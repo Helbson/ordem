@@ -3,117 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ordem de Serviço - Seu Controle</title>
+  <title>Login - Ordem de Serviço</title>
   <style>
-    body {font-family: Arial, sans-serif;background: #f0f2f5;margin:0;padding:20px;}
-    .container {max-width:600px;margin:auto;background:white;border-radius:15px;padding:20px;box-shadow:0 5px 15px rgba(0,0,0,0.1);}
-    h1 {text-align:center;color:#2c3e50;}
-    textarea,button{width:100%;padding:12px;margin:10px 0;border-radius:8px;border:1px solid #ccc;font-size:16px;box-sizing:border-box;}
-    button{background:#27ae60;color:white;border:none;cursor:pointer;font-weight:bold;}
-    button:hover{background:#219653;}
-    .em-progresso{background:#f39c12;color:white;padding:5px 10px;border-radius:5px;}
-    .finalizado{background:#27ae60;color:white;padding:5px 10px;border-radius:5px;}
-    .card{background:#ecf0f1;padding:15px;margin:15px 0;border-radius:10px;}
-    .hidden{display:none;}
+    body {font-family: Arial;background:#1a1a2e;margin:0;display:flex;height:100vh;align-items:center;justify-content:center;color:white;}
+    .box {background:#16213e;padding:50px;border-radius:20px;width:90%;max-width:400px;text-align:center;box-shadow:0 15px 35px rgba(0,0,0,0.6);}
+    h1 {color:#00ff88;font-size:24px;margin-bottom:30px;}
+    input {width:100%;padding:18px;margin:15px 0;border:none;border-radius:12px;background:#0f0f1a;color:white;font-size:18px;text-align:center;}
+    button {width:100%;padding:18px;margin:15px 0;border:none;border-radius:12px;background:#00ff88;color:black;font-weight:bold;font-size:18px;cursor:pointer;}
+    button:hover {background:#00cc66;}
+    .erro {color:#ff6b6b;margin-top:10px;display:none;}
   </style>
 </head>
 <body>
-
-<div class="container">
-  <h1>Ordem de Serviço - Seu Controle</h1>
-  <div id="nova-ordem">
-    <textarea id="descricao" placeholder="Ex: Visitar Regina, entregar 20g..." rows="3"></textarea>
-    <button onclick="criarOrdem()">OK - Criar Ordem</button>
+  <div class="box">
+    <h1>ORDEM DE SERVIÇO</h1>
+    <input type="password" id="senha" placeholder="Digite a senha" maxlength="10">
+    <button onclick="entrar()">ENTRAR</button>
+    <p class="erro" id="erro">Senha incorreta!</p>
   </div>
-  <div id="lista">Carregando ordens...</div>
-</div>
 
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script>
+    const SENHA_CERTA = "2025"; // ← MUDE AQUI PRA SENHA QUE VOCÊ QUISER (ex: 1234, helbson, 9876, etc)
 
-<script>
-  // CONFIGURAÇÃO CORRIGIDA
-  const firebaseConfig = {
-    apiKey: "AIzaSyDm2V4szjQPegs4rJlH_eCIlG8lZiOyCEE",
-    authDomain: "ordem-cbc8e.firebaseapp.com",
-    projectId: "ordem-cbc8e",
-    storageBucket: "ordem-cbc8e.firebasestorage.app",
-    messagingSenderId: "1095787217194",
-    appId: "1:1095787217194:web:4f71cd1922b81af3b3de53",
-    measurementId: "G-QEGLXQEQ2G"   // <--- vírgula aqui!
-  };
+    function entrar() {
+      if (document.getElementById("senha").value === SENHA_CERTA) {
+        localStorage.setItem("liberado", "sim");
+        location.href = "painel.html";
+      } else {
+        document.getElementById("erro").style.display = "block";
+        document.getElementById("senha").value = "";
+      }
+    }
 
-  // Inicializa Firebase
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-
-  // Login anônimo automático
-  firebase.auth().signInAnonymously();
-
-  firebase.auth().onAuthStateChanged(user => {
-    if (user) carregarOrdens();
-  });
-
-  function criarOrdem() {
-    const descricao = document.getElementById("descricao").value.trim();
-    if (!descricao) return alert("Digite a ordem!");
-
-    db.collection("ordens").add({
-      descricao: descricao,
-      status: "em-progresso",
-      valor: 0,
-      criadoEm: firebase.firestore.FieldValue.serverTimestamp()
-    }).then(() => {
-      document.getElementById("descricao").value = "";
-      carregarOrdens();
+    document.getElementById("senha").addEventListener("keyup", e => {
+      if (e.key === "Enter") entrar();
     });
-  }
-
-  function carregarOrdens() {
-    const lista = document.getElementById("lista");
-    db.collection("ordens")
-      .orderBy("criadoEm", "desc")
-      .onSnapshot(snapshot => {
-        lista.innerHTML = "";
-        if (snapshot.empty) {
-          lista.innerHTML = "<p style='text-align:center;color:#777;'>Nenhuma ordem ainda.</p>";
-          return;
-        }
-        snapshot.forEach(doc => {
-          const o = doc.data();
-          const div = document.createElement("div");
-          div.className = "card";
-          div.innerHTML = `
-            <strong>${o.descricao}</strong><br>
-            <small>${o.criadoEm ? new Date(o.criadoEm.toDate()).toLocaleString('pt-BR') : 'Agora'}</small><br><br>
-            <span class="${o.status==='finalizado'?'finalizado':'em-progresso'}">
-              ${o.status==='finalizado'?'FINALIZADO':'EM PROGRESSO'}
-            </span>
-            ${o.status==='finalizado' ? 
-              `<br><strong>R$ ${o.valor}</strong>` :
-              `<div class="hidden" id="campo-${doc.id}">
-                 <input type="number" id="valor-${doc.id}" placeholder="Valor (ex: 360)">
-                 <button onclick="finalizar('${doc.id}')">Finalizar</button>
-               </div><br>
-               <button onclick="document.getElementById('campo-${doc.id}').classList.remove('hidden')">Finalizar Ordem</button>`
-            }
-          `;
-          lista.appendChild(div);
-        });
-      });
-  }
-
-  function finalizar(id) {
-    const valor = document.getElementById(`valor-${id}`).value;
-    if (!valor || valor <= 0) return alert("Digite o valor!");
-    db.collection("ordens").doc(id).update({
-      status: "finalizado",
-      valor: Number(valor)
-    });
-  }
-</script>
-
+  </script>
 </body>
 </html>
