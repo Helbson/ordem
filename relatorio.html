@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Ordens de Pagamento</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        
+        header p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+        
+        .nav-links {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .dashboard-container {
+            padding: 30px;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .dashboard-title {
+            color: #2c3e50;
+            font-size: 1.5rem;
+        }
+        
+        .stats-container {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-card {
+            background-color: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 8px;
+            min-width: 150px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .stat-card.primary {
+            border-left: 4px solid #3498db;
+        }
+        
+        .stat-card.success {
+            border-left: 4px solid #27ae60;
+        }
+        
+        .stat-card.danger {
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+        
+        .firebase-status {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .status-connected {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status-disconnected {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .filters-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            align-items: center;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-width: 180px;
+        }
+        
+        .filter-label {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        .filter-input, .filter-select {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            background-color: white;
+        }
+        
+        .filter-input:focus, .filter-select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        .btn-filter {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            align-self: flex-end;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-filter:hover {
+            background-color: #2980b9;
+        }
+        
+        .orders-container {
+            overflow-x: auto;
+            margin-top: 20px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+        
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+        
+        .orders-table th {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            text-align: left;
+            padding: 15px;
+            font-weight: 600;
+            border-bottom: 2px solid #ddd;
+        }
+        
+        .orders-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .orders-table tbody tr {
+            transition: background-color 0.2s;
+        }
+        
+        .orders-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .order-id {
+            font-weight: 600;
+            color: #2c3e50;
+            font-family: monospace;
+        }
+        
+        .recipient-name {
+            color: #3498db;
+            cursor: pointer;
+            text-decoration: none;
+            transition: color 0.2s;
+            font-weight: 500;
+        }
+        
+        .recipient-name:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+        
+        .amount {
+            font-weight: 600;
+            color: #27ae60;
+        }
+        
+        .urgent-badge {
+            background-color: #e74c3c;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .normal-badge {
+            background-color: #7f8c8d;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .no-orders {
+            text-align: center;
+            padding: 50px 20px;
+            color: #7f8c8d;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-action {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        
+        .btn-view {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-view:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-delete {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .btn-delete:hover {
+            background-color: #c0392b;
+        }
+        
+        .creation-date {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        
+        .dashboard-footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            text-align: center;
+        }
+        
+        .btn-clear-all {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-clear-all:hover {
+            background-color: #c0392b;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .stats-container {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .stat-card {
+                flex: 1;
+                min-width: 120px;
+            }
+            
+            .orders-table th, .orders-table td {
+                padding: 10px 8px;
+                font-size: 0.9rem;
+            }
+            
+            .actions {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .btn-action {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stats-container {
+                flex-direction: column;
+            }
+            
+            .stat-card {
+                width: 100%;
+            }
+            
+            .filters-container {
+                flex-direction: column;
+            }
+            
+            .filter-group {
+                width: 100%;
+            }
+            
+            .btn-filter {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Dashboard - Ordens de Pagamento</h1>
+            <p>Visualize e gerencie todas as ordens de pagamento do Firebase</p>
+            <div class="nav-links">
+                <a href="index.html">Criar Nova Ordem</a>
+                <a href="#" id="refreshBtn">Atualizar Lista</a>
+                <a href="#" id="exportBtn">Exportar para CSV</a>
+            </div>
+        </header>
+        
+        <div class="dashboard-container">
+            <div id="firebaseStatus" class="firebase-status status-disconnected">
+                🔄 Conectando ao Firebase...
+            </div>
+            
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Carregando dados do Firebase...</p>
+            </div>
+            
+            <div class="dashboard-header">
+                <h2 class="dashboard-title">Todas as Ordens de Pagamento</h2>
+                <div class="stats-container">
+                    <div class="stat-card primary">
+                        <div class="stat-value" id="totalOrders">0</div>
+                        <div class="stat-label">Total de Ordens</div>
+                    </div>
+                    <div class="stat-card success">
+                        <div class="stat-value" id="totalAmount">R$ 0,00</div>
+                        <div class="stat-label">Valor Total</div>
+                    </div>
+                    <div class="stat-card danger">
+                        <div class="stat-value" id="urgentOrders">0</div>
+                        <div class="stat-label">Pagamentos Urgentes</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="filters-container">
+                <div class="filter-group">
+                    <label class="filter-label">Buscar por Nome</label>
+                    <input type="text" id="filterName" class="filter-input" placeholder="Digite o nome do beneficiário...">
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Ordenar por</label>
+                    <select id="sortBy" class="filter-select">
+                        <option value="dateDesc">Data (mais recente)</option>
+                        <option value="dateAsc">Data (mais antiga)</option>
+                        <option value="amountDesc">Valor (maior)</option>
+                        <option value="amountAsc">Valor (menor)</option>
+                        <option value="nameAsc">Nome (A-Z)</option>
+                        <option value="nameDesc">Nome (Z-A)</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Filtrar por Status</label>
+                    <select id="filterUrgent" class="filter-select">
+                        <option value="all">Todas as ordens</option>
+                        <option value="urgent">Apenas urgentes</option>
+                        <option value="normal">Apenas normais</option>
+                    </select>
+                </div>
+                
+                <button class="btn-filter" id="applyFilters">Aplicar Filtros</button>
+            </div>
+            
+            <div class="orders-container">
+                <table class="orders-table" id="ordersTable">
+                    <thead>
+                        <tr>
+                            <th width="12%">Nº Ordem</th>
+                            <th width="25%">Beneficiário</th>
+                            <th width="15%">Data Pagamento</th>
+                            <th width="15%">Valor</th>
+                            <th width="13%">Status</th>
+                            <th width="20%">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                        <!-- As ordens serão inseridas aqui via JavaScript -->
+                    </tbody>
+                </table>
+                
+                <div id="noOrdersMessage" class="no-orders" style="display: none;">
+                    <h3>Nenhuma ordem de pagamento encontrada</h3>
+                    <p>Não há ordens no banco de dados ou não foi possível conectar ao Firebase.</p>
+                    <p><a href="index.html">Clique aqui para criar sua primeira ordem</a></p>
+                </div>
+            </div>
+            
+            <div class="dashboard-footer">
+                <p>Dashboard de ordens de pagamento conectado ao Firebase</p>
+                <p>Os dados são armazenados na coleção "ordempagamento"</p>
+                <button class="btn-clear-all" id="clearAllBtn">Sincronizar com Firebase</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { 
+            getFirestore, 
+            collection, 
+            getDocs,
+            query,
+            orderBy,
+            where,
+            deleteDoc,
+            doc,
+            serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Configuração do Firebase (igual ao formulário principal)
+        const firebaseConfig = {
+            apiKey: "AIzaSyDm2V4szjQPegs4rJlH_eCIlG8lZiOyCEE",
+            authDomain: "ordem-cbc8e.firebaseapp.com",
+            projectId: "ordem-cbc8e",
+            storageBucket: "ordem-cbc8e.firebasestorage.app",
+            messagingSenderId: "1095787217194",
+            appId: "1:1095787217194:web:4f71cd1922b81af3b3de53"
+        };
+
+        // Inicializar Firebase
+        let app;
+        let db;
+        let firebaseConnected = false;
+        const COLLECTION_NAME = "ordempagamento"; // Mesma coleção do formulário
+        let allOrders = [];
+
+        // Função para conectar ao Firebase
+        async function connectToFirebase() {
+            try {
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                
+                // Testar conexão
+                await getDocs(collection(db, COLLECTION_NAME));
+                
+                firebaseConnected = true;
+                updateStatus("✅ Conectado ao Firebase", "connected");
+                return true;
+            } catch (error) {
+                console.error("❌ Erro ao conectar ao Firebase:", error);
+                updateStatus("❌ Não foi possível conectar ao Firebase", "disconnected");
+                return false;
+            }
+        }
+
+        // Função para atualizar status
+        function updateStatus(message, type) {
+            const statusElement = document.getElementById('firebaseStatus');
+            statusElement.textContent = message;
+            statusElement.className = `firebase-status status-${type}`;
+        }
+
+        // Função para mostrar/ocultar loading
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+        }
+
+        // Carregar ordens do Firebase
+        async function loadOrdersFromFirebase() {
+            showLoading(true);
+            allOrders = [];
+            
+            try {
+                if (!firebaseConnected || !db) {
+                    const connected = await connectToFirebase();
+                    if (!connected) {
+                        throw new Error("Não conectado ao Firebase");
+                    }
+                }
+
+                // Buscar todos os documentos da coleção
+                const q = query(collection(db, COLLECTION_NAME), orderBy("createdAt", "desc"));
+                const querySnapshot = await getDocs(q);
+                
+                console.log(`📥 Carregando ${querySnapshot.size} ordens do Firebase...`);
+                
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    allOrders.push({
+                        id: doc.id,
+                        orderId: data.orderId || `OP-${doc.id.substring(0, 6)}`,
+                        ...data
+                    });
+                });
+                
+                console.log(`✅ ${allOrders.length} ordens carregadas com sucesso!`);
+                updateStatus(`✅ ${allOrders.length} ordens carregadas do Firebase`, "connected");
+                
+            } catch (error) {
+                console.error("❌ Erro ao carregar ordens do Firebase:", error);
+                updateStatus("❌ Erro ao carregar ordens do Firebase", "disconnected");
+                
+                // Tentar carregar do localStorage como fallback
+                allOrders = JSON.parse(localStorage.getItem('localPaymentOrders')) || [];
+                if (allOrders.length > 0) {
+                    updateStatus(`⚠️ ${allOrders.length} ordens carregadas do cache local`, "disconnected");
+                }
+            }
+            
+            // Aplicar filtros e exibir
+            applyFiltersAndDisplay();
+            showLoading(false);
+        }
+
+        // Aplicar filtros e exibir ordens
+        function applyFiltersAndDisplay() {
+            let filteredOrders = [...allOrders];
+            
+            // Filtrar por nome
+            const nameFilter = document.getElementById('filterName').value.toLowerCase();
+            if (nameFilter) {
+                filteredOrders = filteredOrders.filter(order => 
+                    order.recipientName && order.recipientName.toLowerCase().includes(nameFilter)
+                );
+            }
+            
+            // Filtrar por urgência
+            const urgentFilter = document.getElementById('filterUrgent').value;
+            if (urgentFilter === 'urgent') {
+                filteredOrders = filteredOrders.filter(order => order.urgent === true);
+            } else if (urgentFilter === 'normal') {
+                filteredOrders = filteredOrders.filter(order => order.urgent === false);
+            }
+            
+            // Ordenar
+            const sortBy = document.getElementById('sortBy').value;
+            switch(sortBy) {
+                case 'dateDesc':
+                    filteredOrders.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+                    break;
+                case 'dateAsc':
+                    filteredOrders.sort((a, b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0));
+                    break;
+                case 'amountDesc':
+                    filteredOrders.sort((a, b) => (b.amount || 0) - (a.amount || 0));
+                    break;
+                case 'amountAsc':
+                    filteredOrders.sort((a, b) => (a.amount || 0) - (b.amount || 0));
+                    break;
+                case 'nameAsc':
+                    filteredOrders.sort((a, b) => (a.recipientName || '').localeCompare(b.recipientName || ''));
+                    break;
+                case 'nameDesc':
+                    filteredOrders.sort((a, b) => (b.recipientName || '').localeCompare(a.recipientName || ''));
+                    break;
+            }
+            
+            // Atualizar estatísticas
+            updateStatistics(filteredOrders);
+            
+            // Exibir tabela
+            displayOrders(filteredOrders);
+        }
+
+        // Atualizar estatísticas
+        function updateStatistics(orders) {
+            const totalOrders = orders.length;
+            const totalAmount = orders.reduce((sum, order) => sum + (order.amount || 0), 0);
+            const urgentOrders = orders.filter(order => order.urgent === true).length;
+            
+            document.getElementById('totalOrders').textContent = totalOrders;
+            document.getElementById('totalAmount').textContent = totalAmount.toLocaleString('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            });
+            document.getElementById('urgentOrders').textContent = urgentOrders;
+        }
+
+        // Exibir ordens na tabela
+        function displayOrders(orders) {
+            const ordersTableBody = document.getElementById('ordersTableBody');
+            const noOrdersMessage = document.getElementById('noOrdersMessage');
+            
+            ordersTableBody.innerHTML = '';
+            
+            if (orders.length === 0) {
+                ordersTableBody.parentNode.style.display = 'none';
+                noOrdersMessage.style.display = 'block';
+                return;
+            }
+            
+            ordersTableBody.parentNode.style.display = 'block';
+            noOrdersMessage.style.display = 'none';
+            
+            orders.forEach(order => {
+                const row = document.createElement('tr');
+                
+                // Formatar datas
+                const paymentDate = order.paymentDate ? 
+                    new Date(order.paymentDate).toLocaleDateString('pt-BR') : 'N/A';
+                
+                const createdAt = order.createdAt ? 
+                    new Date(order.createdAt).toLocaleDateString('pt-BR') : 'N/A';
+                
+                // Formatar valor
+                const amount = order.amount ? 
+                    new Intl.NumberFormat('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL'
+                    }).format(order.amount) : 'R$ 0,00';
+                
+                row.innerHTML = `
+                    <td class="order-id">${order.orderId || order.id}</td>
+                    <td>
+                        <a href="javascript:void(0)" class="recipient-name" data-order-id="${order.id}">
+                            ${order.recipientName || 'N/A'}
+                        </a>
+                        <div class="creation-date">Criado em: ${createdAt}</div>
+                    </td>
+                    <td>${paymentDate}</td>
+                    <td class="amount">${amount}</td>
+                    <td>
+                        ${order.urgent === true ? 
+                            '<span class="urgent-badge">URGENTE</span>' : 
+                            '<span class="normal-badge">NORMAL</span>'}
+                    </td>
+                    <td class="actions">
+                        <button class="btn-action btn-view" data-order-id="${order.id}">Ver Comprovante</button>
+                        <button class="btn-action btn-delete" data-order-id="${order.id}">Excluir</button>
+                    </td>
+                `;
+                
+                ordersTableBody.appendChild(row);
+            });
+            
+            // Adicionar eventos
+            addOrderEventListeners();
+        }
+
+        // Adicionar eventos às ordens
+        function addOrderEventListeners() {
+            // Visualizar comprovante
+            document.querySelectorAll('.btn-view, .recipient-name').forEach(element => {
+                element.addEventListener('click', function() {
+                    const orderId = this.getAttribute('data-order-id');
+                    const order = allOrders.find(o => o.id === orderId);
+                    if (order) viewReceipt(order);
+                });
+            });
+            
+            // Excluir ordem
+            document.querySelectorAll('.btn-delete').forEach(button => {
+                button.addEventListener('click', async function() {
+                    const orderId = this.getAttribute('data-order-id');
+                    const order = allOrders.find(o => o.id === orderId);
+                    
+                    if (order && confirm(`Tem certeza que deseja excluir a ordem ${order.orderId || orderId}?`)) {
+                        await deleteOrder(orderId);
+                    }
+                });
+            });
+        }
+
+        // Visualizar comprovante
+        function viewReceipt(order) {
+            const receiptWindow = window.open('', '_blank');
+            
+            // Formatar dados para exibição
+            const amountFormatted = order.amount ? 
+                new Intl.NumberFormat('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                }).format(order.amount) : 'R$ 0,00';
+            
+            const paymentDateFormatted = order.paymentDate ? 
+                new Date(order.paymentDate).toLocaleDateString('pt-BR') : 'N/A';
+            
+            const createdAtFormatted = order.createdAt ? 
+                new Date(order.createdAt).toLocaleString('pt-BR') : 'N/A';
+            
+            const urgentText = order.urgent === true ? 'Sim' : 'Não';
+            
+            receiptWindow.document.write(`
+                <!DOCTYPE html>
+                <html lang="pt-BR">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Comprovante - ${order.orderId || order.id}</title>
+                    <style>
+                        body { 
+                            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+                            padding: 30px; 
+                            line-height: 1.6; 
+                            background-color: #f5f7fa;
+                            color: #333;
+                        }
+                        .receipt-container {
+                            max-width: 800px;
+                            margin: 0 auto;
+                            background-color: white;
+                            border-radius: 10px;
+                            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+                            overflow: hidden;
+                        }
+                        .receipt-header {
+                            background: linear-gradient(135deg, #2c3e50, #4a6491);
+                            color: white;
+                            padding: 25px 30px;
+                            text-align: center;
+                        }
+                        .receipt-header h1 {
+                            font-size: 1.8rem;
+                            margin-bottom: 10px;
+                        }
+                        .order-id {
+                            font-size: 1.3rem;
+                            font-weight: bold;
+                            letter-spacing: 1px;
+                            background-color: rgba(255, 255, 255, 0.2);
+                            padding: 5px 15px;
+                            border-radius: 20px;
+                            display: inline-block;
+                            margin-top: 10px;
+                        }
+                        .receipt-content {
+                            padding: 30px;
+                        }
+                        .receipt-section {
+                            margin-bottom: 25px;
+                        }
+                        .section-title {
+                            color: #2c3e50;
+                            border-bottom: 2px solid #3498db;
+                            padding-bottom: 8px;
+                            margin-bottom: 15px;
+                            font-size: 1.2rem;
+                        }
+                        .receipt-row {
+                            display: flex;
+                            margin-bottom: 12px;
+                            padding-bottom: 12px;
+                            border-bottom: 1px solid #eee;
+                        }
+                        .receipt-label {
+                            font-weight: bold;
+                            color: #2c3e50;
+                            width: 200px;
+                            flex-shrink: 0;
+                        }
+                        .receipt-value {
+                            flex-grow: 1;
+                        }
+                        .urgent {
+                            color: #e74c3c;
+                            font-weight: bold;
+                        }
+                        .amount-highlight {
+                            font-size: 1.5rem;
+                            font-weight: bold;
+                            color: #27ae60;
+                            text-align: center;
+                            padding: 15px;
+                            background-color: #f8f9fa;
+                            border-radius: 5px;
+                            margin: 20px 0;
+                        }
+                        .receipt-footer {
+                            margin-top: 30px;
+                            padding-top: 20px;
+                            border-top: 1px solid #eee;
+                            font-size: 0.9rem;
+                            color: #7f8c8d;
+                            text-align: center;
+                        }
+                        .button-container {
+                            display: flex;
+                            justify-content: center;
+                            gap: 15px;
+                            margin-top: 25px;
+                        }
+                        button {
+                            padding: 12px 25px;
+                            border: none;
+                            border-radius: 5px;
+                            font-size: 16px;
+                            font-weight: 600;
+                            cursor: pointer;
+                            transition: all 0.3s;
+                        }
+                        .btn-print {
+                            background-color: #3498db;
+                            color: white;
+                        }
+                        .btn-print:hover {
+                            background-color: #2980b9;
+                        }
+                        .btn-close {
+                            background-color: #f1f1f1;
+                            color: #333;
+                        }
+                        .btn-close:hover {
+                            background-color: #e0e0e0;
+                        }
+                        @media print {
+                            .button-container {
+                                display: none;
+                            }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="receipt-container">
+                        <div class="receipt-header">
+                            <h1>COMPROVANTE DE ORDEM DE PAGAMENTO</h1>
+                            <div class="order-id">${order.orderId || order.id}</div>
+                        </div>
+                        
+                        <div class="receipt-content">
+                            <div class="amount-highlight">
+                                VALOR: ${amountFormatted}
+                            </div>
+                            
+                            <div class="receipt-section">
+                                <h2 class="section-title">Informações do Beneficiário</h2>
+                                <div class="receipt-row">
+                                    <div class="receipt-label">Nome:</div>
+                                    <div class="receipt-value">${order.recipientName || 'N/A'}</div>
+                                </div>
+                                ${order.phone ? `<div class="receipt-row">
+                                    <div class="receipt-label">Telefone:</div>
+                                    <div class="receipt-value">${order.phone}</div>
+                                </div>` : ''}
+                                ${order.email ? `<div class="receipt-row">
+                                    <div class="receipt-label">E-mail:</div>
+                                    <div class="receipt-value">${order.email}</div>
+                                </div>` : ''}
+                            </div>
+                            
+                            <div class="receipt-section">
+                                <h2 class="section-title">Detalhes do Pagamento</h2>
+                                <div class="receipt-row">
+                                    <div class="receipt-label">Data do Pagamento:</div>
+                                    <div class="receipt-value">${paymentDateFormatted}</div>
+                                </div>
+                                <div class="receipt-row">
+                                    <div class="receipt-label">Recorrência:</div>
+                                    <div class="receipt-value">${order.recurrence || 'Não informada'}</div>
+                                </div>
+                                <div class="receipt-row">
+                                    <div class="receipt-label">Forma de Pagamento:</div>
+                                    <div class="receipt-value">${order.paymentMethod || 'Não informada'}</div>
+                                </div>
+                                <div class="receipt-row">
+                                    <div class="receipt-label">Descrição:</div>
+                                    <div class="receipt-value">${order.description || 'Não informada'}</div>
+                                </div>
+                                <div class="receipt-row">
+                                    <div class="receipt-label">Pagamento Urgente:</div>
+                                    <div class="receipt-value ${urgentText === 'Sim' ? 'urgent' : ''}">${urgentText}</div>
+                                </div>
+                                <div class="receipt-row">
+                                    <div class="receipt-label">Data de Criação:</div>
+                                    <div class="receipt-value">${createdAtFormatted}</div>
+                                </div>
+                            </div>
+                            
+                            <div class="receipt-footer">
+                                <p>Comprovante gerado em: ${new Date().toLocaleString('pt-BR')}</p>
+                                <p>Ordem de pagamento para uso pessoal</p>
+                            </div>
+                            
+                            <div class="button-container">
+                                <button class="btn-print" onclick="window.print()">Imprimir Comprovante</button>
+                                <button class="btn-close" onclick="window.close()">Fechar</button>
+                            </div>
+                        </div>
+                    </div>
+                </body>
+                </html>
+            `);
+            receiptWindow.document.close();
+        }
+
+        // Excluir ordem do Firebase
+        async function deleteOrder(orderId) {
+            try {
+                if (!firebaseConnected || !db) {
+                    throw new Error("Não conectado ao Firebase");
+                }
+                
+                // Excluir do Firebase
+                await deleteDoc(doc(db, COLLECTION_NAME, orderId));
+                
+                // Remover da lista local
+                allOrders = allOrders.filter(order => order.id !== orderId);
+                
+                // Atualizar exibição
+                applyFiltersAndDisplay();
+                
+                alert('✅ Ordem excluída com sucesso do Firebase!');
+                
+            } catch (error) {
+                console.error("❌ Erro ao excluir ordem:", error);
+                alert(`❌ Erro ao excluir ordem: ${error.message}`);
+            }
+        }
+
+        // Exportar dados para CSV
+        function exportData() {
+            if (allOrders.length === 0) {
+                alert('Não há dados para exportar!');
+                return;
+            }
+            
+            // Converter para CSV
+            let csv = 'ID;Nº Ordem;Beneficiário;Telefone;E-mail;Valor;Data Pagamento;Recorrência;Forma Pagamento;Descrição;Urgente;Data Criação\n';
+            
+            allOrders.forEach(order => {
+                const paymentDate = order.paymentDate ? 
+                    new Date(order.paymentDate).toLocaleDateString('pt-BR') : '';
+                
+                const createdAt = order.createdAt ? 
+                    new Date(order.createdAt).toLocaleString('pt-BR') : '';
+                
+                csv += `"${order.id}";"${order.orderId || ''}";"${order.recipientName || ''}";"${order.phone || ''}";"${order.email || ''}";${order.amount || 0};"${paymentDate}";"${order.recurrence || ''}";"${order.paymentMethod || ''}";"${order.description || ''}";"${order.urgent ? 'Sim' : 'Não'}";"${createdAt}"\n`;
+            });
+            
+            // Criar blob e link de download
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `ordens_firebase_${new Date().toISOString().slice(0,10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Sincronizar com Firebase (carregar novamente)
+        async function syncWithFirebase() {
+            showLoading(true);
+            updateStatus("🔄 Sincronizando com Firebase...", "disconnected");
+            await loadOrdersFromFirebase();
+            showLoading(false);
+        }
+
+        // Inicializar quando a página carregar
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Conectar ao Firebase e carregar dados
+            await connectToFirebase();
+            await loadOrdersFromFirebase();
+            
+            // Event Listeners
+            document.getElementById('refreshBtn').addEventListener('click', async function(e) {
+                e.preventDefault();
+                await loadOrdersFromFirebase();
+            });
+            
+            document.getElementById('exportBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                exportData();
+            });
+            
+            document.getElementById('applyFilters').addEventListener('click', function() {
+                applyFiltersAndDisplay();
+            });
+            
+            document.getElementById('clearAllBtn').addEventListener('click', async function() {
+                await syncWithFirebase();
+            });
+            
+            // Aplicar filtros ao pressionar Enter no campo de busca
+            document.getElementById('filterName').addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') {
+                    applyFiltersAndDisplay();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

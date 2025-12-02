@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestão - Transição</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="transicao.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Sistema de Gestão</h1>
+            <p>Selecione uma das opções abaixo para acessar as funcionalidades do sistema. Ambas as opções possuem processos otimizados para melhor experiência.</p>
+        </div>
+        
+        <div class="cards-container">
+            <!-- Card Ordem de Pagamento -->
+            <div class="card" id="paymentCard">
+                <div class="icon-container payment-icon">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                </div>
+                <h2>Ordem de Pagamento</h2>
+                <p>Gerencie e acompanhe todas as transações financeiras, pagamentos a fornecedores, emissão de boletos e relatórios financeiros.</p>
+                <button class="btn payment-btn" id="paymentBtn">Acessar</button>
+            </div>
+            
+            <!-- Card Ordem de Serviço -->
+            <div class="card" id="serviceCard">
+                <div class="icon-container service-icon">
+                    <i class="fas fa-tools"></i>
+                </div>
+                <h2>Ordem de Serviço</h2>
+                <p>Controle de serviços prestados, agendamentos, alocação de técnicos, acompanhamento de execução e histórico de serviços.</p>
+                <button class="btn service-btn" id="serviceBtn">Acessar</button>
+            </div>
+
+              <!-- card relatorio ordem de serviço-->
+            <div class="card" id="relatorio">
+                <div class="icon-container relatorio-icon">
+                    <i class="fa-file-lines"></i>
+                </div>
+                <h2>Relatorio de pagamentos</h2>
+                <p>Controle de serviços prestados, agendamentos, alocação de técnicos, acompanhamento de execução e histórico de serviços.</p>
+                <button class="btn relatorio-btn" id="relatorioBtn">Acessar</button>
+            </div>
+        </div>
+        
+        <!-- Botão para voltar à página inicial -->
+        <div class="back-container">
+            <button class="btn back-btn" id="backBtn">
+                <i class="fas fa-home"></i> Voltar para Página Inicial
+            </button>
+        </div>
+        
+        <div class="footer">
+            <p>Sistema de Gestão Empresarial &copy; 2023 - Todos os direitos reservados</p>
+        </div>
+    </div>
+
+    <script src="transicao.js"></script>
+</body>
+</html>

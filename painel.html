@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ordem de Serviço</title>
+  <style>
+    body{font-family:Arial;background:#f4f6f9;margin:0;padding:20px;}
+    .box{max-width:600px;margin:auto;background:white;padding:20px;border-radius:15px;box-shadow:0 4px 20px rgba(0,0,0,0.1);}
+    h1{text-align:center;color:#2c3e50;}
+    textarea,button,input{width:100%;padding:14px;margin:10px 0;border-radius:8px;border:1px solid #ddd;font-size:16px;box-sizing:border-box;}
+    button{background:#27ae60;color:white;border:none;cursor:pointer;font-weight:bold;}
+    button:hover{background:#219a52;}
+    .azul{background:#3498db;}
+    .laranja{background:#e67e22;}
+    .vermelho{background:#c0392b;}
+    .card{background:#ecf0f1;padding:16px;margin:15px 0;border-radius:10px;}
+    .sep{border-top:4px dashed #ddd;margin:40px 0;padding-top:20px;}
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <h1>Ordem de Serviço</h1>
+  <button class="vermelho" onclick="location.href='index.html'">SAIR</button>
+
+  <textarea id="txt" placeholder="Ex: Regina - 20g" rows="3"></textarea>
+  <button onclick="nova()">CRIAR ORDEM</button>
+
+  <div id="abertas"></div>
+
+  <div class="sep">
+    <h2 style="text-align:center;color:#27ae60">Histórico</h2>
+    <div id="fechadas"></div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, collection, addDoc, doc, updateDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  const app = initializeApp({
+    apiKey: "AIzaSyDm2V4szjQPegs4rJlH_eCIlG8lZiOyCEE",
+    authDomain: "ordem-cbc8e.firebaseapp.com",
+    projectId: "ordem-cbc8e",
+    storageBucket: "ordem-cbc8e.firebasestorage.app",
+    messagingSenderId: "1095787217194",
+    appId: "1:1095787217194:web:4f71cd1922b81af3b3de53"
+  });
+  const db = getFirestore(app);
+
+  function carregar() {
+    onSnapshot(query(collection(db,"ordens"),orderBy("data","desc")), s=>{
+      document.getElementById("abertas").innerHTML = "";
+      document.getElementById("fechadas").innerHTML = "";
+      s.forEach(d=>{
+        const o = d.data();
+        const hora = o.data?.toDate?.().toLocaleString("pt-BR") || "Agora";
+        const card = `<div class="card"><strong>${o.desc}</strong><br><small>${hora}</small><br><br>`;
+
+        if (o.status==="aberta") {
+          document.getElementById("abertas").innerHTML += card + `
+            <span style="background:#f39c12;color:white;padding:5px 10px;border-radius:5px;">ABERTA</span>
+            <div id="v${d.id}" style="display:none;margin-top:10px;">
+              <input type="number" id="n${d.id}" placeholder="Valor recebido">
+              <button class="azul" onclick="fecha('${d.id}',true)">Fechar com valor</button>
+            </div>
+            <button class="azul" onclick="document.getElementById('v${d.id}').style.display='block'">Recebi dinheiro</button>
+            <button class="laranja" onclick="fecha('${d.id}',false)">Entreguei (sem dinheiro)</button>
+          </div>`;
+        } else {
+          const v = o.valor>0 ? "R$ "+o.valor : "Sem valor";
+          document.getElementById("fechadas").innerHTML += card + `
+            <span style="background:#27ae60;color:white;padding:5px 10px;border-radius:5px;">FECHADA</span>
+            <div style="font-size:20px;font-weight:bold;color:#27ae60;margin-top:8px;">${v}</div></div>`;
+        }
+      });
+    });
+  }
+
+  window.nova = async () => {
+    const t = document.getElementById("txt").value.trim();
+    if(!t) return alert("Digite a ordem");
+    await addDoc(collection(db,"ordens"),{desc:t,status:"aberta",valor:0,data:serverTimestamp()});
+    document.getElementById("txt").value="";
+  };
+
+  window.fecha = async (id, comValor) => {
+    let valor = 0;
+    if(comValor) valor = Number(document.getElementById("n"+id).value) || 0;
+    await updateDoc(doc(db,"ordens",id),{status:"fechada",valor:valor});
+  };
+
+  carregar();
+</script>
+</body>
+</html>
