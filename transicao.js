@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const serviceBtn = document.getElementById('serviceBtn');
     if (serviceBtn) {
         serviceBtn.addEventListener('click', function() {
-            window.location.href = 'servico.html';
+            window.location.href = 'painel.html';
         });
     }
 
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const divulgaBtn = document.getElementById('divulgaBtn');
     if (divulgaBtn) {
         divulgaBtn.addEventListener('click', function() {
-            window.location.href = 'divulgador.html';
+            window.location.href = 'divulga.html';
         });
     }
 
