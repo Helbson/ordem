@@ -1,0 +1,1763 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Captação de Inventário - Sistema Completo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Adicionar SDK do Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    
+    <style>
+        /* ... (seus estilos CSS permanecem os mesmos) ... */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a237e 0%, #283593 50%, #3949ab 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        header p {
+            opacity: 0.9;
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: #2c3e50;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .tab-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .dashboard-container {
+            padding: 30px;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ESTATÍSTICAS */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border: 1px solid #e9ecef;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-value {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        /* FORMULÁRIOS */
+        .forms-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #e9ecef;
+        }
+
+        .form-card h3 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #3498db;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60, #219653);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        /* TABELA DE TRANSAÇÕES */
+        .transactions-container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-top: 30px;
+            overflow-x: auto;
+        }
+
+        .filters-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .transactions-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1000px;
+        }
+
+        .transactions-table th {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 18px 20px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .transactions-table th:first-child {
+            border-top-left-radius: 10px;
+        }
+
+        .transactions-table th:last-child {
+            border-top-right-radius: 10px;
+        }
+
+        .transactions-table td {
+            padding: 18px 20px;
+            border-bottom: 1px solid #f1f1f1;
+            vertical-align: middle;
+        }
+
+        .transactions-table tbody tr {
+            transition: background-color 0.2s ease;
+            cursor: pointer;
+        }
+
+        .transactions-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .transaction-code {
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            color: #2c3e50;
+            background: #f8f9fa;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .transaction-type {
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .type-entrada {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .type-saida {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .transaction-value {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .value-entrada {
+            color: #27ae60;
+        }
+
+        .value-saida {
+            color: #e74c3c;
+        }
+
+        .transaction-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-action {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-receipt {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+
+        .btn-delete {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+        }
+
+        /* MODAL DE COMPROVANTE */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+            padding: 20px;
+        }
+
+        .receipt-modal {
+            background: white;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            animation: modalAppear 0.4s ease;
+        }
+
+        @keyframes modalAppear {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .receipt-header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .receipt-title {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .receipt-id {
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .receipt-content {
+            padding: 40px;
+        }
+
+        .receipt-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 2px dashed #eee;
+        }
+
+        .receipt-label {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .receipt-value {
+            text-align: right;
+            max-width: 60%;
+            word-break: break-word;
+        }
+
+        .receipt-total {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            text-align: center;
+            padding: 25px;
+            margin-top: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .receipt-actions {
+            display: flex;
+            gap: 15px;
+            padding: 30px;
+            border-top: 1px solid #eee;
+            justify-content: center;
+        }
+
+        .btn-print {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-print:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(52, 152, 219, 0.3);
+        }
+
+        /* EXPORTAÇÃO */
+        .export-container {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+
+        .export-options {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        /* LOADING */
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            border: 4px solid rgba(52, 152, 219, 0.1);
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* RESPONSIVIDADE */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 20px;
+            }
+            
+            .forms-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-card {
+                padding: 20px;
+            }
+            
+            .transactions-table th, 
+            .transactions-table td {
+                padding: 12px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .transaction-actions {
+                flex-direction: column;
+            }
+            
+            .btn-action {
+                width: 100%;
+            }
+            
+            .receipt-content {
+                padding: 25px;
+            }
+            
+            .receipt-row {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .receipt-value {
+                text-align: left;
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                border-radius: 15px;
+            }
+            
+            header {
+                padding: 20px;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .tab-btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+            
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .filters-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .export-options {
+                flex-direction: column;
+            }
+        }
+
+        /* ANIMAÇÕES */
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* BADGES */
+        .badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* FOOTER */
+        .footer {
+            text-align: center;
+            padding: 25px;
+            margin-top: 40px;
+            color: #6c757d;
+            font-size: 0.9rem;
+            border-top: 1px solid #e9ecef;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-warehouse"></i> Sistema de Captação de Inventário</h1>
+            <p>Controle completo de entradas e saídas com emissão de comprovantes</p>
+            
+            <div class="nav-tabs">
+                <button class="tab-btn active" onclick="openTab('dashboard')">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </button>
+                <button class="tab-btn" onclick="openTab('transactions')">
+                    <i class="fas fa-exchange-alt"></i> Transações
+                </button>
+                <button class="tab-btn" onclick="openTab('reports')">
+                    <i class="fas fa-chart-bar"></i> Relatórios
+                </button>
+            </div>
+        </header>
+
+        <div class="dashboard-container">
+            <!-- ABA DASHBOARD -->
+            <div id="tab-dashboard" class="tab-content active">
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalSaldo">R$ 0,00</div>
+                        <div class="stat-label">Saldo Total do Caixa</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalEntradas">R$ 0,00</div>
+                        <div class="stat-label">Total de Entradas</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalSaidas">R$ 0,00</div>
+                        <div class="stat-label">Total de Saídas</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalTransacoes">0</div>
+                        <div class="stat-label">Transações Registradas</div>
+                    </div>
+                </div>
+
+                <div class="forms-container">
+                    <!-- FORMULÁRIO DE ENTRADA -->
+                    <div class="form-card">
+                        <h3><i class="fas fa-sign-in-alt text-success"></i> Nova Entrada no Caixa</h3>
+                        <form id="formEntrada" onsubmit="registrarEntrada(event)">
+                            <div class="form-group">
+                                <label class="form-label">Valor (R$):</label>
+                                <input type="number" class="form-input" id="entradaValor" step="0.01" min="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Origem:</label>
+                                <input type="text" class="form-input" id="entradaOrigem" required placeholder="Ex: Venda, Recebimento, etc.">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Destino no Caixa:</label>
+                                <select class="form-select" id="entradaDestino" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="caixa_principal">Caixa Principal</option>
+                                    <option value="caixa_reserva">Caixa de Reserva</option>
+                                    <option value="caixa_emergencia">Caixa de Emergência</option>
+                                    <option value="caixa_investimento">Caixa de Investimento</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Data:</label>
+                                <input type="datetime-local" class="form-input" id="entradaData" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Descrição (opcional):</label>
+                                <textarea class="form-textarea" id="entradaDescricao" placeholder="Detalhes sobre a entrada..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-check-circle"></i> Registrar Entrada
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- FORMULÁRIO DE SAÍDA -->
+                    <div class="form-card">
+                        <h3><i class="fas fa-sign-out-alt text-danger"></i> Nova Saída do Caixa</h3>
+                        <form id="formSaida" onsubmit="registrarSaida(event)">
+                            <div class="form-group">
+                                <label class="form-label">Valor (R$):</label>
+                                <input type="number" class="form-input" id="saidaValor" step="0.01" min="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Especificação:</label>
+                                <input type="text" class="form-input" id="saidaEspecificacao" required placeholder="Ex: Pagamento, Compra, etc.">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Retirado de qual Caixa:</label>
+                                <select class="form-select" id="saidaCaixa" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="caixa_principal">Caixa Principal</option>
+                                    <option value="caixa_reserva">Caixa de Reserva</option>
+                                    <option value="caixa_emergencia">Caixa de Emergência</option>
+                                    <option value="caixa_investimento">Caixa de Investimento</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Data:</label>
+                                <input type="datetime-local" class="form-input" id="saidaData" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Observações (opcional):</label>
+                                <textarea class="form-textarea" id="saidaObservacoes" placeholder="Detalhes sobre a saída..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-minus-circle"></i> Registrar Saída
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ABA TRANSAÇÕES -->
+            <div id="tab-transactions" class="tab-content">
+                <div class="transactions-container">
+                    <h3 style="color: #2c3e50; margin-bottom: 25px;">
+                        <i class="fas fa-list-alt"></i> Histórico de Transações
+                    </h3>
+                    
+                    <div class="filters-container">
+                        <div class="form-group">
+                            <label class="form-label">Tipo:</label>
+                            <select class="form-select" id="filterTipo" onchange="filtrarTransacoes()">
+                                <option value="all">Todos</option>
+                                <option value="entrada">Entradas</option>
+                                <option value="saida">Saídas</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Período:</label>
+                            <select class="form-select" id="filterPeriodo" onchange="filtrarTransacoes()">
+                                <option value="all">Todos</option>
+                                <option value="today">Hoje</option>
+                                <option value="week">Esta Semana</option>
+                                <option value="month">Este Mês</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Buscar:</label>
+                            <input type="text" class="form-input" id="filterBusca" placeholder="Código ou descrição..." onkeyup="filtrarTransacoes()">
+                        </div>
+                        <button class="btn" onclick="limparFiltros()">
+                            <i class="fas fa-times"></i> Limpar Filtros
+                        </button>
+                    </div>
+
+                    <table class="transactions-table">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Data</th>
+                                <th>Tipo</th>
+                                <th>Valor</th>
+                                <th>Origem/Especificação</th>
+                                <th>Caixa</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactionsList">
+                            <!-- Transações serão carregadas aqui -->
+                        </tbody>
+                    </table>
+
+                    <div id="noTransactions" class="loading" style="display: none;">
+                        <i class="fas fa-receipt fa-3x" style="color: #6c757d; margin-bottom: 20px;"></i>
+                        <h3>Nenhuma transação encontrada</h3>
+                        <p>Registre sua primeira entrada ou saída</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ABA RELATÓRIOS -->
+            <div id="tab-reports" class="tab-content">
+                <div class="export-container">
+                    <h3 style="color: #2c3e50; margin-bottom: 20px;">
+                        <i class="fas fa-file-export"></i> Exportar Dados
+                    </h3>
+                    <p style="margin-bottom: 25px; color: #6c757d;">
+                        Exporte todas as transações para análise externa ou backup
+                    </p>
+                    
+                    <div class="export-options">
+                        <button class="btn btn-success" onclick="exportarParaCSV()">
+                            <i class="fas fa-file-csv"></i> Exportar para CSV
+                        </button>
+                        <button class="btn" onclick="exportarParaJSON()">
+                            <i class="fas fa-file-code"></i> Exportar para JSON
+                        </button>
+                        <button class="btn btn-danger" onclick="fazerBackup()">
+                            <i class="fas fa-download"></i> Backup Completo
+                        </button>
+                        <button class="btn" onclick="gerarRelatorio()">
+                            <i class="fas fa-chart-pie"></i> Relatório Financeiro
+                        </button>
+                    </div>
+                </div>
+
+                <div class="transactions-container" style="margin-top: 30px;">
+                    <h3 style="color: #2c3e50; margin-bottom: 25px;">
+                        <i class="fas fa-chart-line"></i> Estatísticas Detalhadas
+                    </h3>
+                    
+                    <div class="stats-container" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                        <div class="stat-card">
+                            <div class="stat-value" id="statEntradasMes">0</div>
+                            <div class="stat-label">Entradas este mês</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="statSaidasMes">0</div>
+                            <div class="stat-label">Saídas este mês</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="statMediaEntradas">R$ 0,00</div>
+                            <div class="stat-label">Média de entradas</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="statMediaSaidas">R$ 0,00</div>
+                            <div class="stat-label">Média de saídas</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Sistema de Captação de Inventário © 2024 - Dados sincronizados com Firebase</p>
+            <p style="font-size: 0.8rem; margin-top: 10px; opacity: 0.7;">
+                Total de transações: <span id="footerCount">0</span> | 
+                Última atualização: <span id="lastUpdate">--</span>
+            </p>
+            <div id="syncStatus" style="margin-top: 10px;">
+                <span id="syncIndicator" class="badge badge-success">🟢 Online</span>
+                <small id="syncMessage" style="display: block; margin-top: 5px;"></small>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE COMPROVANTE -->
+    <div class="modal-overlay" id="receiptModal">
+        <div class="receipt-modal">
+            <div class="receipt-header">
+                <h2 class="receipt-title">COMPROVANTE DE TRANSAÇÃO</h2>
+                <div class="receipt-id" id="receiptCode"></div>
+            </div>
+            
+            <div class="receipt-content">
+                <div class="receipt-row">
+                    <div class="receipt-label">Tipo de Transação:</div>
+                    <div class="receipt-value" id="receiptType"></div>
+                </div>
+                <div class="receipt-row">
+                    <div class="receipt-label">Data e Hora:</div>
+                    <div class="receipt-value" id="receiptDate"></div>
+                </div>
+                <div class="receipt-row">
+                    <div class="receipt-label">Código:</div>
+                    <div class="receipt-value" id="receiptFullCode"></div>
+                </div>
+                <div class="receipt-row">
+                    <div class="receipt-label" id="receiptOrigemLabel">Origem:</div>
+                    <div class="receipt-value" id="receiptOrigem"></div>
+                </div>
+                <div class="receipt-row">
+                    <div class="receipt-label">Caixa:</div>
+                    <div class="receipt-value" id="receiptCaixa"></div>
+                </div>
+                <div class="receipt-row">
+                    <div class="receipt-label">Descrição:</div>
+                    <div class="receipt-value" id="receiptDescricao"></div>
+                </div>
+                <div class="receipt-total" id="receiptTotal">
+                    VALOR: R$ 0,00
+                </div>
+            </div>
+            
+            <div class="receipt-actions">
+                <button class="btn-print" onclick="imprimirComprovante()">
+                    <i class="fas fa-print"></i> Imprimir Comprovante
+                </button>
+                <button class="btn btn-success" onclick="fecharModal()">
+                    <i class="fas fa-check"></i> Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // CONFIGURAÇÃO DO FIREBASE
+        const firebaseConfig = {
+            apiKey: "AIzaSyDm2V4szjQPegs4rJlH_eCIlG8lZiOyCEE",
+            authDomain: "ordem-cbc8e.firebaseapp.com",
+            projectId: "ordem-cbc8e",
+            storageBucket: "ordem-cbc8e.firebasestorage.app",
+            messagingSenderId: "1095787217194",
+            appId: "1:1095787217194:web:4f71cd1922b81af3b3de53"
+        };
+
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Variáveis globais
+        let transacoes = [];
+        let nextId = 1;
+        let isOnline = false;
+
+        // Função para atualizar status de sincronização
+        function atualizarStatusSincronizacao(status, mensagem = '') {
+            const indicator = document.getElementById('syncIndicator');
+            const message = document.getElementById('syncMessage');
+            
+            if (status === 'online') {
+                indicator.innerHTML = '🟢 Online';
+                indicator.className = 'badge badge-success';
+            } else if (status === 'offline') {
+                indicator.innerHTML = '🔴 Offline';
+                indicator.className = 'badge badge-danger';
+            } else if (status === 'syncing') {
+                indicator.innerHTML = '🟡 Sincronizando...';
+                indicator.className = 'badge badge-warning';
+            }
+            
+            if (mensagem) {
+                message.textContent = mensagem;
+            }
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Configurar datas atuais
+            const now = new Date();
+            const dataAtual = now.toISOString().slice(0, 16);
+            
+            document.getElementById('entradaData').value = dataAtual;
+            document.getElementById('saidaData').value = dataAtual;
+            
+            // Verificar conexão
+            checkConnection();
+            
+            // Carregar dados
+            await carregarDados();
+            atualizarEstatisticas();
+            renderizarTransacoes();
+            atualizarFooter();
+            
+            console.log('✅ Sistema de Inventário inicializado com Firebase!');
+        });
+
+        // Verificar conexão
+        function checkConnection() {
+            const online = navigator.onLine;
+            if (online) {
+                isOnline = true;
+                atualizarStatusSincronizacao('online', 'Conectado ao Firebase');
+            } else {
+                isOnline = false;
+                atualizarStatusSincronizacao('offline', 'Modo offline - usando localStorage');
+            }
+        }
+
+        // Ouvir eventos de conexão
+        window.addEventListener('online', checkConnection);
+        window.addEventListener('offline', checkConnection);
+
+        // Funções de navegação
+        function openTab(tabName) {
+            // Esconder todas as abas
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remover active de todos os botões
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Mostrar aba selecionada
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            
+            // Ativar botão correspondente
+            const buttons = document.querySelectorAll('.tab-btn');
+            const index = tabName === 'dashboard' ? 0 : tabName === 'transactions' ? 1 : 2;
+            buttons[index].classList.add('active');
+            
+            // Atualizar dados se necessário
+            if (tabName === 'transactions') {
+                renderizarTransacoes();
+            } else if (tabName === 'reports') {
+                atualizarEstatisticasDetalhadas();
+            }
+        }
+
+        // Gerar código único para transação
+        function gerarCodigoTransacao(tipo) {
+            const data = new Date();
+            const prefixo = tipo === 'entrada' ? 'ENT' : 'SAI';
+            const ano = data.getFullYear().toString().slice(-2);
+            const mes = (data.getMonth() + 1).toString().padStart(2, '0');
+            const dia = data.getDate().toString().padStart(2, '0');
+            const sequencial = nextId.toString().padStart(4, '0');
+            
+            nextId++;
+            salvarNextIdLocal();
+            
+            return `${prefixo}-${ano}${mes}${dia}-${sequencial}`;
+        }
+
+        // Formatar valor monetário
+        function formatarValor(valor) {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(valor);
+        }
+
+        // Formatar data
+        function formatarData(dataString) {
+            const data = new Date(dataString);
+            return data.toLocaleDateString('pt-BR') + ' ' + data.toLocaleTimeString('pt-BR').slice(0, 5);
+        }
+
+        // Carregar dados do Firestore/localStorage
+        async function carregarDados() {
+            try {
+                if (isOnline) {
+                    // Carregar do Firestore
+                    const snapshot = await db.collection('transacoes')
+                        .orderBy('timestamp', 'desc')
+                        .get();
+                    
+                    transacoes = [];
+                    snapshot.forEach(doc => {
+                        transacoes.push({ id: doc.id, ...doc.data() });
+                    });
+                    
+                    // Atualizar nextId baseado no maior ID
+                    if (transacoes.length > 0) {
+                        const maxId = Math.max(...transacoes.map(t => parseInt(t.codigo.split('-')[2]) || 0));
+                        nextId = maxId + 1;
+                    }
+                    
+                    // Salvar localmente como backup
+                    localStorage.setItem('inventario_transacoes', JSON.stringify(transacoes));
+                    localStorage.setItem('inventario_next_id', nextId.toString());
+                    
+                    console.log('✅ Dados carregados do Firestore:', transacoes.length);
+                } else {
+                    // Carregar do localStorage
+                    transacoes = JSON.parse(localStorage.getItem('inventario_transacoes')) || [];
+                    nextId = parseInt(localStorage.getItem('inventario_next_id')) || 1;
+                    console.log('⚠️ Modo offline - dados carregados do localStorage');
+                }
+                
+                localStorage.setItem('inventario_last_update', new Date().toISOString());
+                document.getElementById('lastUpdate').textContent = new Date().toLocaleString('pt-BR');
+                
+            } catch (error) {
+                console.error('❌ Erro ao carregar dados:', error);
+                // Fallback para localStorage
+                transacoes = JSON.parse(localStorage.getItem('inventario_transacoes')) || [];
+                nextId = parseInt(localStorage.getItem('inventario_next_id')) || 1;
+                atualizarStatusSincronizacao('offline', 'Erro ao conectar - usando localStorage');
+            }
+        }
+
+        // Salvar dados no Firestore e localStorage
+        async function salvarDados() {
+            try {
+                // Salvar localmente primeiro
+                localStorage.setItem('inventario_transacoes', JSON.stringify(transacoes));
+                localStorage.setItem('inventario_next_id', nextId.toString());
+                localStorage.setItem('inventario_last_update', new Date().toISOString());
+                
+                if (isOnline) {
+                    // Sincronizar com Firestore
+                    atualizarStatusSincronizacao('syncing', 'Sincronizando com Firebase...');
+                    
+                    // Obter último documento para sincronizar apenas novos
+                    const lastSync = localStorage.getItem('last_firebase_sync');
+                    const transacoesParaSincronizar = lastSync 
+                        ? transacoes.filter(t => new Date(t.timestamp) > new Date(lastSync))
+                        : transacoes;
+                    
+                    for (const transacao of transacoesParaSincronizar) {
+                        await db.collection('transacoes').doc(transacao.id?.toString() || transacao.codigo).set(transacao);
+                    }
+                    
+                    localStorage.setItem('last_firebase_sync', new Date().toISOString());
+                    atualizarStatusSincronizacao('online', 'Sincronizado com sucesso!');
+                }
+                
+            } catch (error) {
+                console.error('❌ Erro ao salvar dados:', error);
+                atualizarStatusSincronizacao('offline', 'Erro ao sincronizar - salvando localmente');
+            }
+        }
+
+        // Salvar nextId localmente
+        function salvarNextIdLocal() {
+            localStorage.setItem('inventario_next_id', nextId.toString());
+        }
+
+        // Registrar entrada
+        async function registrarEntrada(event) {
+            event.preventDefault();
+            
+            const valor = parseFloat(document.getElementById('entradaValor').value);
+            const origem = document.getElementById('entradaOrigem').value.trim();
+            const destino = document.getElementById('entradaDestino').value;
+            const data = document.getElementById('entradaData').value;
+            const descricao = document.getElementById('entradaDescricao').value.trim();
+            
+            const codigo = gerarCodigoTransacao('entrada');
+            
+            const transacao = {
+                id: codigo, // Usar código como ID
+                codigo: codigo,
+                tipo: 'entrada',
+                valor: valor,
+                origem: origem,
+                destino: destino,
+                data: data,
+                descricao: descricao,
+                timestamp: new Date().toISOString(),
+                sincronizado: isOnline
+            };
+            
+            transacoes.push(transacao);
+            await salvarDados();
+            
+            // Limpar formulário
+            document.getElementById('formEntrada').reset();
+            document.getElementById('entradaData').value = new Date().toISOString().slice(0, 16);
+            
+            // Atualizar interface
+            atualizarEstatisticas();
+            renderizarTransacoes();
+            atualizarFooter();
+            
+            // Mostrar comprovante
+            mostrarComprovante(transacao);
+            
+            alert(`✅ Entrada registrada com sucesso!\nCódigo: ${codigo}\nValor: ${formatarValor(valor)}`);
+        }
+
+        // Registrar saída
+        async function registrarSaida(event) {
+            event.preventDefault();
+            
+            const valor = parseFloat(document.getElementById('saidaValor').value);
+            const especificacao = document.getElementById('saidaEspecificacao').value.trim();
+            const caixa = document.getElementById('saidaCaixa').value;
+            const data = document.getElementById('saidaData').value;
+            const observacoes = document.getElementById('saidaObservacoes').value.trim();
+            
+            const codigo = gerarCodigoTransacao('saida');
+            
+            const transacao = {
+                id: codigo, // Usar código como ID
+                codigo: codigo,
+                tipo: 'saida',
+                valor: valor,
+                especificacao: especificacao,
+                caixa: caixa,
+                data: data,
+                observacoes: observacoes,
+                timestamp: new Date().toISOString(),
+                sincronizado: isOnline
+            };
+            
+            transacoes.push(transacao);
+            await salvarDados();
+            
+            // Limpar formulário
+            document.getElementById('formSaida').reset();
+            document.getElementById('saidaData').value = new Date().toISOString().slice(0, 16);
+            
+            // Atualizar interface
+            atualizarEstatisticas();
+            renderizarTransacoes();
+            atualizarFooter();
+            
+            // Mostrar comprovante
+            mostrarComprovante(transacao);
+            
+            alert(`✅ Saída registrada com sucesso!\nCódigo: ${codigo}\nValor: ${formatarValor(valor)}`);
+        }
+
+        // Atualizar estatísticas
+        function atualizarEstatisticas() {
+            let totalEntradas = 0;
+            let totalSaidas = 0;
+            let totalTransacoes = transacoes.length;
+            
+            transacoes.forEach(transacao => {
+                if (transacao.tipo === 'entrada') {
+                    totalEntradas += transacao.valor;
+                } else {
+                    totalSaidas += transacao.valor;
+                }
+            });
+            
+            const saldoTotal = totalEntradas - totalSaidas;
+            
+            document.getElementById('totalSaldo').textContent = formatarValor(saldoTotal);
+            document.getElementById('totalEntradas').textContent = formatarValor(totalEntradas);
+            document.getElementById('totalSaidas').textContent = formatarValor(totalSaidas);
+            document.getElementById('totalTransacoes').textContent = totalTransacoes;
+            
+            // Atualizar cor do saldo
+            const saldoElement = document.getElementById('totalSaldo');
+            saldoElement.style.color = saldoTotal >= 0 ? '#27ae60' : '#e74c3c';
+        }
+
+        // Atualizar estatísticas detalhadas
+        function atualizarEstatisticasDetalhadas() {
+            const agora = new Date();
+            const mesAtual = agora.getMonth();
+            const anoAtual = agora.getFullYear();
+            
+            let entradasMes = 0;
+            let saidasMes = 0;
+            let totalEntradas = 0;
+            let totalSaidas = 0;
+            let countEntradas = 0;
+            let countSaidas = 0;
+            
+            transacoes.forEach(transacao => {
+                const dataTransacao = new Date(transacao.data);
+                
+                if (transacao.tipo === 'entrada') {
+                    totalEntradas += transacao.valor;
+                    countEntradas++;
+                    
+                    if (dataTransacao.getMonth() === mesAtual && 
+                        dataTransacao.getFullYear() === anoAtual) {
+                        entradasMes += transacao.valor;
+                    }
+                } else {
+                    totalSaidas += transacao.valor;
+                    countSaidas++;
+                    
+                    if (dataTransacao.getMonth() === mesAtual && 
+                        dataTransacao.getFullYear() === anoAtual) {
+                        saidasMes += transacao.valor;
+                    }
+                }
+            });
+            
+            const mediaEntradas = countEntradas > 0 ? totalEntradas / countEntradas : 0;
+            const mediaSaidas = countSaidas > 0 ? totalSaidas / countSaidas : 0;
+            
+            document.getElementById('statEntradasMes').textContent = formatarValor(entradasMes);
+            document.getElementById('statSaidasMes').textContent = formatarValor(saidasMes);
+            document.getElementById('statMediaEntradas').textContent = formatarValor(mediaEntradas);
+            document.getElementById('statMediaSaidas').textContent = formatarValor(mediaSaidas);
+        }
+
+        // Renderizar transações na tabela
+        function renderizarTransacoes(filtradas = transacoes) {
+            const tbody = document.getElementById('transactionsList');
+            const noTransactions = document.getElementById('noTransactions');
+            
+            tbody.innerHTML = '';
+            
+            if (filtradas.length === 0) {
+                tbody.style.display = 'none';
+                noTransactions.style.display = 'block';
+                return;
+            }
+            
+            tbody.style.display = 'table-row-group';
+            noTransactions.style.display = 'none';
+            
+            // Ordenar por data (mais recente primeiro)
+            filtradas.sort((a, b) => new Date(b.data) - new Date(a.data));
+            
+            filtradas.forEach(transacao => {
+                const row = document.createElement('tr');
+                row.className = 'fade-in';
+                row.onclick = () => mostrarComprovante(transacao);
+                row.style.cursor = 'pointer';
+                
+                const valorClass = transacao.tipo === 'entrada' ? 'value-entrada' : 'value-saida';
+                const tipoClass = transacao.tipo === 'entrada' ? 'type-entrada' : 'type-saida';
+                const tipoTexto = transacao.tipo === 'entrada' ? 'ENTRADA' : 'SAÍDA';
+                
+                const origemTexto = transacao.tipo === 'entrada' 
+                    ? transacao.origem 
+                    : transacao.especificacao;
+                
+                const caixaTexto = transacao.tipo === 'entrada' 
+                    ? `Para: ${formatarCaixa(transacao.destino)}`
+                    : `De: ${formatarCaixa(transacao.caixa)}`;
+                
+                row.innerHTML = `
+                    <td>
+                        <div class="transaction-code">${transacao.codigo}</div>
+                    </td>
+                    <td>${formatarData(transacao.data)}</td>
+                    <td>
+                        <span class="transaction-type ${tipoClass}">${tipoTexto}</span>
+                    </td>
+                    <td class="transaction-value ${valorClass}">
+                        ${transacao.tipo === 'entrada' ? '+' : '-'} ${formatarValor(transacao.valor)}
+                    </td>
+                    <td>${origemTexto}</td>
+                    <td>${caixaTexto}</td>
+                    <td>
+                        <div class="transaction-actions">
+                            <button class="btn-action btn-receipt" onclick="event.stopPropagation(); mostrarComprovante(${transacao.id ? '"' + transacao.id + '"' : transacao.codigo})">
+                                <i class="fas fa-receipt"></i> Comprovante
+                            </button>
+                            <button class="btn-action btn-delete" onclick="event.stopPropagation(); deletarTransacao('${transacao.id || transacao.codigo}')">
+                                <i class="fas fa-trash"></i> Excluir
+                            </button>
+                        </div>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        // Formatar nome do caixa
+        function formatarCaixa(codigoCaixa) {
+            const caixas = {
+                'caixa_principal': 'Caixa Principal',
+                'caixa_reserva': 'Caixa Reserva',
+                'caixa_emergencia': 'Caixa Emergência',
+                'caixa_investimento': 'Caixa Investimento'
+            };
+            return caixas[codigoCaixa] || codigoCaixa;
+        }
+
+        // Filtrar transações
+        function filtrarTransacoes() {
+            const tipo = document.getElementById('filterTipo').value;
+            const periodo = document.getElementById('filterPeriodo').value;
+            const busca = document.getElementById('filterBusca').value.toLowerCase();
+            
+            let filtradas = transacoes;
+            
+            // Filtrar por tipo
+            if (tipo !== 'all') {
+                filtradas = filtradas.filter(t => t.tipo === tipo);
+            }
+            
+            // Filtrar por período
+            if (periodo !== 'all') {
+                const agora = new Date();
+                let dataLimite = new Date();
+                
+                switch(periodo) {
+                    case 'today':
+                        dataLimite.setHours(0, 0, 0, 0);
+                        break;
+                    case 'week':
+                        dataLimite.setDate(agora.getDate() - 7);
+                        break;
+                    case 'month':
+                        dataLimite.setMonth(agora.getMonth() - 1);
+                        break;
+                }
+                
+                filtradas = filtradas.filter(t => new Date(t.data) >= dataLimite);
+            }
+            
+            // Filtrar por busca
+            if (busca) {
+                filtradas = filtradas.filter(t => 
+                    t.codigo.toLowerCase().includes(busca) ||
+                    (t.tipo === 'entrada' ? t.origem : t.especificacao).toLowerCase().includes(busca) ||
+                    t.descricao?.toLowerCase().includes(busca) ||
+                    t.observacoes?.toLowerCase().includes(busca)
+                );
+            }
+            
+            renderizarTransacoes(filtradas);
+        }
+
+        // Limpar filtros
+        function limparFiltros() {
+            document.getElementById('filterTipo').value = 'all';
+            document.getElementById('filterPeriodo').value = 'all';
+            document.getElementById('filterBusca').value = '';
+            renderizarTransacoes();
+        }
+
+        // Mostrar comprovante
+        function mostrarComprovante(transacaoId) {
+            let transacao;
+            
+            if (typeof transacaoId === 'object') {
+                transacao = transacaoId;
+            } else {
+                transacao = transacoes.find(t => t.id === transacaoId || t.codigo === transacaoId);
+            }
+            
+            if (!transacao) return;
+            
+            // Preencher dados do comprovante
+            document.getElementById('receiptCode').textContent = transacao.codigo;
+            document.getElementById('receiptType').textContent = 
+                transacao.tipo === 'entrada' ? 'ENTRADA NO CAIXA' : 'SAÍDA DO CAIXA';
+            document.getElementById('receiptDate').textContent = formatarData(transacao.data);
+            document.getElementById('receiptFullCode').textContent = transacao.codigo;
+            
+            if (transacao.tipo === 'entrada') {
+                document.getElementById('receiptOrigemLabel').textContent = 'Origem:';
+                document.getElementById('receiptOrigem').textContent = transacao.origem;
+                document.getElementById('receiptCaixa').textContent = `Para: ${formatarCaixa(transacao.destino)}`;
+                document.getElementById('receiptDescricao').textContent = transacao.descricao || 'Nenhuma descrição';
+            } else {
+                document.getElementById('receiptOrigemLabel').textContent = 'Especificação:';
+                document.getElementById('receiptOrigem').textContent = transacao.especificacao;
+                document.getElementById('receiptCaixa').textContent = `De: ${formatarCaixa(transacao.caixa)}`;
+                document.getElementById('receiptDescricao').textContent = transacao.observacoes || 'Nenhuma observação';
+            }
+            
+            document.getElementById('receiptTotal').textContent = 
+                `VALOR: ${transacao.tipo === 'entrada' ? '+' : '-'} ${formatarValor(transacao.valor)}`;
+            
+            // Mostrar modal
+            document.getElementById('receiptModal').style.display = 'flex';
+        }
+
+        // Fechar modal
+        function fecharModal() {
+            document.getElementById('receiptModal').style.display = 'none';
+        }
+
+        // Imprimir comprovante
+        function imprimirComprovante() {
+            const conteudo = document.querySelector('.receipt-modal').innerHTML;
+            const janela = window.open('', '_blank', 'width=600,height=800');
+            
+            janela.document.write(`
+                <!DOCTYPE html>
+                <html lang="pt-BR">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Comprovante ${document.getElementById('receiptCode').textContent}</title>
+                    <style>
+                        body { 
+                            font-family: Arial, sans-serif; 
+                            padding: 20px; 
+                            background: white;
+                        }
+                        .receipt-modal { 
+                            border: 2px solid #000; 
+                            padding: 30px; 
+                            max-width: 500px; 
+                            margin: 0 auto; 
+                            border-radius: 10px;
+                        }
+                        .receipt-header { 
+                            text-align: center; 
+                            border-bottom: 3px solid #000; 
+                            padding-bottom: 20px; 
+                            margin-bottom: 20px; 
+                        }
+                        .receipt-title { 
+                            font-size: 24px; 
+                            margin: 0; 
+                            font-weight: bold;
+                        }
+                        .receipt-id { 
+                            font-family: 'Courier New', monospace; 
+                            font-size: 18px; 
+                            margin-top: 10px; 
+                        }
+                        .receipt-row { 
+                            display: flex; 
+                            justify-content: space-between; 
+                            margin-bottom: 15px; 
+                            padding-bottom: 15px; 
+                            border-bottom: 1px dashed #000; 
+                        }
+                        .receipt-label { 
+                            font-weight: bold; 
+                        }
+                        .receipt-value { 
+                            text-align: right; 
+                            max-width: 60%;
+                        }
+                        .receipt-total { 
+                            font-size: 22px; 
+                            font-weight: bold; 
+                            text-align: center; 
+                            padding: 25px; 
+                            margin-top: 30px; 
+                            border-top: 3px solid #000; 
+                            border-bottom: 3px solid #000;
+                        }
+                        @media print {
+                            body { margin: 0; padding: 0; }
+                            .receipt-modal { border: none; box-shadow: none; }
+                        }
+                        .print-footer {
+                            text-align: center;
+                            margin-top: 30px;
+                            font-size: 12px;
+                            color: #666;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="receipt-modal">
+                        ${conteudo}
+                        <div class="print-footer">
+                            <p>Comprovante emitido em: ${new Date().toLocaleString('pt-BR')}</p>
+                            <p>Este documento é válido como comprovante financeiro</p>
+                        </div>
+                    </div>
+                    <script>
+                        window.onload = function() { 
+                            window.print(); 
+                            setTimeout(function() { window.close(); }, 1000); 
+                        }
+                    <\/script>
+                </body>
+                </html>
+            `);
+            janela.document.close();
+        }
+
+        // Deletar transação
+        async function deletarTransacao(id) {
+            if (!confirm('Tem certeza que deseja excluir esta transação?\nEsta ação não pode ser desfeita.')) {
+                return;
+            }
+            
+            const index = transacoes.findIndex(t => t.id === id || t.codigo === id);
+            if (index !== -1) {
+                const transacao = transacoes[index];
+                transacoes.splice(index, 1);
+                
+                try {
+                    // Remover localmente
+                    localStorage.setItem('inventario_transacoes', JSON.stringify(transacoes));
+                    
+                    // Remover do Firestore se online
+                    if (isOnline) {
+                        await db.collection('transacoes').doc(id).delete();
+                        atualizarStatusSincronizacao('online', 'Transação removida do Firebase');
+                    }
+                    
+                    atualizarEstatisticas();
+                    renderizarTransacoes();
+                    atualizarFooter();
+                    
+                    alert(`✅ Transação ${transacao.codigo} excluída com sucesso!`);
+                    
+                } catch (error) {
+                    console.error('❌ Erro ao excluir transação:', error);
+                    alert('⚠️ Transação excluída localmente, mas houve erro ao sincronizar com Firebase');
+                }
+            }
+        }
+
+        // Exportar para CSV
+        function exportarParaCSV() {
+            if (transacoes.length === 0) {
+                alert('Não há transações para exportar!');
+                return;
+            }
+            
+            let csv = 'Código,Tipo,Data,Valor,Origem/Especificação,Caixa,Descrição/Observações\n';
+            
+            transacoes.forEach(transacao => {
+                const tipo = transacao.tipo === 'entrada' ? 'ENTRADA' : 'SAÍDA';
+                const valor = transacao.valor.toFixed(2).replace('.', ',');
+                const data = formatarData(transacao.data);
+                const origem = transacao.tipo === 'entrada' ? transacao.origem : transacao.especificacao;
+                const caixa = transacao.tipo === 'entrada' ? transacao.destino : transacao.caixa;
+                const descricao = transacao.tipo === 'entrada' ? transacao.descricao : transacao.observacoes;
+                
+                csv += `"${transacao.codigo}","${tipo}","${data}","${valor}","${origem}","${formatarCaixa(caixa)}","${descricao || ''}"\n`;
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `inventario_${new Date().toISOString().slice(0,10)}.csv`;
+            link.click();
+            
+            alert(`✅ ${transacoes.length} transações exportadas para CSV!`);
+        }
+
+        // Exportar para JSON
+        function exportarParaJSON() {
+            if (transacoes.length === 0) {
+                alert('Não há transações para exportar!');
+                return;
+            }
+            
+            const exportData = {
+                metadata: {
+                    exportDate: new Date().toISOString(),
+                    totalTransacoes: transacoes.length,
+                    sistema: 'Captação de Inventário'
+                },
+                transacoes: transacoes
+            };
+            
+            const json = JSON.stringify(exportData, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `inventario_backup_${new Date().toISOString().slice(0,10)}.json`;
+            link.click();
+            
+            alert(`✅ Backup JSON criado com ${transacoes.length} transações!`);
+        }
+
+        // Fazer backup completo
+        function fazerBackup() {
+            if (transacoes.length === 0) {
+                alert('Não há dados para fazer backup!');
+                return;
+            }
+            
+            exportarParaJSON();
+        }
+
+        // Gerar relatório financeiro
+        function gerarRelatorio() {
+            if (transacoes.length === 0) {
+                alert('Não há dados para gerar relatório!');
+                return;
+            }
+            
+            let totalEntradas = 0;
+            let totalSaidas = 0;
+            const entradasPorOrigem = {};
+            const saidasPorEspecificacao = {};
+            
+            transacoes.forEach(transacao => {
+                if (transacao.tipo === 'entrada') {
+                    totalEntradas += transacao.valor;
+                    entradasPorOrigem[transacao.origem] = (entradasPorOrigem[transacao.origem] || 0) + transacao.valor;
+                } else {
+                    totalSaidas += transacao.valor;
+                    saidasPorEspecificacao[transacao.especificacao] = (saidasPorEspecificacao[transacao.especificacao] || 0) + transacao.valor;
+                }
+            });
+            
+            const saldo = totalEntradas - totalSaidas;
+            
+            let relatorio = `RELATÓRIO FINANCEIRO - ${new Date().toLocaleDateString('pt-BR')}\n`;
+            relatorio += '='.repeat(50) + '\n\n';
+            relatorio += `TOTAL DE ENTRADAS: ${formatarValor(totalEntradas)}\n`;
+            relatorio += `TOTAL DE SAÍDAS: ${formatarValor(totalSaidas)}\n`;
+            relatorio += `SALDO FINAL: ${formatarValor(saldo)}\n\n`;
+            relatorio += `TOTAL DE TRANSAÇÕES: ${transacoes.length}\n\n`;
+            
+            relatorio += 'ENTRADAS POR ORIGEM:\n';
+            for (const [origem, valor] of Object.entries(entradasPorOrigem)) {
+                relatorio += `  ${origem}: ${formatarValor(valor)}\n`;
+            }
+            
+            relatorio += '\nSAÍDAS POR ESPECIFICAÇÃO:\n';
+            for (const [especificacao, valor] of Object.entries(saidasPorEspecificacao)) {
+                relatorio += `  ${especificacao}: ${formatarValor(valor)}\n`;
+            }
+            
+            // Criar e baixar relatório
+            const blob = new Blob([relatorio], { type: 'text/plain;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `relatorio_inventario_${new Date().toISOString().slice(0,10)}.txt`;
+            link.click();
+            
+            alert('📊 Relatório financeiro gerado com sucesso!');
+        }
+
+        // Atualizar footer
+        function atualizarFooter() {
+            document.getElementById('footerCount').textContent = transacoes.length;
+            document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('pt-BR');
+        }
+
+        // Fechar modal ao clicar fora
+        document.getElementById('receiptModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                fecharModal();
+            }
+        });
+
+        // Permitir usar ESC para fechar modal
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                fecharModal();
+            }
+        });
+
+        // Sincronizar dados pendentes quando voltar online
+        window.addEventListener('online', async function() {
+            isOnline = true;
+            atualizarStatusSincronizacao('syncing', 'Sincronizando dados pendentes...');
+            
+            try {
+                await carregarDados();
+                await salvarDados();
+                atualizarEstatisticas();
+                renderizarTransacoes();
+                atualizarStatusSincronizacao('online', 'Dados sincronizados com sucesso!');
+            } catch (error) {
+                console.error('❌ Erro ao sincronizar:', error);
+                atualizarStatusSincronizacao('offline', 'Erro na sincronização');
+            }
+        });
+    </script>
+</body>
+</html>

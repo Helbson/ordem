@@ -1,6 +1,8 @@
-/* transicao.css - Versão TOTALMENTE RESPONSIVA */
+/* transicao.css - VERSÃO COMPLETA E CORRIGIDA */
+/* =========================================== */
 
-/* Reset e configurações globais */
+/* RESET E CONFIGURAÇÕES GLOBAIS */
+/* =========================================== */
 * {
     margin: 0;
     padding: 0;
@@ -13,10 +15,10 @@ body {
     min-height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* Alterado para flex-start */
+    align-items: flex-start;
     padding: 15px;
-    padding-top: 40px; /* Adicionado padding top */
-    padding-bottom: 40px; /* Adicionado padding bottom */
+    padding-top: 40px;
+    padding-bottom: 40px;
     overflow-x: hidden;
 }
 
@@ -27,7 +29,8 @@ body {
     margin: 0 auto;
 }
 
-/* Header */
+/* HEADER */
+/* =========================================== */
 .header {
     margin-bottom: 40px;
     padding: 0 10px;
@@ -50,7 +53,8 @@ body {
     padding: 0 10px;
 }
 
-/* Cards Container */
+/* CARDS CONTAINER */
+/* =========================================== */
 .cards-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -60,7 +64,8 @@ body {
     width: 100%;
 }
 
-/* Card */
+/* CARD */
+/* =========================================== */
 .card {
     background-color: rgba(255, 255, 255, 0.98);
     border-radius: 20px;
@@ -77,6 +82,7 @@ body {
     justify-content: space-between;
 }
 
+/* Faixa colorida no topo de cada card */
 .card::before {
     content: '';
     position: absolute;
@@ -87,26 +93,13 @@ body {
     background: linear-gradient(90deg, #4CAF50, #2196F3);
 }
 
-/* Cores diferentes para cada card */
-.card:nth-child(1)::before {
-    background: linear-gradient(90deg, #FF9800, #FF5722);
-}
-
-.card:nth-child(2)::before {
-    background: linear-gradient(90deg, #4CAF50, #2196F3);
-}
-
-.card:nth-child(3)::before {
-    background: linear-gradient(90deg, #9C27B0, #673AB7);
-}
-
-.card:nth-child(4)::before {
-    background: linear-gradient(90deg, #00BCD4, #0097A7);
-}
-
-.card:nth-child(5)::before {
-    background: linear-gradient(90deg, #FF4081, #F50057);
-}
+/* CORES DIFERENTES PARA CADA CARD - ATUALIZADO */
+.card:nth-child(1)::before { background: linear-gradient(90deg, #FF9800, #FF5722); } /* Pagamento */
+.card:nth-child(2)::before { background: linear-gradient(90deg, #4CAF50, #2196F3); } /* Serviço */
+.card:nth-child(3)::before { background: linear-gradient(90deg, #9C27B0, #673AB7); } /* Relatório */
+.card:nth-child(4)::before { background: linear-gradient(90deg, #00BCD4, #0097A7); } /* Divulgador */
+.card:nth-child(5)::before { background: linear-gradient(90deg, #FF4081, #F50057); } /* Despesas */
+.card:nth-child(6)::before { background: linear-gradient(90deg, #FFEB3B, #FBC02D); } /* Inventário */
 
 .card:hover {
     transform: translateY(-12px) scale(1.02);
@@ -117,7 +110,8 @@ body {
     transform: scale(1.1) rotate(5deg);
 }
 
-/* Icon Container */
+/* ICON CONTAINER */
+/* =========================================== */
 .icon-container {
     width: 90px;
     height: 90px;
@@ -127,36 +121,23 @@ body {
     align-items: center;
     margin: 0 auto 25px;
     transition: transform 0.4s ease;
-    background: linear-gradient(135deg, #4CAF50, #2196F3);
 }
 
-/* Cores diferentes para os ícones */
-.payment-icon {
-    background: linear-gradient(135deg, #FF9800, #FF5722);
-}
-
-.service-icon {
-    background: linear-gradient(135deg, #4CAF50, #2196F3);
-}
-
-.relatorio-icon {
-    background: linear-gradient(135deg, #9C27B0, #673AB7);
-}
-
-.despesas-icon {
-    background: linear-gradient(135deg, #00BCD4, #0097A7);
-}
-
-.divulga-icon {
-    background: linear-gradient(135deg, #FF4081, #F50057);
-}
+/* CORES DOS ÍCONES - ATUALIZADO */
+.payment-icon { background: linear-gradient(135deg, #FF9800, #FF5722); }
+.service-icon { background: linear-gradient(135deg, #4CAF50, #2196F3); }
+.relatorio-icon { background: linear-gradient(135deg, #9C27B0, #673AB7); }
+.divulga-icon { background: linear-gradient(135deg, #FF4081, #F50057); }
+.despesas-icon { background: linear-gradient(135deg, #00BCD4, #0097A7); }
+.inventario-icon { background: linear-gradient(135deg, #FFEB3B, #FBC02D); }
 
 .icon-container i {
     font-size: 40px;
     color: white;
 }
 
-/* Conteúdo do Card */
+/* CONTEÚDO DO CARD */
+/* =========================================== */
 .card h2 {
     font-size: clamp(1.3rem, 4vw, 1.8rem);
     color: #2c3e50;
@@ -173,7 +154,8 @@ body {
     flex-grow: 1;
 }
 
-/* Botões */
+/* BOTÕES */
+/* =========================================== */
 .btn {
     display: inline-block;
     padding: 12px 35px;
@@ -190,25 +172,43 @@ body {
     margin-top: auto;
 }
 
-/* Cores dos botões correspondentes aos cards */
-.payment-btn {
-    background: linear-gradient(90deg, #FF9800, #FF5722);
+/* CORES DOS BOTÕES - CORRIGIDO */
+.payment-btn { 
+    background: linear-gradient(90deg, #FF9800, #FF5722); 
+    color: white; 
 }
 
-.service-btn {
-    background: linear-gradient(90deg, #4CAF50, #2196F3);
+.service-btn { 
+    background: linear-gradient(90deg, #4CAF50, #2196F3); 
+    color: white; 
 }
 
-.relatorio-btn {
-    background: linear-gradient(90deg, #9C27B0, #673AB7);
+.relatorio-btn { 
+    background: linear-gradient(90deg, #9C27B0, #673AB7); 
+    color: white; 
 }
 
-.despesas-btn {
+.despesas-btn { 
+    background: linear-gradient(90deg, #00BCD4, #0097A7); 
+    color: white; 
+}
+
+.divulga-btn { 
+    background: linear-gradient(90deg, #FF4081, #F50057); 
+    color: white; 
+}
+
+/* BOTÃO DO INVENTÁRIO - CORRIGIDO */
+.inventario-btn { 
+    background: linear-gradient(90deg, #FFEB3B, #FBC02D); 
+    color: #333 !important; /* Texto escuro para contraste */
+    font-weight: 700;
+}
+
+/* CORREÇÃO PARA BOTÃO DESPESAS (ID antigo) */
+#Despesas {
     background: linear-gradient(90deg, #00BCD4, #0097A7);
-}
-
-.divulga-btn {
-    background: linear-gradient(90deg, #FF4081, #F50057);
+    color: white;
 }
 
 .btn:hover {
@@ -217,7 +217,8 @@ body {
     opacity: 0.95;
 }
 
-/* Botão Voltar */
+/* BOTÃO VOLTAR */
+/* =========================================== */
 .back-container {
     margin-top: 50px;
     padding: 0 15px;
@@ -233,6 +234,10 @@ body {
     gap: 10px;
     border-radius: 50px;
     transition: all 0.3s ease;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
 }
 
 .back-btn:hover {
@@ -244,7 +249,8 @@ body {
     font-size: 1.2em;
 }
 
-/* Footer */
+/* FOOTER */
+/* =========================================== */
 .footer {
     margin-top: 50px;
     color: rgba(255, 255, 255, 0.8);
@@ -252,7 +258,8 @@ body {
     padding: 0 15px;
 }
 
-/* Animações */
+/* ANIMAÇÕES */
+/* =========================================== */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -264,20 +271,33 @@ body {
     }
 }
 
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
 .card {
     animation: fadeInUp 0.6s ease forwards;
     opacity: 0;
 }
 
+/* DELAYS DAS ANIMAÇÕES */
 .card:nth-child(1) { animation-delay: 0.1s; }
 .card:nth-child(2) { animation-delay: 0.2s; }
 .card:nth-child(3) { animation-delay: 0.3s; }
 .card:nth-child(4) { animation-delay: 0.4s; }
 .card:nth-child(5) { animation-delay: 0.5s; }
+.card:nth-child(6) { animation-delay: 0.6s; }
+
+.btn:hover {
+    animation: pulse 0.3s ease;
+}
 
 /* MEDIA QUERIES PARA RESPONSIVIDADE */
+/* =========================================== */
 
-/* Tablets pequenos e celulares grandes */
+/* TABLETS PEQUENOS E CELULARES GRANDES */
 @media (max-width: 1024px) {
     .cards-container {
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -294,7 +314,7 @@ body {
     }
 }
 
-/* Celulares médios */
+/* CELULARES MÉDIOS */
 @media (max-width: 768px) {
     body {
         padding: 15px;
@@ -323,7 +343,7 @@ body {
     }
 }
 
-/* Celulares pequenos */
+/* CELULARES PEQUENOS */
 @media (max-width: 480px) {
     body {
         padding: 12px;
@@ -383,7 +403,7 @@ body {
     }
 }
 
-/* Celulares muito pequenos (Galaxy Fold, iPhone SE) */
+/* CELULARES MUITO PEQUENOS (GALAXY FOLD, IPHONE SE) */
 @media (max-width: 375px) {
     body {
         padding: 10px;
@@ -425,7 +445,7 @@ body {
     }
 }
 
-/* Orientação paisagem em celulares */
+/* ORIENTAÇÃO PAISAGEM EM CELULARES */
 @media (max-height: 600px) and (orientation: landscape) {
     body {
         padding-top: 20px;
@@ -471,7 +491,8 @@ body {
     }
 }
 
-/* Modo escuro (opcional) */
+/* MODO ESCURO */
+/* =========================================== */
 @media (prefers-color-scheme: dark) {
     .card {
         background-color: rgba(30, 30, 40, 0.95);
@@ -483,5 +504,101 @@ body {
     
     .card p {
         color: #b0b0b0;
+    }
+    
+    /* Ajuste para botão do inventário no dark mode */
+    .inventario-btn {
+        color: #222 !important;
+        text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
+    }
+}
+
+/* CORREÇÕES ESPECÍFICAS */
+/* =========================================== */
+
+/* Garantir que todos os botões tenham cor de texto legível */
+.payment-btn, 
+.service-btn, 
+.relatorio-btn, 
+.despesas-btn, 
+.divulga-btn,
+.back-btn {
+    color: white !important;
+}
+
+/* Correção para garantir que o hover funcione em todos os botões */
+.btn:hover:not(.inventario-btn) {
+    color: white !important;
+}
+
+/* Correção específica para o botão do inventário */
+.inventario-btn:hover {
+    background: linear-gradient(90deg, #FBC02D, #FFEB3B) !important;
+    color: #222 !important;
+    box-shadow: 0 10px 25px rgba(251, 192, 45, 0.3);
+}
+
+/* Garantir que ícones dentro de botões sejam brancos (exceto inventário) */
+.btn:not(.inventario-btn) i {
+    color: white !important;
+}
+
+/* Estilo para ícone do botão inventário */
+.inventario-btn i {
+    color: #333 !important;
+}
+
+/* ANIMAÇÕES ADICIONAIS */
+/* =========================================== */
+@keyframes glow {
+    0% { box-shadow: 0 0 5px rgba(255, 255, 255, 0.2); }
+    50% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.4); }
+    100% { box-shadow: 0 0 5px rgba(255, 255, 255, 0.2); }
+}
+
+.header h1 {
+    animation: glow 3s ease-in-out infinite;
+}
+
+/* LOADING STATE PARA BOTÕES */
+.btn.loading {
+    position: relative;
+    color: transparent !important;
+}
+
+.btn.loading::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    margin-top: -10px;
+    margin-left: -10px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ACCESSIBILITY */
+/* =========================================== */
+.btn:focus,
+.card:focus {
+    outline: 2px solid #3498db;
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .card,
+    .btn,
+    .icon-container {
+        transition: none;
+        animation: none;
     }
 }

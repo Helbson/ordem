@@ -1,61 +1,63 @@
-// transicao.js
+// transicao.js - COMPLETO E CORRIGIDO
+// ===========================================
 
-// Efeito visual ao passar o mouse nos cards
-const cards = document.querySelectorAll('.card');
-cards.forEach(card => {
-    card.addEventListener('mouseenter', function() {
-        this.style.transform = 'translateY(-15px)';
-        this.style.transition = 'transform 0.3s ease';
-    });
-    
-    card.addEventListener('mouseleave', function() {
-        this.style.transform = 'translateY(0)';
-    });
-});
+// Aguarda o carregamento completo do DOM
+document.addEventListener('DOMContentLoaded', function() {
 
-// Efeito de digitação no título
-const title = document.querySelector('.header h1');
-if (title) {
-    const originalText = title.textContent;
-    title.textContent = '';
-    
-    let i = 0;
-    function typeWriter() {
-        if (i < originalText.length) {
-            title.textContent += originalText.charAt(i);
-            i++;
-            setTimeout(typeWriter, 50);
-        }
+    // Botão Ordem de Pagamento
+    const paymentBtn = document.getElementById('paymentBtn');
+    if (paymentBtn) {
+        paymentBtn.addEventListener('click', function() {
+            window.location.href = 'pagamento.html';
+        });
     }
-    
-    // Iniciar efeito de digitação
-    setTimeout(typeWriter, 300);
-}
 
-// Botão Voltar
-document.getElementById('backBtn').addEventListener('click', function() {
-    window.location.href = 'login.html';
-});
+    // Botão Ordem de Serviço
+    const serviceBtn = document.getElementById('serviceBtn');
+    if (serviceBtn) {
+        serviceBtn.addEventListener('click', function() {
+            window.location.href = 'servico.html';
+        });
+    }
 
-// Botões dos cards - CORRIGIDOS com os IDs corretos
-document.getElementById('paymentBtn').addEventListener('click', function() {
-    window.location.href = 'pagamento.html';
-});
+    // Botão Relatório de Pagamentos
+    const relatorioBtn = document.getElementById('relatorioBtn');
+    if (relatorioBtn) {
+        relatorioBtn.addEventListener('click', function() {
+            window.location.href = 'relatorio.html';
+        });
+    }
 
-document.getElementById('serviceBtn').addEventListener('click', function() {
-    window.location.href = 'painel.html';
-});
+    // Botão Divulgador
+    const divulgaBtn = document.getElementById('divulgaBtn');
+    if (divulgaBtn) {
+        divulgaBtn.addEventListener('click', function() {
+            window.location.href = 'divulgador.html';
+        });
+    }
 
-document.getElementById('relatorioBtn').addEventListener('click', function() {
-    window.location.href = 'relatorio.html';
-});
+    // Botão Despesas
+    const despesasBtn = document.getElementById('despesasBtn');
+    if (despesasBtn) {
+        despesasBtn.addEventListener('click', function() {
+            window.location.href = 'despesas.html';
+        });
+    }
 
-// CORREÇÃO AQUI: Usar o ID correto "divulgaBtn" em vez de "settingsBtn"
-document.getElementById('divulgaBtn').addEventListener('click', function() {
-    window.location.href = 'divulga.html';
-});
+    // Botão Inventário - CORRIGIDO PARA iventario.html
+    const inventarioBtn = document.getElementById('inventarioBtn');
+    if (inventarioBtn) {
+        inventarioBtn.addEventListener('click', function() {
+            window.location.href = 'iventario.html'; // Nome correto do arquivo
+        });
+    }
 
-// CORREÇÃO AQUI: Usar o ID correto "Despesas" em vez de "helpBtn"
-document.getElementById('Despesas').addEventListener('click', function() {
-    window.location.href = 'despesas.html';
+    // Botão Voltar para Home
+    const backBtn = document.getElementById('backBtn');
+    if (backBtn) {
+        backBtn.addEventListener('click', function() {
+            window.location.href = 'index.html';
+        });
+    }
+
 });
