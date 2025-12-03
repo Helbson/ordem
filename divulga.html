@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Divulgador Natura - Envio Automático com Imagens</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #128c7e 0%, #075e54 100%);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            color: #075e54;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .seu-numero {
+            text-align: center;
+            background: #25d366;
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #128c7e;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 5px solid #25d366;
+        }
+        
+        h2 {
+            color: #075e54;
+            margin-bottom: 15px;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h2 i {
+            color: #25d366;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #25d366;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+            font-family: inherit;
+        }
+        
+        .file-input-container {
+            position: relative;
+            margin-bottom: 15px;
+        }
+        
+        .file-input-label {
+            display: block;
+            padding: 14px;
+            background: #e9ecef;
+            border: 2px dashed #25d366;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .file-input-label:hover {
+            background: #d4edda;
+            border-color: #128c7e;
+        }
+        
+        .file-input {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .file-name {
+            margin-top: 5px;
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+        }
+        
+        .preview-area {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        #imagePreview {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            display: none;
+            margin: 0 auto;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .image-options {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .image-option {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .image-option.active {
+            background: #d4edda;
+            border-color: #25d366;
+            color: #075e54;
+            font-weight: bold;
+        }
+        
+        .image-option:hover {
+            border-color: #25d366;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #25d366 0%, #1ebea5 100%);
+            color: white;
+            border: none;
+            padding: 18px 30px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+        }
+        
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+        
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+        }
+        
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .progress-container {
+            margin: 20px 0;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 25px;
+            background: #e9ecef;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 10px;
+            display: none;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #25d366, #1ebea5);
+            width: 0%;
+            transition: width 0.5s;
+            position: relative;
+        }
+        
+        .progress-text {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .config-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .config-row > div {
+            flex: 1;
+        }
+        
+        .exemplo {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+        }
+        
+        .whatsapp-icon {
+            color: #25d366;
+            font-size: 24px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 14px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .instructions {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .log-container {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+            display: none;
+        }
+        
+        .log-entry {
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .log-success {
+            color: #28a745;
+        }
+        
+        .log-error {
+            color: #dc3545;
+        }
+        
+        .log-info {
+            color: #17a2b8;
+        }
+        
+        .image-tip {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            margin-top: 5px;
+            font-style: italic;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .config-row, .image-options {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fab fa-whatsapp whatsapp-icon"></i> DIVULGADOR Helbsonsete - ENVIO AUTOMÁTICO</h1>
+        <div class="seu-numero">
+            <i class="fas fa-phone"></i> Contato Ofcial:63985177675
+        </div>
+        <p class="subtitle">Envie mensagens e imagens automaticamente para seus clientes</p>
+        
+        <div class="instructions">
+            <h3><i class="fas fa-info-circle"></i> INSTRUÇÕES IMPORTANTES:</h3>
+            <ol>
+                <li>Abra o WhatsApp Web em uma <strong>nova janela</strong> e faça login</li>
+                <li>Para imagens: faça upload do arquivo OU cole um link da internet</li>
+                <li>Mantenha a janela do WhatsApp Web <strong>visível e ativa</strong></li>
+                <li>Não mexa no computador durante o envio</li>
+            </ol>
+        </div>
+        
+        <!-- PASSO 1: IMAGEM DO PRODUTO -->
+        <div class="card">
+            <h2><i class="fas fa-image"></i> 1. Imagem do Produto (Opcional)</h2>
+            
+            <div class="image-options">
+                <div class="image-option active" onclick="selecionarOpcaoImagem('upload')" id="optionUpload">
+                    <i class="fas fa-upload"></i><br>
+                    Enviar do meu PC
+                </div>
+                <div class="image-option" onclick="selecionarOpcaoImagem('link')" id="optionLink">
+                    <i class="fas fa-link"></i><br>
+                    Usar link da internet
+                </div>
+                <div class="image-option" onclick="selecionarOpcaoImagem('nenhuma')" id="optionNenhuma">
+                    <i class="fas fa-ban"></i><br>
+                    Sem imagem
+                </div>
+            </div>
+            
+            <!-- Opção 1: Upload do PC -->
+            <div id="uploadContainer" class="image-container">
+                <div class="file-input-container">
+                    <label class="file-input-label">
+                        <i class="fas fa-cloud-upload-alt" style="font-size: 48px; color: #25d366; margin-bottom: 10px;"></i><br>
+                        <span style="font-weight: bold; font-size: 16px;">Clique para selecionar uma imagem</span><br>
+                        <span style="font-size: 14px;">Arraste e solte ou clique para escolher</span>
+                    </label>
+                    <input type="file" id="imagemUpload" class="file-input" accept="image/*">
+                </div>
+                <div class="file-name" id="fileName">Nenhum arquivo selecionado</div>
+            </div>
+            
+            <!-- Opção 2: Link da internet -->
+            <div id="linkContainer" class="image-container" style="display: none;">
+                <label><i class="fas fa-link"></i> Cole o link da imagem:</label>
+                <input type="text" id="imagemLink" placeholder="https://exemplo.com/imagem.jpg">
+                <div class="exemplo">
+                    <strong>Dica:</strong> Use imagens de sites como Imgur, Google Photos (com link compartilhável), ou seu próprio site.
+                </div>
+            </div>
+            
+            <!-- Preview da imagem -->
+            <div class="preview-area">
+                <img id="imagePreview" alt="Pré-visualização da imagem">
+            </div>
+            
+            <div class="image-tip">
+                <i class="fas fa-lightbulb"></i> As imagens serão enviadas junto com a mensagem
+            </div>
+        </div>
+        
+        <!-- PASSO 2: LISTA DE CLIENTES -->
+        <div class="card">
+            <h2><i class="fas fa-users"></i> 2. Lista de Clientes</h2>
+            <label><i class="fas fa-user-friends"></i> Cole seus clientes (nome + número):</label>
+            <textarea id="lista" rows="6" placeholder="Exemplo:
+Maria Silva 11999998888
+João Santos 11977776666
+Ana Oliveira 11988889999
+Carlos Souza 11966665555"></textarea>
+            <div class="exemplo">
+                <strong>Formato:</strong> Nome Telefone (apenas números, com DDD)<br>
+                <strong>Limite seguro:</strong> Até 50 clientes por hora para evitar bloqueio
+            </div>
+        </div>
+        
+        <!-- PASSO 3: MENSAGEM -->
+        <div class="card">
+            <h2><i class="fas fa-comment-dots"></i> 3. Sua Mensagem</h2>
+            <label><i class="fas fa-edit"></i> Digite a mensagem que será enviada:</label>
+            <textarea id="msg" rows="7">Oi [NOME]! Tudo bem? 😊
+Chegou novidade fresquinha da Natura!
+
+🌟 Sabonete Líquido Ekos Maracujá
+💚 Hidratação 24h
+🌸 Fragrância tropical incrível
+✨ 100% vegano e sustentável
+
+📦 Frete grátis acima de R$ 99
+💳 Pode parcelar no cartão
+🏠 Entrega para todo Brasil
+
+Quer ver mais produtos?</textarea>
+            <div class="exemplo">
+                <strong>Dica:</strong> Use [NOME] onde quiser que apareça o nome do cliente automaticamente.
+            </div>
+        </div>
+        
+        <!-- PASSO 4: CONFIGURAÇÕES -->
+        <div class="card">
+            <h2><i class="fas fa-cog"></i> 4. Configurações</h2>
+            <div class="config-row">
+                <div>
+                    <label><i class="fas fa-clock"></i> Tempo entre mensagens (segundos):</label>
+                    <input type="number" id="intervalo" min="5" max="30" value="10">
+                </div>
+                <div>
+                    <label><i class="fas fa-link"></i> Link do catálogo:</label>
+                    <input type="text" id="catalogo" placeholder="https://seucatalogo.natura.com.br" value="https://www.natura.com.br">
+                </div>
+            </div>
+            <div class="config-row">
+                <div>
+                    <label><i class="fas fa-stopwatch"></i> Esperar antes de iniciar (segundos):</label>
+                    <input type="number" id="esperaInicial" min="0" max="60" value="5">
+                </div>
+                <div>
+                    <label><i class="fas fa-sync-alt"></i> Método de envio:</label>
+                    <select id="metodoEnvio">
+                        <option value="simples">Apenas abrir conversas (mais seguro)</option>
+                        <option value="avancado">Tentar envio automático (experimental)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <!-- BARRA DE PROGRESSO -->
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">Aguardando início...</div>
+        </div>
+        
+        <!-- LOG DE ENVIO -->
+        <div class="log-container" id="logContainer">
+            <div id="logContent"></div>
+        </div>
+        
+        <!-- STATUS -->
+        <div id="status" class="status"></div>
+        
+        <!-- BOTÕES -->
+        <button class="btn" onclick="iniciarEnvioAutomatico()" id="btnIniciar">
+            <i class="fas fa-robot"></i> INICIAR ENVIO AUTOMÁTICO
+        </button>
+        
+        <div class="config-row">
+            <button class="btn btn-secondary" onclick="pausarEnvio()" id="btnPausar" disabled>
+                <i class="fas fa-pause"></i> PAUSAR
+            </button>
+            <button class="btn btn-danger" onclick="pararEnvio()" id="btnParar" disabled>
+                <i class="fas fa-stop"></i> PARAR
+            </button>
+        </div>
+        
+        <button class="btn btn-warning" onclick="testarEnvio()">
+            <i class="fas fa-vial"></i> TESTAR COM 1 CLIENTE
+        </button>
+        
+        <button class="btn btn-secondary" onclick="limparImagem()">
+            <i class="fas fa-trash-alt"></i> REMOVER IMAGEM
+        </button>
+        
+        <footer>
+            <p><i class="fas fa-exclamation-triangle"></i> <strong>AVISO:</strong> Para imagens do PC, será necessário fazer upload manual no WhatsApp Web</p>
+            <p>Desenvolvido para Consultoras Natura • © 2024</p>
+        </footer>
+    </div>
+
+    <script>
+        // Variáveis globais
+        let enviando = false;
+        let pausado = false;
+        let clientes = [];
+        let indiceAtual = 0;
+        let totalClientes = 0;
+        let imagemData = null;
+        let imagemTipo = 'nenhuma'; // 'upload', 'link', 'nenhuma'
+        let imagemUrl = '';
+
+        // Elementos DOM
+        let uploadContainer, linkContainer;
+        let optionUpload, optionLink, optionNenhuma;
+
+        // Inicializar após carregamento da página
+        document.addEventListener('DOMContentLoaded', function() {
+            uploadContainer = document.getElementById('uploadContainer');
+            linkContainer = document.getElementById('linkContainer');
+            optionUpload = document.getElementById('optionUpload');
+            optionLink = document.getElementById('optionLink');
+            optionNenhuma = document.getElementById('optionNenhuma');
+            
+            configurarEventosImagem();
+        });
+
+        // Configurar eventos para imagem
+        function configurarEventosImagem() {
+            // Upload de arquivo
+            document.getElementById('imagemUpload').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    // Verificar tipo e tamanho
+                    if (!file.type.startsWith('image/')) {
+                        mostrarStatus('❌ Por favor, selecione apenas arquivos de imagem!', 'error');
+                        this.value = '';
+                        return;
+                    }
+                    
+                    if (file.size > 5 * 1024 * 1024) { // 5MB
+                        mostrarStatus('⚠️ Imagem muito grande (máx. 5MB). Reduza o tamanho.', 'warning');
+                    }
+                    
+                    // Mostrar nome do arquivo
+                    document.getElementById('fileName').textContent = `Arquivo: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+                    
+                    // Ler imagem para preview
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        imagemData = e.target.result;
+                        document.getElementById('imagePreview').src = imagemData;
+                        document.getElementById('imagePreview').style.display = 'block';
+                        mostrarStatus('✅ Imagem carregada com sucesso!', 'success', 3000);
+                    };
+                    reader.readAsDataURL(file);
+                    
+                    // Ativar opção de upload
+                    selecionarOpcaoImagem('upload');
+                }
+            });
+
+            // Link de imagem
+            document.getElementById('imagemLink').addEventListener('input', function() {
+                const link = this.value.trim();
+                if (link && link.startsWith('http')) {
+                    imagemUrl = link;
+                    document.getElementById('imagePreview').src = link;
+                    document.getElementById('imagePreview').style.display = 'block';
+                    document.getElementById('imagePreview').onerror = function() {
+                        mostrarStatus('❌ Não foi possível carregar a imagem do link', 'error');
+                        this.style.display = 'none';
+                    };
+                    mostrarStatus('✅ Link de imagem configurado!', 'success', 3000);
+                }
+            });
+
+            // Drag and drop para upload
+            const dropArea = document.querySelector('.file-input-label');
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, unhighlight, false);
+            });
+
+            function highlight() {
+                dropArea.style.background = '#d4edda';
+                dropArea.style.borderColor = '#128c7e';
+            }
+
+            function unhighlight() {
+                dropArea.style.background = '';
+                dropArea.style.borderColor = '';
+            }
+
+            dropArea.addEventListener('drop', handleDrop, false);
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                
+                if (files.length > 0) {
+                    const file = files[0];
+                    if (file.type.startsWith('image/')) {
+                        // Simular seleção de arquivo
+                        const dataTransfer = new DataTransfer();
+                        dataTransfer.items.add(file);
+                        document.getElementById('imagemUpload').files = dataTransfer.files;
+                        
+                        // Disparar evento change
+                        document.getElementById('imagemUpload').dispatchEvent(new Event('change'));
+                    } else {
+                        mostrarStatus('❌ Arraste apenas arquivos de imagem!', 'error');
+                    }
+                }
+            }
+        }
+
+        // Selecionar opção de imagem
+        function selecionarOpcaoImagem(opcao) {
+            imagemTipo = opcao;
+            
+            // Remover classe active de todas
+            optionUpload.classList.remove('active');
+            optionLink.classList.remove('active');
+            optionNenhuma.classList.remove('active');
+            
+            // Esconder todos os containers
+            uploadContainer.style.display = 'none';
+            linkContainer.style.display = 'none';
+            
+            // Mostrar container selecionado
+            if (opcao === 'upload') {
+                optionUpload.classList.add('active');
+                uploadContainer.style.display = 'block';
+            } else if (opcao === 'link') {
+                optionLink.classList.add('active');
+                linkContainer.style.display = 'block';
+            } else if (opcao === 'nenhuma') {
+                optionNenhuma.classList.add('active');
+                imagemData = null;
+                imagemUrl = '';
+                document.getElementById('imagePreview').style.display = 'none';
+            }
+        }
+
+        // Limpar imagem
+        function limparImagem() {
+            document.getElementById('imagemUpload').value = '';
+            document.getElementById('imagemLink').value = '';
+            document.getElementById('fileName').textContent = 'Nenhum arquivo selecionado';
+            document.getElementById('imagePreview').style.display = 'none';
+            imagemData = null;
+            imagemUrl = '';
+            selecionarOpcaoImagem('nenhuma');
+            mostrarStatus('✅ Imagem removida!', 'success', 3000);
+        }
+
+        // Log de eventos
+        function log(mensagem, tipo = 'info') {
+            const logContainer = document.getElementById('logContainer');
+            const logContent = document.getElementById('logContent');
+            const timestamp = new Date().toLocaleTimeString();
+            
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry log-${tipo}`;
+            logEntry.innerHTML = `[${timestamp}] ${mensagem}`;
+            
+            logContent.appendChild(logEntry);
+            logContainer.style.display = 'block';
+            logContainer.scrollTop = logContainer.scrollHeight;
+            
+            console.log(`[${tipo.toUpperCase()}] ${mensagem}`);
+        }
+
+        // Mostrar status
+        function mostrarStatus(mensagem, tipo = 'info', tempo = 0) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = mensagem;
+            statusDiv.className = `status ${tipo}`;
+            statusDiv.style.display = 'block';
+            
+            if (tempo > 0) {
+                setTimeout(() => {
+                    statusDiv.style.display = 'none';
+                }, tempo);
+            }
+            
+            log(mensagem.replace(/<[^>]*>/g, ''), tipo);
+        }
+
+        // Atualizar progresso
+        function atualizarProgresso(indice, total) {
+            const percentual = ((indice + 1) / total) * 100;
+            document.getElementById('progressFill').style.width = percentual + '%';
+            document.getElementById('progressBar').style.display = 'block';
+            document.getElementById('progressText').style.display = 'block';
+            document.getElementById('progressText').innerHTML = 
+                `Enviando... ${indice + 1} de ${total} (${Math.round(percentual)}%)`;
+        }
+
+        // Extrair telefone
+        function extrairTelefone(texto) {
+            let telefone = texto.replace(/\D/g, '');
+            
+            if (telefone.length >= 10) {
+                if (telefone.startsWith('0')) {
+                    telefone = telefone.substring(1);
+                }
+                
+                if (!telefone.startsWith('55')) {
+                    telefone = '55' + telefone;
+                }
+                
+                if (telefone.length >= 12) {
+                    return telefone;
+                }
+            }
+            
+            return null;
+        }
+
+        // Extrair nome
+        function extrairNome(linha) {
+            let nome = linha.replace(/\d/g, '').trim().replace(/\s+/g, ' ').trim();
+            return nome || 'Cliente';
+        }
+
+        // Processar lista de clientes
+        function processarListaClientes() {
+            const listaTexto = document.getElementById('lista').value.trim();
+            if (!listaTexto) {
+                mostrarStatus('❌ Coloque pelo menos um cliente na lista!', 'error');
+                return false;
+            }
+
+            const linhas = listaTexto.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+
+            if (linhas.length === 0) {
+                mostrarStatus('❌ Nenhum cliente válido encontrado!', 'error');
+                return false;
+            }
+
+            clientes = [];
+            
+            for (let linha of linhas) {
+                const telefone = extrairTelefone(linha);
+                
+                if (telefone) {
+                    const nome = extrairNome(linha);
+                    clientes.push({
+                        nome: nome,
+                        telefone: telefone,
+                        linhaOriginal: linha
+                    });
+                } else {
+                    log(`Linha ignorada: ${linha}`, 'error');
+                }
+            }
+
+            if (clientes.length === 0) {
+                mostrarStatus('❌ Nenhum telefone válido encontrado!', 'error');
+                return false;
+            }
+
+            totalClientes = clientes.length;
+            mostrarStatus(`✅ ${totalClientes} clientes processados com sucesso!`, 'success');
+            return true;
+        }
+
+        // Preparar mensagem com imagem
+        function prepararMensagem() {
+            const mensagemBase = document.getElementById('msg').value;
+            const catalogo = document.getElementById('catalogo').value.trim();
+            
+            if (!mensagemBase.trim()) {
+                mostrarStatus('❌ Digite uma mensagem para enviar!', 'error');
+                return null;
+            }
+            
+            return { mensagemBase, catalogo };
+        }
+
+        // Preparar URL do WhatsApp
+        function prepararUrlWhatsApp(cliente, dadosMensagem) {
+            let mensagem = dadosMensagem.mensagemBase.replace(/\[NOME\]/g, cliente.nome);
+            
+            // Adicionar catálogo
+            if (dadosMensagem.catalogo) {
+                mensagem += `\n\n📚 Catálogo: ${dadosMensagem.catalogo}`;
+            }
+            
+            // Adicionar link da imagem se houver
+            if (imagemTipo === 'link' && imagemUrl) {
+                mensagem += `\n\n${imagemUrl}`;
+                log(`Imagem (link) incluída para ${cliente.nome}`, 'info');
+            }
+            
+            // Para upload, adicionar instrução
+            if (imagemTipo === 'upload' && imagemData) {
+                mensagem += `\n\n📸 Imagem anexada (faça upload no WhatsApp Web)`;
+                log(`Imagem do PC será enviada manualmente para ${cliente.nome}`, 'info');
+            }
+            
+            const mensagemCodificada = encodeURIComponent(mensagem);
+            return `https://wa.me/${cliente.telefone}?text=${mensagemCodificada}`;
+        }
+
+        // Enviar para um cliente
+        async function enviarParaCliente(cliente, dadosMensagem) {
+            return new Promise((resolve) => {
+                try {
+                    const urlWhatsApp = prepararUrlWhatsApp(cliente, dadosMensagem);
+                    
+                    // Abrir em nova aba
+                    const novaAba = window.open(
+                        urlWhatsApp, 
+                        `whatsapp_${cliente.telefone}`, 
+                        'width=800,height=600,scrollbars=yes'
+                    );
+                    
+                    if (novaAba) {
+                        // Para método avançado (experimental)
+                        const metodoEnvio = document.getElementById('metodoEnvio').value;
+                        
+                        if (metodoEnvio === 'avancado') {
+                            // Tentativa de envio automático (experimental)
+                            setTimeout(() => {
+                                try {
+                                    // Esta parte requer que o WhatsApp Web esteja logado
+                                    // É uma simulação básica
+                                    novaAba.focus();
+                                    log(`Mensagem preparada para ${cliente.nome}`, 'info');
+                                    
+                                    // Fechar após tempo
+                                    setTimeout(() => {
+                                        try { novaAba.close(); } catch(e) {}
+                                        resolve(true);
+                                    }, 5000);
+                                    
+                                } catch (e) {
+                                    log(`Erro no envio automático: ${e.message}`, 'error');
+                                    resolve(false);
+                                }
+                            }, 3000);
+                        } else {
+                            // Método simples: apenas abrir conversa
+                            setTimeout(() => {
+                                try { novaAba.close(); } catch(e) {}
+                                resolve(true);
+                            }, 2000);
+                        }
+                    } else {
+                        log(`Falha ao abrir conversa com ${cliente.nome}`, 'error');
+                        resolve(false);
+                    }
+                    
+                } catch (error) {
+                    log(`Erro: ${error.message}`, 'error');
+                    resolve(false);
+                }
+            });
+        }
+
+        // Função principal de envio automático
+        async function iniciarEnvioAutomatico() {
+            if (enviando) {
+                mostrarStatus('⚠️ Já está enviando mensagens...', 'warning');
+                return;
+            }
+            
+            // Validar e processar dados
+            if (!processarListaClientes()) return;
+            
+            const dadosMensagem = prepararMensagem();
+            if (!dadosMensagem) return;
+            
+            // Configurar interface
+            enviando = true;
+            pausado = false;
+            indiceAtual = 0;
+            
+            document.getElementById('btnIniciar').disabled = true;
+            document.getElementById('btnPausar').disabled = false;
+            document.getElementById('btnParar').disabled = false;
+            document.getElementById('progressBar').style.display = 'block';
+            
+            const intervaloEntreEnvios = parseInt(document.getElementById('intervalo').value) * 1000;
+            const esperaInicial = parseInt(document.getElementById('esperaInicial').value) * 1000;
+            
+            mostrarStatus(`⏳ Preparando envio para ${totalClientes} clientes...`, 'info');
+            
+            // Espera inicial
+            if (esperaInicial > 0) {
+                mostrarStatus(`⏳ Aguardando ${esperaInicial/1000} segundos antes de iniciar...`, 'info');
+                await new Promise(resolve => setTimeout(resolve, esperaInicial));
+            }
+            
+            // Loop de envio
+            for (let i = 0; i < clientes.length; i++) {
+                if (!enviando) break;
+                
+                while (pausado && enviando) {
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                }
+                
+                if (!enviando) break;
+                
+                const cliente = clientes[i];
+                indiceAtual = i;
+                
+                // Atualizar progresso
+                atualizarProgresso(i, totalClientes);
+                
+                // Mostrar status
+                mostrarStatus(`📤 Enviando para ${cliente.nome} (${i + 1}/${totalClientes})...`, 'info');
+                log(`Processando: ${cliente.nome} - ${cliente.telefone}`);
+                
+                // Enviar mensagem
+                const sucesso = await enviarParaCliente(cliente, dadosMensagem);
+                
+                if (sucesso) {
+                    log(`✅ ${cliente.nome}: Conversa aberta`, 'success');
+                } else {
+                    log(`⚠️ ${cliente.nome}: Possível falha`, 'error');
+                }
+                
+                // Aguardar intervalo
+                if (i < clientes.length - 1 && enviando) {
+                    mostrarStatus(`⏳ Aguardando ${intervaloEntreEnvios/1000}s...`, 'info');
+                    await new Promise(resolve => setTimeout(resolve, intervaloEntreEnvios));
+                }
+            }
+            
+            // Finalização
+            if (enviando) {
+                mostrarStatus(`✅ Envio concluído! ${totalClientes} conversas preparadas.`, 'success', 10000);
+                log('Processo concluído!', 'success');
+            }
+            
+            // Resetar
+            enviando = false;
+            pausado = false;
+            
+            document.getElementById('btnIniciar').disabled = false;
+            document.getElementById('btnPausar').disabled = true;
+            document.getElementById('btnParar').disabled = true;
+            document.getElementById('progressText').innerHTML = 'Concluído!';
+        }
+
+        // Funções de controle
+        function pausarEnvio() {
+            if (!enviando) return;
+            
+            pausado = !pausado;
+            document.getElementById('btnPausar').innerHTML = pausado ? 
+                '<i class="fas fa-play"></i> CONTINUAR' : 
+                '<i class="fas fa-pause"></i> PAUSAR';
+            
+            mostrarStatus(pausado ? '⏸️ Envio pausado' : '▶️ Envio retomado', 
+                         pausado ? 'warning' : 'info');
+        }
+
+        function pararEnvio() {
+            if (!enviando) return;
+            
+            enviando = false;
+            pausado = false;
+            
+            document.getElementById('btnIniciar').disabled = false;
+            document.getElementById('btnPausar').disabled = true;
+            document.getElementById('btnParar').disabled = true;
+            document.getElementById('btnPausar').innerHTML = '<i class="fas fa-pause"></i> PAUSAR';
+            
+            mostrarStatus('⏹️ Envio interrompido', 'warning', 5000);
+        }
+
+        async function testarEnvio() {
+            if (enviando) {
+                mostrarStatus('⚠️ Pare o envio atual antes de testar.', 'warning');
+                return;
+            }
+            
+            if (!processarListaClientes()) return;
+            
+            const dadosMensagem = prepararMensagem();
+            if (!dadosMensagem) return;
+            
+            const clienteTeste = clientes[0];
+            
+            mostrarStatus(`🧪 Testando envio para: ${clienteTeste.nome}`, 'info');
+            
+            const sucesso = await enviarParaCliente(clienteTeste, dadosMensagem);
+            
+            if (sucesso) {
+                mostrarStatus(`✅ Teste realizado! Verifique o WhatsApp Web.`, 'success', 8000);
+            } else {
+                mostrarStatus(`❌ Falha no teste.`, 'error', 8000);
+            }
+        }
+
+        // Salvar e carregar dados
+        window.addEventListener('beforeunload', function(e) {
+            if (enviando) {
+                e.preventDefault();
+                e.returnValue = 'O envio está em andamento. Tem certeza que quer sair?';
+            }
+            
+            const dados = {
+                lista: document.getElementById('lista').value,
+                msg: document.getElementById('msg').value,
+                catalogo: document.getElementById('catalogo').value,
+                imagemLink: document.getElementById('imagemLink').value,
+                intervalo: document.getElementById('intervalo').value,
+                esperaInicial: document.getElementById('esperaInicial').value,
+                metodoEnvio: document.getElementById('metodoEnvio').value,
+                imagemTipo: imagemTipo
+            };
+            localStorage.setItem('divulgadorNaturaComImagem', JSON.stringify(dados));
+        });
+
+        window.addEventListener('load', function() {
+            const dadosSalvos = localStorage.getItem('divulgadorNaturaComImagem');
+            if (dadosSalvos) {
+                try {
+                    const dados = JSON.parse(dadosSalvos);
+                    document.getElementById('lista').value = dados.lista || '';
+                    document.getElementById('msg').value = dados.msg || '';
+                    document.getElementById('catalogo').value = dados.catalogo || 'https://www.natura.com.br';
+                    document.getElementById('imagemLink').value = dados.imagemLink || '';
+                    document.getElementById('intervalo').value = dados.intervalo || '10';
+                    document.getElementById('esperaInicial').value = dados.esperaInicial || '5';
+                    document.getElementById('metodoEnvio').value = dados.metodoEnvio || 'simples';
+                    
+                    if (dados.imagemTipo) {
+                        selecionarOpcaoImagem(dados.imagemTipo);
+                        if (dados.imagemTipo === 'link' && dados.imagemLink) {
+                            document.getElementById('imagePreview').src = dados.imagemLink;
+                            document.getElementById('imagePreview').style.display = 'block';
+                        }
+                    }
+                } catch (e) {
+                    console.error('Erro ao carregar dados:', e);
+                }
+            }
+            
+            mostrarStatus('✨ Sistema carregado! Configure e clique em INICIAR.', 'info', 5000);
+        });
+    </script>
+</body>
+</html>
