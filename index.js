@@ -1,17 +1,18 @@
-function entrar() {
-  // Redireciona diretamente para a próxima página
-  location.href = "trasicao.html";
-}
+// Login e senha pré-definidos (apenas para demonstração)
+const USUARIO_CORRETO = 'admin';
+const SENHA_CORRETA   = '123456';
 
-// Adiciona evento de tecla Enter para o botão
-document.addEventListener('keyup', function(e) {
-  if (e.key === 'Enter') {
-    entrar();
+function entrar(event) {
+  event.preventDefault();                 // evita reload da página
+
+  const login = document.getElementById('login').value.trim();
+  const senha = document.getElementById('senha').value;
+  const msgErro = document.getElementById('msgErro');
+
+  if (login === USUARIO_CORRETO && senha === SENHA_CORRETA) {
+    // Autenticação OK → redireciona para o sistema
+    window.location.href = 'trasicao.html';   // ou qualquer página interna
+  } else {
+    msgErro.textContent = 'Usuário ou senha incorretos.';
   }
-});
-
-// Foco automático no botão (opcional)
-document.addEventListener('DOMContentLoaded', function() {
-  const button = document.querySelector('button');
-  button.focus();
-});
+}

@@ -3,14 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ordem de Serviço</title>
+  <title>Ordem de Serviço – Login</title>
   <link rel="stylesheet" href="index.css">
 </head>
 <body>
   <div class="box">
     <h1>ORDEM DE SERVIÇO</h1>
     <p class="welcome-text">Bem-vindo ao sistema</p>
-    <button onclick="entrar()">ACESSAR SISTEMA</button>
+
+    <form id="loginForm" onsubmit="entrar(event)">
+      <label>
+        Usuário
+        <input type="text" id="login" required placeholder="Digite seu usuário">
+      </label>
+
+      <label>
+        Senha
+        <input type="password" id="senha" required placeholder="Digite sua senha">
+      </label>
+
+      <button type="submit">ACESSAR SISTEMA</button>
+    </form>
+
+    <p id="msgErro" class="erro"></p>
   </div>
 
   <script src="index.js"></script>
