@@ -90,16 +90,16 @@ body {
     left: 0;
     width: 100%;
     height: 6px;
-    background: linear-gradient(90deg, #4CAF50, #2196F3);
 }
 
-/* CORES DIFERENTES PARA CADA CARD - ATUALIZADO */
+/* CORES DIFERENTES PARA CADA CARD */
 .card:nth-child(1)::before { background: linear-gradient(90deg, #FF9800, #FF5722); } /* Pagamento */
 .card:nth-child(2)::before { background: linear-gradient(90deg, #4CAF50, #2196F3); } /* Serviço */
 .card:nth-child(3)::before { background: linear-gradient(90deg, #9C27B0, #673AB7); } /* Relatório */
 .card:nth-child(4)::before { background: linear-gradient(90deg, #00BCD4, #0097A7); } /* Divulgador */
 .card:nth-child(5)::before { background: linear-gradient(90deg, #FF4081, #F50057); } /* Despesas */
 .card:nth-child(6)::before { background: linear-gradient(90deg, #FFEB3B, #FBC02D); } /* Inventário */
+.card:nth-child(7)::before { background: linear-gradient(90deg, #2E7D32, #4CAF50); } /* Finanças */
 
 .card:hover {
     transform: translateY(-12px) scale(1.02);
@@ -123,13 +123,14 @@ body {
     transition: transform 0.4s ease;
 }
 
-/* CORES DOS ÍCONES - ATUALIZADO */
+/* CORES DOS ÍCONES */
 .payment-icon { background: linear-gradient(135deg, #FF9800, #FF5722); }
 .service-icon { background: linear-gradient(135deg, #4CAF50, #2196F3); }
 .relatorio-icon { background: linear-gradient(135deg, #9C27B0, #673AB7); }
-.divulga-icon { background: linear-gradient(135deg, #FF4081, #F50057); }
-.despesas-icon { background: linear-gradient(135deg, #00BCD4, #0097A7); }
+.divulga-icon { background: linear-gradient(135deg, #00BCD4, #0097A7); }
+.despesas-icon { background: linear-gradient(135deg, #FF4081, #F50057); }
 .inventario-icon { background: linear-gradient(135deg, #FFEB3B, #FBC02D); }
+.financas-icon { background: linear-gradient(135deg, #2E7D32, #4CAF50); } /* Verde para finanças */
 
 .icon-container i {
     font-size: 40px;
@@ -172,7 +173,7 @@ body {
     margin-top: auto;
 }
 
-/* CORES DOS BOTÕES - CORRIGIDO */
+/* CORES DOS BOTÕES */
 .payment-btn { 
     background: linear-gradient(90deg, #FF9800, #FF5722); 
     color: white; 
@@ -189,26 +190,25 @@ body {
 }
 
 .despesas-btn { 
-    background: linear-gradient(90deg, #00BCD4, #0097A7); 
-    color: white; 
-}
-
-.divulga-btn { 
     background: linear-gradient(90deg, #FF4081, #F50057); 
     color: white; 
 }
 
-/* BOTÃO DO INVENTÁRIO - CORRIGIDO */
+.divulga-btn { 
+    background: linear-gradient(90deg, #00BCD4, #0097A7); 
+    color: white; 
+}
+
 .inventario-btn { 
     background: linear-gradient(90deg, #FFEB3B, #FBC02D); 
-    color: #333 !important; /* Texto escuro para contraste */
+    color: #333 !important;
     font-weight: 700;
 }
 
-/* CORREÇÃO PARA BOTÃO DESPESAS (ID antigo) */
-#Despesas {
-    background: linear-gradient(90deg, #00BCD4, #0097A7);
-    color: white;
+.financas-btn { 
+    background: linear-gradient(90deg, #2E7D32, #4CAF50); 
+    color: white !important;
+    font-weight: 700;
 }
 
 .btn:hover {
@@ -289,6 +289,7 @@ body {
 .card:nth-child(4) { animation-delay: 0.4s; }
 .card:nth-child(5) { animation-delay: 0.5s; }
 .card:nth-child(6) { animation-delay: 0.6s; }
+.card:nth-child(7) { animation-delay: 0.7s; }
 
 .btn:hover {
     animation: pulse 0.3s ease;
@@ -403,7 +404,7 @@ body {
     }
 }
 
-/* CELULARES MUITO PEQUENOS (GALAXY FOLD, IPHONE SE) */
+/* CELULARES MUITO PEQUENOS */
 @media (max-width: 375px) {
     body {
         padding: 10px;
@@ -492,7 +493,6 @@ body {
 }
 
 /* MODO ESCURO */
-/* =========================================== */
 @media (prefers-color-scheme: dark) {
     .card {
         background-color: rgba(30, 30, 40, 0.95);
@@ -506,50 +506,13 @@ body {
         color: #b0b0b0;
     }
     
-    /* Ajuste para botão do inventário no dark mode */
     .inventario-btn {
         color: #222 !important;
         text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
     }
 }
 
-/* CORREÇÕES ESPECÍFICAS */
-/* =========================================== */
-
-/* Garantir que todos os botões tenham cor de texto legível */
-.payment-btn, 
-.service-btn, 
-.relatorio-btn, 
-.despesas-btn, 
-.divulga-btn,
-.back-btn {
-    color: white !important;
-}
-
-/* Correção para garantir que o hover funcione em todos os botões */
-.btn:hover:not(.inventario-btn) {
-    color: white !important;
-}
-
-/* Correção específica para o botão do inventário */
-.inventario-btn:hover {
-    background: linear-gradient(90deg, #FBC02D, #FFEB3B) !important;
-    color: #222 !important;
-    box-shadow: 0 10px 25px rgba(251, 192, 45, 0.3);
-}
-
-/* Garantir que ícones dentro de botões sejam brancos (exceto inventário) */
-.btn:not(.inventario-btn) i {
-    color: white !important;
-}
-
-/* Estilo para ícone do botão inventário */
-.inventario-btn i {
-    color: #333 !important;
-}
-
 /* ANIMAÇÕES ADICIONAIS */
-/* =========================================== */
 @keyframes glow {
     0% { box-shadow: 0 0 5px rgba(255, 255, 255, 0.2); }
     50% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.4); }
@@ -587,7 +550,6 @@ body {
 }
 
 /* ACCESSIBILITY */
-/* =========================================== */
 .btn:focus,
 .card:focus {
     outline: 2px solid #3498db;

@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu de Gestão - Sistema</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset e configurações básicas */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --azul-escuro: #1e3a5f;
+            --preto: #121212;
+            --cinza-escuro: #2d3748;
+            --cinza-medio: #4a5568;
+            --cinza-claro: #e2e8f0;
+            --branco: #ffffff;
+            --azul-destaque: #2b6cb0;
+            --verde-sucesso: #38a169;
+            --vermelho-erro: #e53e3e;
+            --roxo: #805ad5;
+            --laranja: #dd6b20;
+            --amarelo: #d69e2e;
+            --verde-agua: #319795;
+            --ciano: #00b5d8;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--azul-escuro) 0%, var(--preto) 100%);
+            color: var(--branco);
+            line-height: 1.5;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        /* Container Principal */
+        .main-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        /* Header */
+        .main-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem 0;
+        }
+
+        .main-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--branco) 0%, var(--cinza-claro) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .main-header p {
+            color: var(--cinza-claro);
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        /* Menu de Gestão */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .menu-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem 1rem;
+            text-decoration: none;
+            color: var(--branco);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            min-height: 140px;
+            justify-content: center;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.2);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%);
+        }
+
+        .card-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .menu-card.clientes .card-icon {
+            background: linear-gradient(135deg, var(--azul-destaque) 0%, var(--azul-escuro) 100%);
+        }
+
+        .menu-card.produtos .card-icon {
+            background: linear-gradient(135deg, var(--verde-sucesso) 0%, #48bb78 100%);
+        }
+
+        .menu-card.estoque .card-icon {
+            background: linear-gradient(135deg, var(--laranja) 0%, #ed8936 100%);
+        }
+
+        .menu-card.relatorios .card-icon {
+            background: linear-gradient(135deg, var(--roxo) 0%, #6b46c1 100%);
+        }
+
+        .menu-card.caixa .card-icon {
+            background: linear-gradient(135deg, var(--amarelo) 0%, #ecc94b 100%);
+        }
+
+        .menu-card.servicos .card-icon {
+            background: linear-gradient(135deg, var(--verde-agua) 0%, #38b2ac 100%);
+        }
+
+        .menu-card.catalogo .card-icon {
+            background: linear-gradient(135deg, var(--ciano) 0%, #0987a0 100%);
+        }
+
+        .card-content h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .card-content p {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+
+        /* Footer */
+        .main-footer {
+            text-align: center;
+            padding: 1.5rem 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 2rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--azul-destaque) 0%, var(--azul-escuro) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .user-details h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .user-details p {
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-link {
+            color: var(--cinza-claro);
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: var(--branco);
+        }
+
+        .copyright {
+            color: var(--cinza-medio);
+            font-size: 0.75rem;
+        }
+
+        /* Responsividade */
+        @media (max-width: 480px) {
+            .main-container {
+                max-width: 100%;
+                padding: 0.5rem;
+            }
+            
+            .main-header {
+                margin-bottom: 1.5rem;
+            }
+            
+            .main-header h1 {
+                font-size: 1.6rem;
+            }
+            
+            .menu-grid {
+                grid-template-columns: 1fr;
+                gap: 0.8rem;
+            }
+            
+            .menu-card {
+                padding: 1.2rem;
+                min-height: 120px;
+            }
+            
+            .card-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+            
+            .footer-links {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .menu-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 360px) {
+            .menu-card {
+                padding: 1rem;
+            }
+            
+            .card-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.3rem;
+            }
+            
+            .card-content h3 {
+                font-size: 1rem;
+            }
+            
+            .card-content p {
+                font-size: 0.75rem;
+            }
+        }
+
+        /* Animações */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .menu-card {
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+        }
+
+        .menu-card:nth-child(1) { animation-delay: 0.1s; }
+        .menu-card:nth-child(2) { animation-delay: 0.2s; }
+        .menu-card:nth-child(3) { animation-delay: 0.3s; }
+        .menu-card:nth-child(4) { animation-delay: 0.4s; }
+        .menu-card:nth-child(5) { animation-delay: 0.5s; }
+        .menu-card:nth-child(6) { animation-delay: 0.6s; }
+        .menu-card:nth-child(7) { animation-delay: 0.7s; }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header -->
+        <div class="main-header">
+            <h1>Menu de Gestão</h1>
+            <p>Gerencie seu negócio de forma eficiente</p>
+        </div>
+
+        <!-- Menu de Gestão -->
+        <div class="menu-grid">
+            <!-- Clientes -->
+            <a href="../finança/interaçaocliente.html" class="menu-card clientes">
+                <div class="card-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Clientes</h3>
+                    <p>Cadastro e gestão de clientes</p>
+                </div>
+            </a>
+
+            <!-- Produtos -->
+            <a href="../finança/produtos.html" class="menu-card produtos">
+                <div class="card-icon">
+                    <i class="fas fa-boxes"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Produtos</h3>
+                    <p>Controle de produtos e catálogo</p>
+                </div>
+            </a>
+
+            <!-- Estoque -->
+            <a href="../finança/transiçaoestoque.html" class="menu-card estoque">
+                <div class="card-icon">
+                    <i class="fas fa-warehouse"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Estoque</h3>
+                    <p>Controle de inventário e estoque</p>
+                </div>
+            </a>
+
+            <!-- Catálogo (NOVO) -->
+            <a href="../enviar ordem/catalago.html" class="menu-card catalogo">
+                <div class="card-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Catálogo</h3>
+                    <p>Catálogo de produtos e serviços</p>
+                </div>
+            </a>
+
+            <!-- Relatórios -->
+            <a href="../finança/transição.html" class="menu-card relatorios">
+                <div class="card-icon">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Relatórios</h3>
+                    <p>Relatórios e análises do negócio</p>
+                </div>
+            </a>
+
+            <!-- Caixa -->
+            <a href="../finança/caixa.html" class="menu-card caixa">
+                <div class="card-icon">
+                    <i class="fas fa-cash-register"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Caixa</h3>
+                    <p>Controle financeiro e fluxo de caixa</p>
+                </div>
+            </a>
+
+            <!-- Serviços -->
+            <a href="../finança/serviço.html" class="menu-card servicos">
+                <div class="card-icon">
+                    <i class="fas fa-concierge-bell"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Serviços</h3>
+                    <p>Gestão de serviços prestados</p>
+                </div>
+            </a>
+        </div>
+
+        <!-- Footer -->
+        <div class="main-footer">
+            <div class="user-info">
+                <div class="user-avatar">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <div class="user-details">
+                    <h4>Gestor Comercial</h4>
+                    <p>Administrador do Sistema</p>
+                </div>
+            </div>
+            
+            <div class="footer-links">
+                <a href="../finança/configuracoes.html" class="footer-link">
+                    <i class="fas fa-cog"></i> Configurações
+                </a>
+                <a href="../finança/ajuda.html" class="footer-link">
+                    <i class="fas fa-question-circle"></i> Ajuda
+                </a>
+                <a href="../finança/sair.html" class="footer-link">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </a>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2024 Sistema de Gestão Comercial
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Efeito de clique nos cards
+            const cards = document.querySelectorAll('.menu-card');
+            
+            cards.forEach(card => {
+                card.addEventListener('click', function(e) {
+                    // Adiciona efeito visual de clique
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+
+            // Atualizar horário no footer (opcional)
+            function updateTime() {
+                const now = new Date();
+                const timeString = now.toLocaleTimeString('pt-BR', { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+                const dateString = now.toLocaleDateString('pt-BR');
+                
+                const timeElement = document.querySelector('.user-details p');
+                if (timeElement) {
+                    timeElement.textContent = `${dateString} • ${timeString}`;
+                }
+            }
+
+            // Atualizar a cada minuto
+            updateTime();
+            setInterval(updateTime, 60000);
+        });
+    </script>
+</body>
+</html>

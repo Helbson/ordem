@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Produtos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* === CONFIGURAÇÕES GERAIS === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --ocre-principal: #D4A76A;
+            --ocre-claro: #E8C9A0;
+            --ocre-escuro: #B88C51;
+            --rosa-suave: #F5D6C6;
+            --rosa-escuro: #E8B4A9;
+            --branco: #FFFFFF;
+            --cinza-claro: #F8F9FA;
+            --cinza-escuro: #6C757D;
+            --preto: #2C2C2C;
+            --verde: #4CAF50;
+            --vermelho: #E74C3C;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, var(--rosa-suave) 0%, var(--ocre-claro) 100%);
+            color: var(--preto);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* === HEADER === */
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+            color: var(--ocre-escuro);
+        }
+
+        .logo h1 {
+            font-size: 2.2rem;
+            color: var(--preto);
+        }
+
+        .subtitle {
+            color: var(--cinza-escuro);
+            font-size: 1.1rem;
+        }
+
+        /* === FORMULÁRIO === */
+        .form-container {
+            background: var(--branco);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid var(--rosa-suave);
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.3rem;
+            color: var(--ocre-escuro);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--rosa-suave);
+        }
+
+        .section-title i {
+            font-size: 1.2rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--preto);
+            font-size: 0.95rem;
+        }
+
+        .required::after {
+            content: " *";
+            color: var(--vermelho);
+        }
+
+        .form-input, .form-select, .form-textarea {
+            padding: 1rem;
+            border: 2px solid var(--rosa-suave);
+            border-radius: 10px;
+            font-size: 1rem;
+            background: var(--branco);
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--ocre-principal);
+            box-shadow: 0 0 0 3px rgba(212, 167, 106, 0.2);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* === CÓDIGO DO PRODUTO === */
+        .product-code {
+            background: linear-gradient(135deg, var(--ocre-principal) 0%, var(--rosa-escuro) 100%);
+            color: var(--branco);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .code-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+        }
+
+        .code-value {
+            font-size: 2rem;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+        }
+
+        /* === VALORES E CÁLCULOS === */
+        .values-section {
+            background: var(--cinza-claro);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border: 1px solid var(--rosa-suave);
+        }
+
+        .calculations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .calculation-item {
+            text-align: center;
+            padding: 1rem;
+            background: var(--branco);
+            border-radius: 8px;
+            border: 1px solid var(--rosa-suave);
+        }
+
+        .calculation-label {
+            font-size: 0.85rem;
+            color: var(--cinza-escuro);
+            margin-bottom: 0.5rem;
+        }
+
+        .calculation-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--verde);
+        }
+
+        .calculation-value.negative {
+            color: var(--vermelho);
+        }
+
+        /* === BOTÕES === */
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid var(--rosa-suave);
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--ocre-principal);
+            color: var(--branco);
+        }
+
+        .btn-primary:hover {
+            background: var(--ocre-escuro);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--cinza-claro);
+            color: var(--preto);
+        }
+
+        .btn-secondary:hover {
+            background: var(--rosa-suave);
+        }
+
+        /* === MENSAGENS === */
+        .message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .message.success {
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid var(--verde);
+            color: var(--verde);
+            display: block;
+        }
+
+        .message.error {
+            background: rgba(231, 76, 60, 0.1);
+            border: 1px solid var(--vermelho);
+            color: var(--vermelho);
+            display: block;
+        }
+
+        /* === ANIMAÇÕES === */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        /* === RESPONSIVIDADE === */
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .calculations-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-container {
+                padding: 1.5rem;
+            }
+            
+            .header {
+                padding: 1rem 0;
+            }
+            
+            .logo h1 {
+                font-size: 1.8rem;
+            }
+            
+            .code-value {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <header class="header fade-in">
+            <div class="logo">
+                <i class="fas fa-box-open"></i>
+                <h1>Cadastro de Produtos</h1>
+            </div>
+            <p class="subtitle">Adicione novos produtos ao seu catálogo</p>
+        </header>
+
+        <!-- FORMULÁRIO -->
+        <div class="form-container fade-in">
+            <!-- CÓDIGO DO PRODUTO -->
+            <div class="product-code">
+                <div class="code-label">Código do Produto</div>
+                <div class="code-value" id="productCode">PROD-0001</div>
+            </div>
+
+            <form id="productForm">
+                <!-- INFORMAÇÕES BÁSICAS -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-info-circle"></i>
+                        Informações Básicas
+                    </h2>
+                    
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label class="form-label required" for="productName">Nome do Produto</label>
+                            <input type="text" id="productName" class="form-input" placeholder="Ex: Notebook Dell Inspiron 15" required>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label class="form-label" for="productDescription">Descrição</label>
+                            <textarea id="productDescription" class="form-textarea" placeholder="Descreva as características do produto..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label required" for="productCategory">Categoria</label>
+                            <select id="productCategory" class="form-select" required>
+                                <option value="">Selecione uma categoria</option>
+                                <option value="eletronicos">Eletrônicos</option>
+                                <option value="informatica">Informática</option>
+                                <option value="moveis">Móveis</option>
+                                <option value="vestuario">Vestuário</option>
+                                <option value="livros">Livros</option>
+                                <option value="outros">Outros</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="productBrand">Marca</label>
+                            <input type="text" id="productBrand" class="form-input" placeholder="Ex: Dell, Samsung, etc.">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ESTOQUE E FORNECEDOR -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-warehouse"></i>
+                        Estoque e Fornecedor
+                    </h2>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label required" for="productQuantity">Quantidade em Estoque</label>
+                            <input type="number" id="productQuantity" class="form-input" placeholder="0" min="0" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label required" for="minStock">Estoque Mínimo</label>
+                            <input type="number" id="minStock" class="form-input" placeholder="0" min="0" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="supplier">Fornecedor</label>
+                            <input type="text" id="supplier" class="form-input" placeholder="Nome do fornecedor">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="supplierCode">Código do Fornecedor</label>
+                            <input type="text" id="supplierCode" class="form-input" placeholder="Código interno do fornecedor">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VALORES -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-dollar-sign"></i>
+                        Valores
+                    </h2>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label required" for="costPrice">Preço de Custo (R$)</label>
+                            <input type="number" id="costPrice" class="form-input" placeholder="0.00" step="0.01" min="0" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label required" for="salePrice">Preço de Venda (R$)</label>
+                            <input type="number" id="salePrice" class="form-input" placeholder="0.00" step="0.01" min="0" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="profitMargin">Margem de Lucro (%)</label>
+                            <input type="number" id="profitMargin" class="form-input" placeholder="0" step="0.1" min="0" readonly>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="profitValue">Lucro por Unidade (R$)</label>
+                            <input type="number" id="profitValue" class="form-input" placeholder="0.00" step="0.01" readonly>
+                        </div>
+                    </div>
+
+                    <!-- CÁLCULOS AUTOMÁTICOS -->
+                    <div class="values-section">
+                        <h3 style="color: var(--ocre-escuro); margin-bottom: 1rem;">Cálculos Automáticos</h3>
+                        <div class="calculations-grid">
+                            <div class="calculation-item">
+                                <div class="calculation-label">Valor Total em Estoque</div>
+                                <div class="calculation-value" id="totalStockValue">R$ 0,00</div>
+                            </div>
+                            <div class="calculation-item">
+                                <div class="calculation-label">Lucro Total Potencial</div>
+                                <div class="calculation-value" id="totalPotentialProfit">R$ 0,00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- INFORMAÇÕES ADICIONAIS -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-ellipsis-h"></i>
+                        Informações Adicionais
+                    </h2>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="weight">Peso (kg)</label>
+                            <input type="number" id="weight" class="form-input" placeholder="0.00" step="0.01" min="0">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="dimensions">Dimensões (cm)</label>
+                            <input type="text" id="dimensions" class="form-input" placeholder="L x A x C">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="warranty">Garantia (meses)</label>
+                            <input type="number" id="warranty" class="form-input" placeholder="0" min="0">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="barcode">Código de Barras</label>
+                            <input type="text" id="barcode" class="form-input" placeholder="Código EAN/UPC">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MENSAGENS -->
+                <div class="message success" id="successMessage">
+                    <i class="fas fa-check-circle"></i> Produto cadastrado com sucesso!
+                </div>
+
+                <div class="message error" id="errorMessage">
+                    <i class="fas fa-exclamation-circle"></i> Preencha todos os campos obrigatórios.
+                </div>
+
+                <!-- BOTÕES -->
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary">
+                        <i class="fas fa-times"></i>
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i>
+                        Salvar Produto
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Elementos do DOM
+        const productForm = document.getElementById('productForm');
+        const costPriceInput = document.getElementById('costPrice');
+        const salePriceInput = document.getElementById('salePrice');
+        const quantityInput = document.getElementById('productQuantity');
+        const profitMarginInput = document.getElementById('profitMargin');
+        const profitValueInput = document.getElementById('profitValue');
+        const totalStockValue = document.getElementById('totalStockValue');
+        const totalPotentialProfit = document.getElementById('totalPotentialProfit');
+        const productCode = document.getElementById('productCode');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // Gerar código do produto
+        function generateProductCode() {
+            const timestamp = new Date().getTime();
+            const random = Math.floor(Math.random() * 1000);
+            return `PROD-${timestamp.toString().slice(-4)}${random.toString().padStart(3, '0')}`;
+        }
+
+        // Calcular valores automáticos
+        function calculateValues() {
+            const costPrice = parseFloat(costPriceInput.value) || 0;
+            const salePrice = parseFloat(salePriceInput.value) || 0;
+            const quantity = parseInt(quantityInput.value) || 0;
+
+            // Calcular margem de lucro
+            const profit = salePrice - costPrice;
+            const margin = costPrice > 0 ? (profit / costPrice) * 100 : 0;
+
+            // Atualizar campos
+            profitMarginInput.value = margin.toFixed(2);
+            profitValueInput.value = profit.toFixed(2);
+
+            // Atualizar cálculos totais
+            const totalStock = costPrice * quantity;
+            const totalProfit = profit * quantity;
+
+            totalStockValue.textContent = `R$ ${totalStock.toFixed(2)}`;
+            totalPotentialProfit.textContent = `R$ ${totalProfit.toFixed(2)}`;
+
+            // Cor do lucro
+            if (profit < 0) {
+                totalPotentialProfit.classList.add('negative');
+            } else {
+                totalPotentialProfit.classList.remove('negative');
+            }
+        }
+
+        // Event listeners para cálculos em tempo real
+        costPriceInput.addEventListener('input', calculateValues);
+        salePriceInput.addEventListener('input', calculateValues);
+        quantityInput.addEventListener('input', calculateValues);
+
+        // Submissão do formulário
+        productForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validar campos obrigatórios
+            const requiredFields = productForm.querySelectorAll('[required]');
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    isValid = false;
+                    field.style.borderColor = 'var(--vermelho)';
+                } else {
+                    field.style.borderColor = 'var(--rosa-suave)';
+                }
+            });
+
+            if (!isValid) {
+                errorMessage.style.display = 'block';
+                successMessage.style.display = 'none';
+                return;
+            }
+
+            // Simular salvamento
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'block';
+
+            // Gerar novo código
+            productCode.textContent = generateProductCode();
+
+            // Limpar formulário após 2 segundos
+            setTimeout(() => {
+                productForm.reset();
+                calculateValues();
+                successMessage.style.display = 'none';
+            }, 2000);
+        });
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            productCode.textContent = generateProductCode();
+            calculateValues();
+        });
+    </script>
+</body>
+</html>
