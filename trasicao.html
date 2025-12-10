@@ -1,27 +1,20 @@
 <!DOCTYPE html>
-<html lang="pt-br" translate="no">
+<html lang="pt-br">
 <head>
-    <!-- BLOQUEIA GOOGLE TRANSLATE -->
-    <meta name="google" content="notranslate">
-    <meta name="googlebot" content="notranslate">
-    <meta http-equiv="Content-Language" content="pt-br">
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Principal - Sistema</title>
-    
+    <title>Painel - Sistema</title>
     <style>
-        /* ESTILOS COMPLETAMENTE EMBUTIDOS */
+        /* ESTILOS EMBUTIDOS */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: Arial, sans-serif;
         }
         
         body {
-            background: #1a237e;
-            background: linear-gradient(135deg, #1a237e 0%, #283593 50%, #3949ab 100%);
+            background: #f0f0f0;
             min-height: 100vh;
             padding: 20px;
         }
@@ -29,344 +22,178 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
+        }
+        
+        header {
+            background: white;
             padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-            color: white;
-        }
-        
-        .header h1 {
-            font-size: 2.5rem;
+        h1 {
+            color: #333;
             margin-bottom: 10px;
         }
         
         .user-info {
-            font-size: 1.2rem;
-            color: #FFD700;
+            color: #666;
             margin-bottom: 20px;
-            font-weight: 600;
         }
         
-        .description {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1.1rem;
-            max-width: 800px;
-            margin: 0 auto 30px;
-            line-height: 1.6;
-        }
-        
-        .cards-grid {
+        .cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
             margin-bottom: 40px;
         }
         
         .card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
+            background: white;
             padding: 25px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            transition: all 0.3s ease;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
             cursor: pointer;
-            border-top: 5px solid;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
         }
-        
-        /* Cores diferentes para cada card */
-        .card:nth-child(1) { border-color: #FF9800; }
-        .card:nth-child(2) { border-color: #4CAF50; }
-        .card:nth-child(3) { border-color: #2196F3; }
-        .card:nth-child(4) { border-color: #9C27B0; }
-        .card:nth-child(5) { border-color: #00BCD4; }
-        .card:nth-child(6) { border-color: #FF4081; }
-        .card:nth-child(7) { border-color: #2E7D32; }
         
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
         }
         
-        .card-icon {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            display: block;
-        }
-        
-        .card h2 {
+        .card h3 {
             color: #333;
-            margin-bottom: 15px;
-            font-size: 1.4rem;
+            margin-bottom: 10px;
         }
         
         .card p {
             color: #666;
-            font-size: 0.95rem;
-            margin-bottom: 20px;
-            line-height: 1.5;
-            flex-grow: 1;
+            font-size: 14px;
+            margin-bottom: 15px;
         }
         
         .btn {
-            display: inline-block;
-            padding: 12px 30px;
-            background: linear-gradient(to right, #6a11cb, #2575fc);
+            background: #0066cc;
             color: white;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 600;
-            transition: all 0.3s;
             border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
             cursor: pointer;
-            width: 90%;
-            max-width: 200px;
-            margin-top: 10px;
+            font-size: 14px;
         }
         
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(106, 17, 203, 0.3);
-        }
-        
-        .actions {
-            text-align: center;
-            margin-top: 50px;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
+            background: #0052a3;
         }
         
         .logout-btn {
-            background: linear-gradient(to right, #ff416c, #ff4b2b);
-            padding: 14px 35px;
-            font-size: 1rem;
+            background: #dc3545;
+            display: block;
+            margin: 30px auto;
+            padding: 12px 30px;
         }
         
-        .home-btn {
-            background: linear-gradient(to right, #2E7D32, #4CAF50);
-            padding: 14px 35px;
-            font-size: 1rem;
-        }
-        
-        .footer {
-            margin-top: 50px;
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.9rem;
-            text-align: center;
+        .logout-btn:hover {
+            background: #c82333;
         }
         
         @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
-            
-            .header h1 {
-                font-size: 2rem;
-            }
-            
-            .cards-grid {
+            .cards {
                 grid-template-columns: 1fr;
-                max-width: 400px;
-                margin: 0 auto 30px;
-            }
-            
-            .actions {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .btn {
-                width: 100%;
-                max-width: 300px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            body {
-                padding: 10px;
-            }
-            
-            .header h1 {
-                font-size: 1.8rem;
-            }
-            
-            .description {
-                font-size: 1rem;
-            }
-            
-            .card {
-                padding: 20px;
-            }
-            
-            .card h2 {
-                font-size: 1.2rem;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>📊 Sistema de Gestão</h1>
-            <div class="user-info" id="userInfo">Carregando...</div>
-            <p class="description">Selecione um módulo abaixo para acessar as funcionalidades do sistema</p>
-        </div>
+        <header>
+            <h1>Sistema de Gestão</h1>
+            <div class="user-info" id="userInfo">Usuário</div>
+            <p>Selecione uma opção para continuar</p>
+        </header>
         
-        <div class="cards-grid">
-            <div class="card" data-page="pagamento.html">
-                <div class="card-icon">💳</div>
-                <h2>Ordem de Pagamento</h2>
-                <p>Gerencie transações financeiras, pagamentos a fornecedores e controle de contas</p>
+        <div class="cards">
+            <div class="card" onclick="goTo('pagamento.html')">
+                <h3>💰 Pagamentos</h3>
+                <p>Controle de pagamentos e transações</p>
                 <button class="btn">Acessar</button>
             </div>
             
-            <div class="card" data-page="painel.html">
-                <div class="card-icon">🔧</div>
-                <h2>Ordem de Serviço</h2>
-                <p>Controle de serviços, agendamentos, técnicos e histórico de atendimentos</p>
+            <div class="card" onclick="goTo('servico.html')">
+                <h3>🔧 Serviços</h3>
+                <p>Gestão de ordens de serviço</p>
                 <button class="btn">Acessar</button>
             </div>
             
-            <div class="card" data-page="relatorio.html">
-                <div class="card-icon">📊</div>
-                <h2>Relatórios</h2>
-                <p>Visualize e exporte relatórios detalhados de todas as operações do sistema</p>
+            <div class="card" onclick="goTo('relatorio.html')">
+                <h3>📊 Relatórios</h3>
+                <p>Relatórios e análises</p>
                 <button class="btn">Acessar</button>
             </div>
             
-            <div class="card" data-page="divulga.html">
-                <div class="card-icon">📢</div>
-                <h2>Divulgador</h2>
-                <p>Divulgue arquivos e informações através de WhatsApp e outras plataformas</p>
-                <button class="btn">Acessar</button>
-            </div>
-            
-            <div class="card" data-page="despesas.html">
-                <div class="card-icon">💰</div>
-                <h2>Despesas</h2>
-                <p>Controle de despesas pessoais e empresariais com categorização detalhada</p>
-                <button class="btn">Acessar</button>
-            </div>
-            
-            <div class="card" data-page="inventario.html">
-                <div class="card-icon">📦</div>
-                <h2>Inventário</h2>
-                <p>Gestão completa de estoque com controle de entrada, saída e inventário</p>
-                <button class="btn">Acessar</button>
-            </div>
-            
-            <div class="card" data-page="financas.html">
-                <div class="card-icon">📈</div>
-                <h2>Finanças</h2>
-                <p>Análise financeira, fluxo de caixa, investimentos e planejamento orçamentário</p>
+            <div class="card" onclick="goTo('inventario.html')">
+                <h3>📦 Inventário</h3>
+                <p>Controle de estoque</p>
                 <button class="btn">Acessar</button>
             </div>
         </div>
         
-        <div class="actions">
-            <button class="btn home-btn" id="homeBtn">🏠 Página Inicial</button>
-            <button class="btn logout-btn" id="logoutBtn">🚪 Sair do Sistema</button>
-        </div>
-        
-        <div class="footer">
-            <p>Sistema de Gestão Empresarial © 2024 - Versão 1.0</p>
-        </div>
+        <button class="btn logout-btn" onclick="logout()">Sair do Sistema</button>
     </div>
 
     <script>
-        // ============================================
-        // SISTEMA DO PAINEL PRINCIPAL
-        // ============================================
-        
-        // ============================================
-        // VERIFICAÇÃO DE LOGIN
-        // ============================================
-        function checkLogin() {
-            try {
-                const isLoggedIn = localStorage.getItem('isLoggedIn');
-                const userData = JSON.parse(localStorage.getItem('currentUser') || '{}');
-                const lastLogin = localStorage.getItem('lastLogin');
-                
-                // Verificar se todos os dados existem
-                if (isLoggedIn !== 'true' || !userData.username || !lastLogin) {
-                    return null;
-                }
-                
-                // Verificar se a sessão expirou (24 horas)
-                const hoursSinceLogin = (Date.now() - parseInt(lastLogin)) / (1000 * 60 * 60);
-                if (hoursSinceLogin > 24) {
-                    localStorage.removeItem('isLoggedIn');
-                    localStorage.removeItem('currentUser');
-                    return null;
-                }
-                
-                return userData;
-                
-            } catch (error) {
-                console.error('Erro ao verificar login:', error);
+        // VERIFICAR SESSÃO
+        function checkSession() {
+            const session = localStorage.getItem('session');
+            if (!session) {
+                // Não está logado, voltar para login
+                alert('Sessão expirada. Faça login novamente.');
+                window.location.href = 'index.html';
                 return null;
             }
+            
+            const sessionData = JSON.parse(session);
+            const now = Date.now();
+            
+            // Verificar se sessão expirou (24 horas)
+            if (now - sessionData.time > 24 * 60 * 60 * 1000) {
+                localStorage.removeItem('session');
+                alert('Sessão expirada. Faça login novamente.');
+                window.location.href = 'index.html';
+                return null;
+            }
+            
+            return sessionData;
         }
         
-        // ============================================
-        // EXIBIR INFORMAÇÕES DO USUÁRIO
-        // ============================================
-        function displayUserInfo() {
-            const user = checkLogin();
-            const userInfoEl = document.getElementById('userInfo');
-            
-            if (user && user.username) {
-                userInfoEl.textContent = `👋 Olá, ${user.username}`;
-                userInfoEl.style.color = '#FFD700';
-                return true;
-            } else {
-                // Redirecionar para login se não estiver logado
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 500);
-                return false;
+        // MOSTRAR INFORMAÇÕES DO USUÁRIO
+        function showUserInfo() {
+            const session = checkSession();
+            if (session) {
+                document.getElementById('userInfo').textContent = 
+                    `👋 Olá, ${session.user}`;
             }
         }
         
-        // ============================================
         // LOGOUT
-        // ============================================
         function logout() {
-            if (confirm('Tem certeza que deseja sair do sistema?')) {
-                // Limpar dados de sessão
-                localStorage.removeItem('isLoggedIn');
-                localStorage.removeItem('currentUser');
-                
-                // Redirecionar para login
+            if (confirm('Deseja realmente sair?')) {
+                localStorage.removeItem('session');
                 window.location.href = 'index.html';
             }
         }
         
-        // ============================================
-        // NAVEGAÇÃO ENTRE PÁGINAS
-        // ============================================
-        function navigateTo(page) {
-            // Verificar se está logado antes de navegar
-            if (!checkLogin()) {
-                alert('Sua sessão expirou. Faça login novamente.');
-                window.location.href = 'index.html';
-                return;
-            }
+        // NAVEGAR PARA PÁGINA
+        function goTo(page) {
+            // Verificar sessão antes de navegar
+            if (!checkSession()) return;
             
-            // Simular loading
+            // Simular carregamento
             const btn = event?.target?.closest('.btn') || event?.target;
             if (btn) {
                 const originalText = btn.textContent;
-                btn.textContent = 'Carregando...';
+                btn.textContent = 'Abrindo...';
                 btn.disabled = true;
                 
                 setTimeout(() => {
@@ -379,81 +206,20 @@
             }
         }
         
-        // ============================================
-        // BLOQUEAR GOOGLE TRANSLATE
-        // ============================================
-        function blockGoogleTranslate() {
-            // Remover elementos do translate
-            const translateElements = document.querySelectorAll('[id*="google"], [class*="translate"], iframe');
-            translateElements.forEach(el => {
-                if (el.src && el.src.includes('translate')) {
-                    el.remove();
-                }
-            });
-            
-            // Desativar funcionalidade do translate
-            if (window.google && google.translate) {
-                google.translate.TranslateElement = null;
-            }
-        }
-        
-        // ============================================
-        // INICIALIZAÇÃO DA PÁGINA
-        // ============================================
+        // INICIALIZAR
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('✅ Painel principal carregado');
+            // Verificar sessão
+            showUserInfo();
             
-            // 1. Verificar login
-            if (!displayUserInfo()) {
-                return;
-            }
-            
-            // 2. Configurar eventos dos cards
-            document.querySelectorAll('.card').forEach(card => {
-                card.addEventListener('click', function(e) {
-                    // Evitar clique no botão (já tem evento próprio)
-                    if (!e.target.classList.contains('btn') && !e.target.closest('.btn')) {
-                        const page = this.getAttribute('data-page');
-                        if (page) {
-                            navigateTo(page);
-                        }
-                    }
-                });
-            });
-            
-            // 3. Configurar eventos dos botões dentro dos cards
+            // Adicionar eventos aos botões dentro dos cards
             document.querySelectorAll('.card .btn').forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation(); // Evita que o card também dispare
                     const card = this.closest('.card');
-                    const page = card.getAttribute('data-page');
-                    if (page) {
-                        navigateTo(page);
-                    }
+                    card.click();
                 });
             });
-            
-            // 4. Configurar botões de ação
-            document.getElementById('logoutBtn').addEventListener('click', logout);
-            document.getElementById('homeBtn').addEventListener('click', function() {
-                navigateTo('index.html');
-            });
-            
-            // 5. Bloquear Google Translate
-            blockGoogleTranslate();
-            
-            // 6. Verificar periodicamente a sessão (a cada 5 minutos)
-            setInterval(() => {
-                if (!checkLogin()) {
-                    alert('Sua sessão expirou. Redirecionando para login...');
-                    window.location.href = 'index.html';
-                }
-            }, 5 * 60 * 1000); // 5 minutos
-            
-            console.log('✅ Sistema inicializado com sucesso');
         });
-        
-        // Bloquear translate também no carregamento da página
-        window.addEventListener('load', blockGoogleTranslate);
     </script>
 </body>
 </html>
