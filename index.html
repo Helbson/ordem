@@ -402,8 +402,15 @@
 
     <script>
         // ============================================
+        // CONFIGURAÇÃO DO FIREBASE (SEM DADOS DE EXEMPLO)
+        // ============================================
+        // NOTA: Removi os dados de exemplo para segurança
+        
+        // ============================================
         // CONFIGURAÇÃO DO FIREBASE
         // ============================================
+        // NOTA: Estas são credenciais públicas do Firebase
+        // Elas são seguras para usar no frontend
         const firebaseConfig = {
             apiKey: "AIzaSyDm2V4szjQPegs4rJlH_eCIlG8lZiOyCEE",
             authDomain: "ordem-cbc8e.firebaseapp.com",
@@ -755,11 +762,15 @@
                     // ERRO DE DOMÍNIO NÃO AUTORIZADO
                     const currentDomain = window.location.hostname;
                     showMessage(
-                        `❌ Domínio não autorizado: ${currentDomain}<br>` +
-                        `Adicione <strong>${currentDomain}</strong> no Firebase Console<br>` +
-                        `Authentication → Settings → Authorized domains`,
+                        `❌ Domínio não autorizado: ${currentDomain}`,
                         'error'
                     );
+                    
+                    // Instruções para corrigir
+                    console.log(`Adicione "${currentDomain}" no Firebase Console:`);
+                    console.log('1. Acesse Firebase Console');
+                    console.log('2. Authentication → Settings → Authorized domains');
+                    console.log(`3. Adicione: ${currentDomain}`);
                     
                 } else {
                     showMessage('❌ Erro ao conectar com Google: ' + error.message, 'error');
@@ -807,16 +818,16 @@
             // Verificar resultado de redirecionamento do Google
             await checkGoogleRedirectResult();
             
-            // Configurar dados de exemplo
-            document.getElementById('email').value = "teste@exemplo.com";
-            document.getElementById('password').value = "123456";
-            
             // Mostrar mensagem de boas-vindas
             showMessage('Bem-vindo! Faça login para continuar.', 'info');
             
             // Verificar e mostrar domínio atual
             const currentDomain = window.location.hostname;
             console.log('Domínio atual:', currentDomain);
+            
+            // IMPORTANTE: NÃO há dados de exemplo no código
+            // Removi: document.getElementById('email').value = "teste@exemplo.com";
+            // Removi: document.getElementById('password').value = "123456";
         });
     </script>
 </body>
