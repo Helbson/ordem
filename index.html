@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Sistema de Gestão</title>
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <style>
         * {
             margin: 0;
@@ -139,26 +136,6 @@
             background: rgba(255, 255, 255, 0.2);
         }
         
-        .btn-google {
-            background: white;
-            color: #333;
-            border: 2px solid #ddd;
-        }
-        
-        .btn-google:hover {
-            border-color: #4285f4;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(66, 133, 244, 0.2);
-        }
-        
-        .google-icon {
-            width: 20px;
-            height: 20px;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>');
-            background-size: contain;
-            background-repeat: no-repeat;
-        }
-        
         .links {
             text-align: center;
             margin: 20px 0;
@@ -178,25 +155,6 @@
         
         .link:hover {
             border-bottom: 2px solid #6a11cb;
-        }
-        
-        .divider {
-            display: flex;
-            align-items: center;
-            margin: 25px 0;
-            color: #aaa;
-        }
-        
-        .divider::before,
-        .divider::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .divider span {
-            padding: 0 15px;
-            font-size: 14px;
         }
         
         .message {
@@ -283,63 +241,54 @@
         
         <!-- SEÇÃO DE LOGIN -->
         <div class="section active" id="login-section">
-            <h2>Faça seu login</h2>
+            <h2>Faça seu acesso</h2>
             
             <form id="login-form">
                 <div class="form-group">
-                    <label for="email">E-mail</label>
+                    <label for="email">Nome de Usuário</label>
                     <div class="input-wrapper">
-                        <input type="email" id="email" placeholder="seu@email.com" required autocomplete="email">
+                        <input type="text" id="username" placeholder="Seu nome ou e-mail" required>
                     </div>
                 </div>
                 
                 <div class="form-group">
                     <label for="password">Senha</label>
                     <div class="input-wrapper">
-                        <input type="password" id="password" placeholder="Sua senha" required autocomplete="current-password">
+                        <input type="password" id="password" placeholder="Sua senha" required>
                         <button type="button" class="toggle-password" id="toggle-password">👁️</button>
                     </div>
                 </div>
                 
                 <button type="submit" class="btn btn-primary">
-                    <span>Entrar</span>
+                    <span>Acessar Sistema</span>
                 </button>
             </form>
             
             <div class="links">
-                <a class="link" id="show-register">Criar conta</a>
+                <a class="link" id="show-register">Primeiro acesso</a>
                 <a class="link" id="show-recovery">Esqueci a senha</a>
             </div>
-            
-            <div class="divider">
-                <span>ou continue com</span>
-            </div>
-            
-            <button class="btn btn-google" id="google-login-btn">
-                <div class="google-icon"></div>
-                <span>Google</span>
-            </button>
         </div>
         
         <!-- SEÇÃO DE CADASTRO -->
         <div class="section" id="register-section">
-            <h2>Criar nova conta</h2>
+            <h2>Criar novo acesso</h2>
             
             <form id="register-form">
                 <div class="form-group">
                     <label for="register-name">Nome completo</label>
-                    <input type="text" id="register-name" placeholder="Seu nome completo" required autocomplete="name">
+                    <input type="text" id="register-name" placeholder="Seu nome completo" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="register-email">E-mail</label>
-                    <input type="email" id="register-email" placeholder="seu@email.com" required autocomplete="email">
+                    <input type="email" id="register-email" placeholder="seu@email.com" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="register-password">Senha</label>
                     <div class="input-wrapper">
-                        <input type="password" id="register-password" placeholder="Mínimo 6 caracteres" required autocomplete="new-password">
+                        <input type="password" id="register-password" placeholder="Mínimo 6 caracteres" required>
                         <button type="button" class="toggle-password" id="toggle-register-password">👁️</button>
                     </div>
                 </div>
@@ -347,13 +296,13 @@
                 <div class="form-group">
                     <label for="register-confirm-password">Confirmar senha</label>
                     <div class="input-wrapper">
-                        <input type="password" id="register-confirm-password" placeholder="Digite novamente" required autocomplete="new-password">
+                        <input type="password" id="register-confirm-password" placeholder="Digite novamente" required>
                         <button type="button" class="toggle-password" id="toggle-register-confirm-password">👁️</button>
                     </div>
                 </div>
                 
                 <button type="submit" class="btn btn-primary">
-                    <span>Cadastrar</span>
+                    <span>Criar Conta</span>
                 </button>
             </form>
             
@@ -364,16 +313,16 @@
         
         <!-- SEÇÃO DE RECUPERAÇÃO -->
         <div class="section" id="recovery-section">
-            <h2>Recuperar senha</h2>
+            <h2>Recuperar acesso</h2>
             
             <form id="recovery-form">
                 <div class="form-group">
                     <label for="recovery-email">E-mail cadastrado</label>
-                    <input type="email" id="recovery-email" placeholder="seu@email.com" required autocomplete="email">
+                    <input type="email" id="recovery-email" placeholder="seu@email.com" required>
                 </div>
                 
                 <button type="submit" class="btn btn-primary">
-                    <span>Enviar link de recuperação</span>
+                    <span>Redefinir Senha</span>
                 </button>
             </form>
             
@@ -390,44 +339,8 @@
 
     <script>
         // ============================================
-        // CONFIGURAÇÃO DO FIREBASE
+        // SISTEMA DE LOGIN SIMPLES (localStorage)
         // ============================================
-        const firebaseConfig = {
-            apiKey: "AIzaSyDm2V4szjQPegs4rJlH_eCIlG8lZiOyCEE",
-            authDomain: "ordem-cbc8e.firebaseapp.com",
-            projectId: "ordem-cbc8e",
-            storageBucket: "ordem-cbc8e.firebasestorage.app",
-            messagingSenderId: "1095787217194",
-            appId: "1:1095787217194:web:4f71cd1922b81af3b3de53"
-        };
-        
-        // ============================================
-        // INICIALIZAÇÃO DO FIREBASE
-        // ============================================
-        let auth;
-        let googleProvider;
-        
-        try {
-            // Inicializar Firebase
-            if (!firebase.apps.length) {
-                firebase.initializeApp(firebaseConfig);
-            }
-            auth = firebase.auth();
-            
-            // Configurar provedor do Google
-            googleProvider = new firebase.auth.GoogleAuthProvider();
-            googleProvider.addScope('profile');
-            googleProvider.addScope('email');
-            
-            // Configurar idioma
-            auth.languageCode = 'pt-BR';
-            
-            console.log('✅ Firebase inicializado com sucesso');
-            
-        } catch (error) {
-            console.error('❌ Erro ao inicializar Firebase:', error);
-            showMessage('⚠️ Erro de conexão com o servidor', 'error');
-        }
         
         // ============================================
         // FUNÇÕES AUXILIARES
@@ -482,11 +395,65 @@
         }
         
         function redirectToTransicao() {
-            showMessage('✅ Login realizado! Redirecionando...', 'success');
+            showMessage('✅ Acesso realizado! Redirecionando...', 'success');
             setTimeout(() => {
                 window.location.href = 'transicao.html';
             }, 1500);
         }
+        
+        // ============================================
+        // SALVAR USUÁRIO NO localStorage
+        // ============================================
+        function saveUser(userData) {
+            try {
+                // Criar um ID único para o usuário
+                const userId = 'user_' + Date.now();
+                userData.id = userId;
+                userData.createdAt = new Date().toISOString();
+                
+                // Salvar no localStorage
+                localStorage.setItem('currentUser', JSON.stringify(userData));
+                localStorage.setItem('isLoggedIn', 'true');
+                
+                // Se quiser salvar histórico de usuários
+                const users = JSON.parse(localStorage.getItem('allUsers') || '[]');
+                users.push(userData);
+                localStorage.setItem('allUsers', JSON.stringify(users));
+                
+                return true;
+            } catch (error) {
+                console.error('Erro ao salvar usuário:', error);
+                return false;
+            }
+        }
+        
+        // ============================================
+        // VERIFICAR LOGIN
+        // ============================================
+        function checkLogin() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            
+            if (isLoggedIn === 'true' && user) {
+                return user;
+            }
+            return null;
+        }
+        
+        // ============================================
+        // VERIFICAR SE JÁ ESTÁ LOGADO
+        // ============================================
+        window.addEventListener('load', function() {
+            const user = checkLogin();
+            if (user) {
+                showMessage(`✅ Bem-vindo de volta, ${user.name}!`, 'success');
+                setTimeout(() => {
+                    window.location.href = 'transicao.html';
+                }, 1000);
+            } else {
+                showMessage('Bem-vindo! Faça login para continuar.', 'info');
+            }
+        });
         
         // ============================================
         // EVENT LISTENERS PARA TOGGLE DE SENHA
@@ -528,15 +495,15 @@
         });
         
         // ============================================
-        // 1. LOGIN COM EMAIL E SENHA
+        // 1. LOGIN SIMPLES
         // ============================================
         document.getElementById('login-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const email = document.getElementById('email').value.trim();
+            const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
             
-            if (!email || !password) {
+            if (!username || !password) {
                 showMessage('Por favor, preencha todos os campos.', 'error');
                 return;
             }
@@ -544,43 +511,32 @@
             showLoading();
             hideMessage();
             
-            try {
-                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+            // Simular verificação (em produção, isso seria no servidor)
+            setTimeout(() => {
+                // Criar objeto do usuário
+                const userData = {
+                    name: username,
+                    email: username.includes('@') ? username : username + '@exemplo.com',
+                    loginTime: new Date().toISOString()
+                };
                 
-                // Login bem sucedido
-                redirectToTransicao();
-                
-                // Limpar formulário
-                this.reset();
-                
-            } catch (error) {
-                let errorMessage = '❌ Erro ao fazer login.';
-                switch (error.code) {
-                    case 'auth/user-not-found':
-                    case 'auth/wrong-password':
-                        errorMessage = '❌ E-mail ou senha incorretos.';
-                        break;
-                    case 'auth/invalid-email':
-                        errorMessage = '❌ E-mail inválido.';
-                        break;
-                    case 'auth/user-disabled':
-                        errorMessage = '❌ Esta conta foi desativada.';
-                        break;
-                    case 'auth/too-many-requests':
-                        errorMessage = '❌ Muitas tentativas. Tente novamente mais tarde.';
-                        break;
-                    default:
-                        errorMessage = '❌ Erro: ' + error.message;
+                // Salvar usuário
+                if (saveUser(userData)) {
+                    // Login bem sucedido
+                    redirectToTransicao();
+                    
+                    // Limpar formulário
+                    this.reset();
+                } else {
+                    showMessage('❌ Erro ao salvar dados do usuário.', 'error');
                 }
-                showMessage(errorMessage, 'error');
-                console.error('Erro de login:', error);
-            } finally {
+                
                 hideLoading();
-            }
+            }, 1000);
         });
         
         // ============================================
-        // 2. CADASTRO COM EMAIL E SENHA
+        // 2. CADASTRO SIMPLES
         // ============================================
         document.getElementById('register-form').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -609,49 +565,34 @@
             showLoading();
             hideMessage();
             
-            try {
-                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+            // Simular processamento
+            setTimeout(() => {
+                // Criar objeto do usuário
+                const userData = {
+                    name: name,
+                    email: email,
+                    createdAt: new Date().toISOString()
+                };
                 
-                // Atualizar nome do usuário
-                await userCredential.user.updateProfile({
-                    displayName: name
-                });
-                
-                showMessage('✅ Conta criada com sucesso! Redirecionando...', 'success');
-                
-                // Redirecionar para transicao.html
-                redirectToTransicao();
-                
-                // Limpar formulário
-                this.reset();
-                
-            } catch (error) {
-                let errorMessage = '❌ Erro ao criar conta.';
-                switch (error.code) {
-                    case 'auth/email-already-in-use':
-                        errorMessage = '❌ Este e-mail já está em uso.';
-                        break;
-                    case 'auth/invalid-email':
-                        errorMessage = '❌ E-mail inválido.';
-                        break;
-                    case 'auth/weak-password':
-                        errorMessage = '❌ Senha muito fraca.';
-                        break;
-                    case 'auth/operation-not-allowed':
-                        errorMessage = '❌ Cadastro por email desativado.';
-                        break;
-                    default:
-                        errorMessage = '❌ Erro: ' + error.message;
+                // Salvar usuário
+                if (saveUser(userData)) {
+                    showMessage('✅ Conta criada com sucesso! Redirecionando...', 'success');
+                    
+                    // Redirecionar
+                    redirectToTransicao();
+                    
+                    // Limpar formulário
+                    this.reset();
+                } else {
+                    showMessage('❌ Erro ao criar conta.', 'error');
                 }
-                showMessage(errorMessage, 'error');
-                console.error('Erro de cadastro:', error);
-            } finally {
+                
                 hideLoading();
-            }
+            }, 1500);
         });
         
         // ============================================
-        // 3. RECUPERAÇÃO DE SENHA
+        // 3. RECUPERAÇÃO SIMPLES
         // ============================================
         document.getElementById('recovery-form').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -666,9 +607,9 @@
             showLoading();
             hideMessage();
             
-            try {
-                await auth.sendPasswordResetEmail(email);
-                showMessage(`✅ Link de recuperação enviado para ${email}.`, 'success');
+            // Simular envio
+            setTimeout(() => {
+                showMessage(`✅ Instruções enviadas para ${email}.`, 'success');
                 
                 // Limpar formulário
                 this.reset();
@@ -678,91 +619,8 @@
                     showSection('login-section');
                 }, 3000);
                 
-            } catch (error) {
-                let errorMessage = '❌ Erro ao enviar e-mail.';
-                switch (error.code) {
-                    case 'auth/user-not-found':
-                        errorMessage = '❌ Nenhum usuário encontrado com este e-mail.';
-                        break;
-                    case 'auth/invalid-email':
-                        errorMessage = '❌ E-mail inválido.';
-                        break;
-                    default:
-                        errorMessage = '❌ Erro: ' + error.message;
-                }
-                showMessage(errorMessage, 'error');
-                console.error('Erro de recuperação:', error);
-            } finally {
                 hideLoading();
-            }
-        });
-        
-        // ============================================
-        // 4. LOGIN COM GOOGLE
-        // ============================================
-        document.getElementById('google-login-btn').addEventListener('click', async function() {
-            showLoading();
-            hideMessage();
-            
-            try {
-                // Usar popup para login com Google
-                const result = await auth.signInWithPopup(googleProvider);
-                
-                showMessage('✅ Login com Google realizado! Redirecionando...', 'success');
-                
-                // Redirecionar para transicao.html
-                redirectToTransicao();
-                
-            } catch (error) {
-                hideLoading();
-                let errorMessage = '❌ Erro ao conectar com Google.';
-                
-                switch (error.code) {
-                    case 'auth/popup-closed-by-user':
-                        errorMessage = '❌ Popup fechado pelo usuário.';
-                        break;
-                    case 'auth/popup-blocked':
-                        errorMessage = '❌ Popup bloqueado. Permita popups para este site.';
-                        break;
-                    case 'auth/unauthorized-domain':
-                        errorMessage = '❌ Domínio não autorizado.';
-                        break;
-                    default:
-                        errorMessage = '❌ Erro: ' + error.message;
-                }
-                
-                showMessage(errorMessage, 'error');
-                console.error('Erro no login com Google:', error);
-            }
-        });
-        
-        // ============================================
-        // 5. OBSERVADOR DE ESTADO DE AUTENTICAÇÃO
-        // ============================================
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                // Se usuário já está logado, redireciona direto
-                console.log('Usuário já logado:', user.email);
-                showMessage(`✅ Bem-vindo de volta, ${user.displayName || user.email}!`, 'success');
-                setTimeout(() => {
-                    window.location.href = 'transicao.html';
-                }, 1000);
-            } else {
-                console.log('Usuário não logado - Mostrar página de login');
-            }
-        });
-        
-        // ============================================
-        // INICIALIZAÇÃO
-        // ============================================
-        window.addEventListener('load', function() {
-            // Mostrar mensagem de boas-vindas
-            showMessage('Bem-vindo! Faça login para continuar.', 'info');
-            
-            // Testar se campos de senha aceitam números
-            document.getElementById('password').addEventListener('input', function() {
-                console.log('Campo senha:', this.value);
-            });
+            }, 1500);
         });
     </script>
 </body>
