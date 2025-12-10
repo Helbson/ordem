@@ -1,57 +1,232 @@
-/* Reset básico */
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; }
+/* index.css - ESTILO COMPLETO PARA TODAS AS PÁGINAS */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
 
 body {
-  height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
   display: flex;
-  align-items: center;
   justify-content: center;
-  background: #f2f2f2;
+  align-items: center;
+  padding: 20px;
 }
 
 .box {
-  background: #fff;
-  padding: 40px 30px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,.15);
-  text-align: center;
-  width: 320px;
-}
-
-h1 { margin-bottom: 10px; font-size: 24px; color: #333; }
-.welcome-text { margin-bottom: 25px; color: #666; }
-
-form label {
-  display: block;
-  margin-bottom: 15px;
-  text-align: left;
-  color: #555;
-}
-
-form input {
+  background: white;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  max-width: 450px;
 }
 
+h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 10px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.welcome-text {
+  text-align: center;
+  color: #666;
+  margin-bottom: 30px;
+  font-size: 16px;
+}
+
+/* ESTILOS PARA FORMULÁRIOS */
+form {
+  margin-bottom: 10px;
+}
+
+label {
+  display: block;
+  margin-bottom: 20px;
+  color: #555;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+label input,
+select {
+  width: 100%;
+  padding: 12px 15px;
+  margin-top: 8px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  background: #f9f9f9;
+}
+
+label input:focus,
+select:focus {
+  border-color: #667eea;
+  outline: none;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23555' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  padding-right: 40px;
+}
+
+/* CONTAINER PARA SENHA COM BOTÃO VISUALIZAR */
+.password-container {
+  position: relative;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  user-select: none;
+  font-size: 18px;
+  color: #666;
+}
+
+/* ESTILOS PARA BOTÕES */
 button {
   width: 100%;
-  padding: 12px;
-  background: #007bff;
-  color: #fff;
+  padding: 14px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background .3s;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+  letter-spacing: 0.5px;
 }
 
-button:hover { background: #0056b3; }
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
 
-.erro {
-  margin-top: 15px;
-  color: #e74c3c;
+button:active {
+  transform: translateY(0);
+}
+
+/* ESTILOS PARA LINKS */
+.links {
+  margin-top: 25px;
+  text-align: center;
+}
+
+.link {
+  display: block;
+  color: #667eea;
+  text-decoration: none;
+  margin: 8px 0;
   font-size: 14px;
+  transition: color 0.3s ease;
+}
+
+.link:hover {
+  color: #764ba2;
+  text-decoration: underline;
+}
+
+/* ESTILOS PARA MENSAGENS */
+.erro {
+  color: #d32f2f;
+  text-align: center;
+  margin-top: 15px;
+  display: none;
+  padding: 12px;
+  background: #ffebee;
+  border-radius: 6px;
+  border-left: 4px solid #d32f2f;
+  font-size: 14px;
+}
+
+.sucesso {
+  color: #388e3c;
+  text-align: center;
+  margin-top: 15px;
+  display: none;
+  padding: 12px;
+  background: #e8f5e9;
+  border-radius: 6px;
+  border-left: 4px solid #388e3c;
+  font-size: 14px;
+}
+
+/* ESTILOS ESPECÍFICOS PARA CADASTRO */
+.form-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+/* RESPONSIVIDADE */
+@media (max-width: 480px) {
+  .box {
+    padding: 25px;
+    margin: 10px;
+  }
+  
+  h1 {
+    font-size: 20px;
+  }
+  
+  .form-group {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  label input,
+  select,
+  button {
+    padding: 12px;
+  }
+}
+
+/* ESTILO PARA NÚMERO (INPUT TYPE NUMBER) */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* ESTILO PARA TELEFONE */
+#telefone {
+  font-family: monospace;
+  letter-spacing: 1px;
+}
+
+/* ANIMAÇÕES */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.box {
+  animation: fadeIn 0.5s ease-out;
 }

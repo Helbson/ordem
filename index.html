@@ -1,33 +1,798 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ordem de Serviço – Login</title>
-  <link rel="stylesheet" href="index.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Sistema de Autenticação</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 420px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            padding: 40px 30px;
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .logo h1 {
+            color: #6a11cb;
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        .logo p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        h2 {
+            color: #333;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        input {
+            width: 100%;
+            padding: 14px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            border-color: #6a11cb;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
+        }
+        
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            margin-top: 10px;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(106, 17, 203, 0.4);
+        }
+        
+        .btn-secondary {
+            background-color: #f1f1f1;
+            color: #555;
+            margin-top: 15px;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e1e1e1;
+        }
+        
+        .btn-google {
+            background: white;
+            color: #555;
+            border: 2px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px;
+            margin-top: 10px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-google:hover {
+            background-color: #f8f9fa;
+            border-color: #4285f4;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(66, 133, 244, 0.2);
+        }
+        
+        .google-icon {
+            width: 20px;
+            height: 20px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>');
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+        
+        .link {
+            color: #2575fc;
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 500;
+            display: inline-block;
+            margin-top: 10px;
+            padding: 5px 0;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .link:hover {
+            border-bottom: 2px solid #2575fc;
+        }
+        
+        .message {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 500;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .success {
+            background-color: #e7f7ef;
+            color: #2ecc71;
+            border: 1px solid #a3e9c4;
+        }
+        
+        .error {
+            background-color: #fdeaea;
+            color: #e74c3c;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .info {
+            background-color: #e3f2fd;
+            color: #1976d2;
+            border: 1px solid #bbdefb;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 40px;
+            cursor: pointer;
+            color: #777;
+            background: none;
+            border: none;
+            font-size: 18px;
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 25px 0;
+            color: #666;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .divider span {
+            padding: 0 15px;
+            font-size: 14px;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .spinner {
+            border: 3px solid rgba(106, 17, 203, 0.1);
+            border-top: 3px solid #6a11cb;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .status {
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .status-success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .status-error {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        
+        .links-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+                max-width: 100%;
+            }
+            
+            .logo h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="box">
-    <h1>ORDEM DE SERVIÇO</h1>
-    <p class="welcome-text">Bem-vindo ao sistema</p>
+    <div class="container">
+        <div class="logo">
+            <h1>🔐 Sistema de Login</h1>
+            <p>Autenticação segura com Firebase</p>
+        </div>
+        
+        <div class="status" id="firebase-status">
+            <span>🔄 Conectando ao Firebase...</span>
+        </div>
+        
+        <div class="message" id="message"></div>
+        
+        <!-- SEÇÃO DE LOGIN -->
+        <div id="login-section">
+            <h2>Faça seu login</h2>
+            
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" placeholder="seu@email.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Senha</label>
+                    <input type="password" id="password" placeholder="Sua senha" required>
+                    <button type="button" class="password-toggle" id="toggle-password">👁️</button>
+                </div>
+                
+                <button type="submit" class="btn-primary">
+                    <span>Entrar</span>
+                </button>
+            </form>
+            
+            <div class="links-container">
+                <a class="link" id="show-register">📝 Criar nova conta</a>
+                <br>
+                <a class="link" id="show-recovery">🔑 Esqueci minha senha</a>
+            </div>
+            
+            <div class="divider">
+                <span>ou continue com</span>
+            </div>
+            
+            <button class="btn-google" id="google-login-btn">
+                <div class="google-icon"></div>
+                <span>Google</span>
+            </button>
+        </div>
+        
+        <!-- SEÇÃO DE CADASTRO -->
+        <div id="register-section" style="display: none;">
+            <h2>Criar nova conta</h2>
+            
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="register-name">Nome completo</label>
+                    <input type="text" id="register-name" placeholder="Seu nome completo" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="register-email">E-mail</label>
+                    <input type="email" id="register-email" placeholder="seu@email.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="register-password">Senha</label>
+                    <input type="password" id="register-password" placeholder="Mínimo 6 caracteres" required>
+                    <button type="button" class="password-toggle" id="toggle-register-password">👁️</button>
+                </div>
+                
+                <div class="form-group">
+                    <label for="register-confirm-password">Confirmar senha</label>
+                    <input type="password" id="register-confirm-password" placeholder="Digite novamente" required>
+                    <button type="button" class="password-toggle" id="toggle-register-confirm-password">👁️</button>
+                </div>
+                
+                <button type="submit" class="btn-primary">
+                    <span>Cadastrar</span>
+                </button>
+            </form>
+            
+            <button class="btn-secondary" id="back-to-login">
+                <span>← Voltar para login</span>
+            </button>
+        </div>
+        
+        <!-- SEÇÃO DE RECUPERAÇÃO -->
+        <div id="recovery-section" style="display: none;">
+            <h2>Recuperar senha</h2>
+            
+            <form id="recovery-form">
+                <div class="form-group">
+                    <label for="recovery-email">E-mail cadastrado</label>
+                    <input type="email" id="recovery-email" placeholder="seu@email.com" required>
+                </div>
+                
+                <button type="submit" class="btn-primary">
+                    <span>Enviar link de recuperação</span>
+                </button>
+            </form>
+            
+            <button class="btn-secondary" id="back-to-login-from-recovery">
+                <span>← Voltar para login</span>
+            </button>
+        </div>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <span>Processando...</span>
+        </div>
+    </div>
 
-    <form id="loginForm" onsubmit="entrar(event)">
-      <label>
-        Usuário
-        <input type="text" id="login" required placeholder="Digite seu usuário">
-      </label>
-
-      <label>
-        Senha
-        <input type="password" id="senha" required placeholder="Digite sua senha">
-      </label>
-
-      <button type="submit">ACESSAR SISTEMA</button>
-    </form>
-
-    <p id="msgErro" class="erro"></p>
-  </div>
-
-  <script src="index.js"></script>
+    <script>
+        // ============================================
+        // CONFIGURAÇÃO DO FIREBASE
+        // ============================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyDm2V4szjQPegs4rJlH_eCIlG8lZiOyCEE",
+            authDomain: "ordem-cbc8e.firebaseapp.com",
+            projectId: "ordem-cbc8e",
+            storageBucket: "ordem-cbc8e.firebasestorage.app",
+            messagingSenderId: "1095787217194",
+            appId: "1:1095787217194:web:4f71cd1922b81af3b3de53"
+        };
+        
+        // ============================================
+        // INICIALIZAÇÃO DO FIREBASE
+        // ============================================
+        let auth;
+        let googleProvider;
+        
+        try {
+            // Inicializar Firebase
+            firebase.initializeApp(firebaseConfig);
+            auth = firebase.auth();
+            
+            // Configurar provedor do Google
+            googleProvider = new firebase.auth.GoogleAuthProvider();
+            googleProvider.addScope('profile');
+            googleProvider.addScope('email');
+            
+            // Configurar idioma
+            auth.languageCode = 'pt-BR';
+            
+            updateStatus('✅ Firebase conectado!', 'success');
+            console.log('Firebase inicializado com sucesso');
+            
+        } catch (error) {
+            console.error('Erro ao inicializar Firebase:', error);
+            updateStatus('❌ Erro ao conectar Firebase', 'error');
+        }
+        
+        // ============================================
+        // FUNÇÃO PARA REDIRECIONAR APÓS LOGIN
+        // ============================================
+        function redirectToTransicao() {
+            // Aguarda 1 segundo para mostrar mensagem de sucesso
+            setTimeout(() => {
+                window.location.href = 'transicao.html';
+            }, 1000);
+        }
+        
+        // ============================================
+        // FUNÇÕES AUXILIARES
+        // ============================================
+        function updateStatus(message, type = 'info') {
+            const status = document.getElementById('firebase-status');
+            status.innerHTML = message;
+            status.className = `status status-${type === 'error' ? 'error' : 'success'}`;
+        }
+        
+        function showMessage(message, type = 'info') {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = message;
+            messageEl.className = `message ${type}`;
+            messageEl.style.display = 'block';
+            
+            // Auto-esconder mensagens de sucesso após 3 segundos
+            if (type === 'success') {
+                setTimeout(() => {
+                    messageEl.style.display = 'none';
+                }, 3000);
+            }
+        }
+        
+        function hideMessage() {
+            document.getElementById('message').style.display = 'none';
+        }
+        
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+            document.querySelectorAll('button:not(.password-toggle)').forEach(btn => {
+                btn.disabled = true;
+                btn.style.opacity = '0.7';
+            });
+        }
+        
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+            document.querySelectorAll('button:not(.password-toggle)').forEach(btn => {
+                btn.disabled = false;
+                btn.style.opacity = '1';
+            });
+        }
+        
+        function showSection(sectionId) {
+            // Esconder todas as seções
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('register-section').style.display = 'none';
+            document.getElementById('recovery-section').style.display = 'none';
+            
+            // Mostrar a seção desejada
+            document.getElementById(sectionId).style.display = 'block';
+            
+            hideMessage();
+        }
+        
+        function togglePasswordVisibility(passwordField, toggleButton) {
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleButton.textContent = '🙈';
+            } else {
+                passwordField.type = 'password';
+                toggleButton.textContent = '👁️';
+            }
+        }
+        
+        // ============================================
+        // EVENT LISTENERS PARA TOGGLE DE SENHA
+        // ============================================
+        document.getElementById('toggle-password').addEventListener('click', function() {
+            const passwordField = document.getElementById('password');
+            togglePasswordVisibility(passwordField, this);
+        });
+        
+        document.getElementById('toggle-register-password').addEventListener('click', function() {
+            const passwordField = document.getElementById('register-password');
+            togglePasswordVisibility(passwordField, this);
+        });
+        
+        document.getElementById('toggle-register-confirm-password').addEventListener('click', function() {
+            const passwordField = document.getElementById('register-confirm-password');
+            togglePasswordVisibility(passwordField, this);
+        });
+        
+        // ============================================
+        // NAVEGAÇÃO ENTRE SESSÕES
+        // ============================================
+        document.getElementById('show-register').addEventListener('click', function(e) {
+            e.preventDefault();
+            showSection('register-section');
+        });
+        
+        document.getElementById('show-recovery').addEventListener('click', function(e) {
+            e.preventDefault();
+            showSection('recovery-section');
+        });
+        
+        document.getElementById('back-to-login').addEventListener('click', function() {
+            showSection('login-section');
+        });
+        
+        document.getElementById('back-to-login-from-recovery').addEventListener('click', function() {
+            showSection('login-section');
+        });
+        
+        // ============================================
+        // 1. LOGIN COM EMAIL E SENHA
+        // ============================================
+        document.getElementById('login-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            
+            if (!email || !password) {
+                showMessage('Por favor, preencha todos os campos.', 'error');
+                return;
+            }
+            
+            showLoading();
+            hideMessage();
+            
+            try {
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                
+                showMessage('✅ Login realizado com sucesso! Redirecionando...', 'success');
+                
+                // Redirecionar para transicao.html
+                redirectToTransicao();
+                
+                // Limpar formulário
+                this.reset();
+                
+            } catch (error) {
+                let errorMessage = '❌ Erro ao fazer login.';
+                switch (error.code) {
+                    case 'auth/user-not-found':
+                    case 'auth/wrong-password':
+                        errorMessage = '❌ E-mail ou senha incorretos.';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = '❌ E-mail inválido.';
+                        break;
+                    case 'auth/user-disabled':
+                        errorMessage = '❌ Esta conta foi desativada.';
+                        break;
+                    default:
+                        errorMessage = '❌ Erro: ' + error.message;
+                }
+                showMessage(errorMessage, 'error');
+                console.error('Erro de login:', error);
+            } finally {
+                hideLoading();
+            }
+        });
+        
+        // ============================================
+        // 2. CADASTRO COM EMAIL E SENHA
+        // ============================================
+        document.getElementById('register-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('register-name').value.trim();
+            const email = document.getElementById('register-email').value.trim();
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm-password').value;
+            
+            // Validações
+            if (!name || !email || !password || !confirmPassword) {
+                showMessage('Por favor, preencha todos os campos.', 'error');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showMessage('As senhas não coincidem.', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showMessage('A senha deve ter pelo menos 6 caracteres.', 'error');
+                return;
+            }
+            
+            showLoading();
+            hideMessage();
+            
+            try {
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                
+                // Atualizar nome do usuário
+                await userCredential.user.updateProfile({
+                    displayName: name
+                });
+                
+                showMessage('✅ Conta criada com sucesso! Redirecionando...', 'success');
+                
+                // Redirecionar para transicao.html
+                redirectToTransicao();
+                
+                // Limpar formulário
+                this.reset();
+                
+            } catch (error) {
+                let errorMessage = '❌ Erro ao criar conta.';
+                switch (error.code) {
+                    case 'auth/email-already-in-use':
+                        errorMessage = '❌ Este e-mail já está em uso.';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = '❌ E-mail inválido.';
+                        break;
+                    case 'auth/weak-password':
+                        errorMessage = '❌ Senha muito fraca.';
+                        break;
+                    default:
+                        errorMessage = '❌ Erro: ' + error.message;
+                }
+                showMessage(errorMessage, 'error');
+                console.error('Erro de cadastro:', error);
+            } finally {
+                hideLoading();
+            }
+        });
+        
+        // ============================================
+        // 3. RECUPERAÇÃO DE SENHA
+        // ============================================
+        document.getElementById('recovery-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('recovery-email').value.trim();
+            
+            if (!email) {
+                showMessage('Por favor, informe seu e-mail.', 'error');
+                return;
+            }
+            
+            showLoading();
+            hideMessage();
+            
+            try {
+                await auth.sendPasswordResetEmail(email);
+                showMessage(`✅ Link de recuperação enviado para ${email}.`, 'success');
+                
+                // Limpar formulário
+                this.reset();
+                
+                // Voltar para login após 3 segundos
+                setTimeout(() => {
+                    showSection('login-section');
+                }, 3000);
+                
+            } catch (error) {
+                let errorMessage = '❌ Erro ao enviar e-mail.';
+                switch (error.code) {
+                    case 'auth/user-not-found':
+                        errorMessage = '❌ Nenhum usuário encontrado com este e-mail.';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = '❌ E-mail inválido.';
+                        break;
+                    default:
+                        errorMessage = '❌ Erro: ' + error.message;
+                }
+                showMessage(errorMessage, 'error');
+                console.error('Erro de recuperação:', error);
+            } finally {
+                hideLoading();
+            }
+        });
+        
+        // ============================================
+        // 4. LOGIN COM GOOGLE
+        // ============================================
+        document.getElementById('google-login-btn').addEventListener('click', async function() {
+            showLoading();
+            hideMessage();
+            
+            try {
+                // Usar signInWithRedirect (funciona melhor que popup)
+                await auth.signInWithRedirect(googleProvider);
+                
+            } catch (error) {
+                hideLoading();
+                let errorMessage = '❌ Erro ao conectar com Google.';
+                
+                if (error.code === 'auth/operation-not-supported-in-this-environment') {
+                    // Fallback para redirecionamento manual
+                    const redirectUrl = `https://ordem-cbc8e.firebaseapp.com/__/auth/handler?apiKey=${firebaseConfig.apiKey}&authType=signInViaRedirect&provider=google.com&redirectUrl=${encodeURIComponent(window.location.href)}`;
+                    window.location.href = redirectUrl;
+                    return;
+                }
+                
+                showMessage(errorMessage, 'error');
+                console.error('Erro no login com Google:', error);
+            }
+        });
+        
+        // ============================================
+        // 5. VERIFICAR RESULTADO DE REDIRECIONAMENTO DO GOOGLE
+        // ============================================
+        async function checkGoogleRedirectResult() {
+            try {
+                const result = await auth.getRedirectResult();
+                
+                if (result.user) {
+                    showMessage('✅ Login com Google realizado! Redirecionando...', 'success');
+                    
+                    // Redirecionar para transicao.html
+                    setTimeout(() => {
+                        window.location.href = 'transicao.html';
+                    }, 1500);
+                }
+                
+            } catch (error) {
+                console.log('Nenhum resultado de redirecionamento ou erro:', error);
+            }
+        }
+        
+        // ============================================
+        // 6. OBSERVADOR DE ESTADO DE AUTENTICAÇÃO
+        // ============================================
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                // Se usuário já está logado, redireciona direto
+                console.log('Usuário já logado:', user.email);
+                window.location.href = 'transicao.html';
+            }
+        });
+        
+        // ============================================
+        // INICIALIZAÇÃO
+        // ============================================
+        window.addEventListener('load', async function() {
+            // Verificar resultado de redirecionamento do Google
+            await checkGoogleRedirectResult();
+            
+            // Configurar dados de exemplo
+            document.getElementById('email').value = "teste@exemplo.com";
+            document.getElementById('password').value = "123456";
+            
+            // Mostrar mensagem de boas-vindas
+            showMessage('Bem-vindo! Faça login para continuar.', 'info');
+        });
+    </script>
 </body>
 </html>

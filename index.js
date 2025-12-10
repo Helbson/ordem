@@ -1,18 +1,15 @@
-// Login e senha pré-definidos (apenas para demonstração)
-const USUARIO_CORRETO = 'admin';
-const SENHA_CORRETA   = '123456';
+// No final do seu index.js atual, adicione:
 
-function entrar(event) {
-  event.preventDefault();                 // evita reload da página
-
-  const login = document.getElementById('login').value.trim();
-  const senha = document.getElementById('senha').value;
-  const msgErro = document.getElementById('msgErro');
-
-  if (login === USUARIO_CORRETO && senha === SENHA_CORRETA) {
-    // Autenticação OK → redireciona para o sistema
-    window.location.href = 'trasicao.html';   // ou qualquer página interna
-  } else {
-    msgErro.textContent = 'Usuário ou senha incorretos.';
+// Verifica se há usuário logado ao carregar a página
+window.onload = function() {
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+  if (usuarioLogado) {
+    // Se já estiver logado, vai direto para transição
+    window.location.href = 'transicao.html';
   }
-}
+  
+  // Configura botão de cadastro
+  document.querySelector('.btn-cadastro').addEventListener('click', function() {
+    window.location.href = 'cadastro.html';
+  });
+};
