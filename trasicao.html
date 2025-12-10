@@ -3,15 +3,343 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://www.gstatic.com;">
     <title>Sistema de Gestão - Transição</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="transicao.css">
+    <style>
+        /* CSS EMBUTIDO PARA EVITAR ERROS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a237e 0%, #283593 50%, #3949ab 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            text-align: center;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .header {
+            margin-bottom: 40px;
+            padding: 0 10px;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: clamp(1.8rem, 5vw, 2.8rem);
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            line-height: 1.3;
+        }
+
+        .user-info {
+            color: #FFD700;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: clamp(0.95rem, 3vw, 1.2rem);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+            padding: 0 10px;
+        }
+
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+            padding: 0 15px;
+        }
+
+        .card {
+            background-color: rgba(255, 255, 255, 0.98);
+            border-radius: 20px;
+            padding: 30px 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+        }
+
+        /* Cores diferentes para cada card */
+        #paymentCard::before { background: linear-gradient(90deg, #FF9800, #FF5722); }
+        #serviceCard::before { background: linear-gradient(90deg, #4CAF50, #2196F3); }
+        #relatorioCard::before { background: linear-gradient(90deg, #9C27B0, #673AB7); }
+        #divulgarCard::before { background: linear-gradient(90deg, #00BCD4, #0097A7); }
+        #despesaCard::before { background: linear-gradient(90deg, #FF4081, #F50057); }
+        #inventarioCard::before { background: linear-gradient(90deg, #FFEB3B, #FBC02D); }
+        #financasCard::before { background: linear-gradient(90deg, #2E7D32, #4CAF50); }
+
+        .card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        .icon-container {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 25px;
+            transition: transform 0.4s ease;
+        }
+
+        .payment-icon { background: linear-gradient(135deg, #FF9800, #FF5722); }
+        .service-icon { background: linear-gradient(135deg, #4CAF50, #2196F3); }
+        .relatorio-icon { background: linear-gradient(135deg, #9C27B0, #673AB7); }
+        .divulga-icon { background: linear-gradient(135deg, #00BCD4, #0097A7); }
+        .despesas-icon { background: linear-gradient(135deg, #FF4081, #F50057); }
+        .inventario-icon { background: linear-gradient(135deg, #FFEB3B, #FBC02D); }
+        .financas-icon { background: linear-gradient(135deg, #2E7D32, #4CAF50); }
+
+        .icon-container i {
+            font-size: 40px;
+            color: white;
+        }
+
+        .card:hover .icon-container {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .card h2 {
+            font-size: clamp(1.3rem, 4vw, 1.8rem);
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .card p {
+            color: #5d6d7e;
+            line-height: 1.5;
+            margin-bottom: 25px;
+            font-size: clamp(0.9rem, 3vw, 1rem);
+            flex-grow: 1;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 35px;
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: clamp(0.9rem, 3vw, 1rem);
+            width: 80%;
+            max-width: 200px;
+            margin-top: auto;
+        }
+
+        .payment-btn { background: linear-gradient(90deg, #FF9800, #FF5722); }
+        .service-btn { background: linear-gradient(90deg, #4CAF50, #2196F3); }
+        .relatorio-btn { background: linear-gradient(90deg, #9C27B0, #673AB7); }
+        .despesas-btn { background: linear-gradient(90deg, #FF4081, #F50057); }
+        .divulga-btn { background: linear-gradient(90deg, #00BCD4, #0097A7); }
+        .inventario-btn { 
+            background: linear-gradient(90deg, #FFEB3B, #FBC02D); 
+            color: #333 !important;
+        }
+        .financas-btn { background: linear-gradient(90deg, #2E7D32, #4CAF50); }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            opacity: 0.95;
+        }
+
+        .actions-container {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .back-btn {
+            background: linear-gradient(90deg, #6a11cb, #2575fc);
+            padding: 14px 40px;
+            font-size: clamp(1rem, 3vw, 1.1rem);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            background: linear-gradient(90deg, #ff416c, #ff4b2b);
+            padding: 14px 40px;
+            font-size: clamp(1rem, 3vw, 1.1rem);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .back-btn:hover, .logout-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .footer {
+            margin-top: 40px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+            padding: 0 15px;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid #6a11cb;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+        }
+
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+        .card:nth-child(4) { animation-delay: 0.4s; }
+        .card:nth-child(5) { animation-delay: 0.5s; }
+        .card:nth-child(6) { animation-delay: 0.6s; }
+        .card:nth-child(7) { animation-delay: 0.7s; }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 15px;
+            }
+            
+            .cards-container {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+                margin: 0 auto;
+                margin-top: 30px;
+            }
+            
+            .actions-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .back-btn, .logout-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 25px 15px;
+                border-radius: 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.6rem;
+            }
+            
+            .card {
+                padding: 25px 20px;
+            }
+            
+            .icon-container {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .icon-container i {
+                font-size: 35px;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h1>Sistema de Gestão</h1>
-            <p>Selecione uma das opções abaixo para acessar as funcionalidades do sistema. Ambas as opções possuem processos otimizados para melhor experiência.</p>
+            <div class="user-info" id="userInfo">Carregando...</div>
+            <p>Selecione uma das opções abaixo para acessar as funcionalidades do sistema.</p>
         </div>
         
         <div class="cards-container">
@@ -78,7 +406,7 @@
             <!-- Card 7: Finanças -->
             <div class="card" id="financasCard">
                 <div class="icon-container financas-icon">
-                    <i class="fas fa-chart-line"></i> <!-- Ícone apropriado para finanças -->
+                    <i class="fas fa-chart-line"></i>
                 </div>
                 <h2>Finanças</h2>
                 <p>Controle completo de fluxo de caixa, investimentos, análises financeiras e planejamento orçamentário.</p>
@@ -86,10 +414,18 @@
             </div>
         </div>
         
-        <!-- Botão para voltar à página inicial -->
-        <div class="back-container">
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <span>Redirecionando...</span>
+        </div>
+        
+        <!-- Botões de Ação -->
+        <div class="actions-container">
             <button class="btn back-btn" id="backBtn">
-                <i class="fas fa-home"></i> Voltar para Página Inicial
+                <i class="fas fa-home"></i> Página Inicial
+            </button>
+            <button class="btn logout-btn" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i> Sair
             </button>
         </div>
         
@@ -98,6 +434,170 @@
         </div>
     </div>
 
-    <script src="transicao.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
+    <script>
+        // ============================================
+        // CONFIGURAÇÃO DO FIREBASE
+        // ============================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyDm2V4szjQPegs4rJlH_eCIlG8lZiOyCEE",
+            authDomain: "ordem-cbc8e.firebaseapp.com",
+            projectId: "ordem-cbc8e",
+            storageBucket: "ordem-cbc8e.firebasestorage.app",
+            messagingSenderId: "1095787217194",
+            appId: "1:1095787217194:web:4f71cd1922b81af3b3de53"
+        };
+        
+        // ============================================
+        // INICIALIZAÇÃO DO FIREBASE
+        // ============================================
+        let auth;
+        
+        try {
+            // Inicializar Firebase
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            auth = firebase.auth();
+            
+            console.log('✅ Firebase inicializado na página de transição');
+            
+        } catch (error) {
+            console.error('❌ Erro ao inicializar Firebase:', error);
+        }
+        
+        // ============================================
+        // FUNÇÕES AUXILIARES
+        // ============================================
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+            document.querySelectorAll('button').forEach(btn => {
+                btn.disabled = true;
+            });
+        }
+        
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+            document.querySelectorAll('button').forEach(btn => {
+                btn.disabled = false;
+            });
+        }
+        
+        function redirectTo(url) {
+            showLoading();
+            setTimeout(() => {
+                window.location.href = url;
+            }, 500);
+        }
+        
+        // ============================================
+        // VERIFICAÇÃO DE AUTENTICAÇÃO
+        // ============================================
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                // Usuário está logado
+                console.log('✅ Usuário autenticado:', user.email);
+                
+                // Atualizar informações do usuário
+                const userInfo = document.getElementById('userInfo');
+                const userName = user.displayName || user.email.split('@')[0];
+                userInfo.textContent = `👋 Bem-vindo, ${userName}!`;
+                userInfo.style.color = '#FFD700';
+                
+            } else {
+                // Usuário não está logado - REDIRECIONAR
+                console.log('❌ Usuário não autenticado. Redirecionando...');
+                alert('Você precisa fazer login para acessar esta página!');
+                window.location.href = 'index.html';
+            }
+        });
+        
+        // ============================================
+        // LOGOUT
+        // ============================================
+        document.getElementById('logoutBtn').addEventListener('click', async function() {
+            if (confirm('Tem certeza que deseja sair?')) {
+                showLoading();
+                
+                try {
+                    await auth.signOut();
+                    console.log('✅ Logout realizado com sucesso');
+                    
+                    // Limpar localStorage se houver
+                    localStorage.removeItem('userLoggedIn');
+                    
+                    // Redirecionar para login
+                    redirectTo('index.html');
+                    
+                } catch (error) {
+                    hideLoading();
+                    console.error('❌ Erro ao fazer logout:', error);
+                    alert('Erro ao fazer logout. Tente novamente.');
+                }
+            }
+        });
+        
+        // ============================================
+        // NAVEGAÇÃO ENTRE PÁGINAS
+        // ============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Botão Voltar para Home
+            document.getElementById('backBtn').addEventListener('click', function() {
+                redirectTo('index.html');
+            });
+            
+            // Botão Ordem de Pagamento
+            document.getElementById('paymentBtn').addEventListener('click', function() {
+                redirectTo('pagamento.html');
+            });
+            
+            // Botão Ordem de Serviço
+            document.getElementById('serviceBtn').addEventListener('click', function() {
+                redirectTo('painel.html');
+            });
+            
+            // Botão Relatório
+            document.getElementById('relatorioBtn').addEventListener('click', function() {
+                redirectTo('relatorio.html');
+            });
+            
+            // Botão Divulgador
+            document.getElementById('divulgaBtn').addEventListener('click', function() {
+                redirectTo('divulga.html');
+            });
+            
+            // Botão Despesas
+            document.getElementById('despesasBtn').addEventListener('click', function() {
+                redirectTo('despesas.html');
+            });
+            
+            // Botão Inventário
+            document.getElementById('inventarioBtn').addEventListener('click', function() {
+                redirectTo('iventario.html');
+            });
+            
+            // Botão Finanças
+            document.getElementById('financasBtn').addEventListener('click', function() {
+                redirectTo('perfilfinanca.html');
+            });
+            
+            // Clicar em qualquer card também redireciona
+            document.querySelectorAll('.card').forEach(card => {
+                card.addEventListener('click', function(e) {
+                    if (!e.target.classList.contains('btn') && !e.target.closest('.btn')) {
+                        const button = this.querySelector('.btn');
+                        if (button) {
+                            button.click();
+                        }
+                    }
+                });
+            });
+            
+            console.log('✅ Página de transição carregada com sucesso!');
+        });
+    </script>
 </body>
 </html>
