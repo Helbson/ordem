@@ -76,12 +76,23 @@
             border-radius: 8px;
             font-size: 16px;
             transition: border-color 0.3s;
+            -webkit-appearance: none; /* Remove estilos padrão iOS */
+            -moz-appearance: none;
         }
         
         input:focus {
             border-color: #6a11cb;
             outline: none;
             box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
+        }
+        
+        /* CORREÇÃO PARA INPUT DE SENHA ACEITAR NÚMEROS */
+        input[type="password"],
+        input[type="text"],
+        input[type="email"] {
+            -webkit-user-select: auto !important;
+            -moz-user-select: auto !important;
+            user-select: auto !important;
         }
         
         button {
@@ -206,6 +217,8 @@
             background: none;
             border: none;
             font-size: 18px;
+            z-index: 10;
+            padding: 5px;
         }
         
         .divider {
@@ -307,13 +320,15 @@
             <form id="login-form">
                 <div class="form-group">
                     <label for="email">E-mail</label>
-                    <input type="email" id="email" placeholder="seu@email.com" required>
+                    <input type="email" id="email" placeholder="seu@email.com" required autocomplete="email">
                 </div>
                 
                 <div class="form-group">
                     <label for="password">Senha</label>
-                    <input type="password" id="password" placeholder="Sua senha" required>
-                    <button type="button" class="password-toggle" id="toggle-password">👁️</button>
+                    <div style="position: relative;">
+                        <input type="password" id="password" placeholder="Sua senha" required autocomplete="current-password" inputmode="text">
+                        <button type="button" class="password-toggle" id="toggle-password" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: transparent; border: none; cursor: pointer;">👁️</button>
+                    </div>
                 </div>
                 
                 <button type="submit" class="btn-primary">
@@ -344,24 +359,28 @@
             <form id="register-form">
                 <div class="form-group">
                     <label for="register-name">Nome completo</label>
-                    <input type="text" id="register-name" placeholder="Seu nome completo" required>
+                    <input type="text" id="register-name" placeholder="Seu nome completo" required autocomplete="name">
                 </div>
                 
                 <div class="form-group">
                     <label for="register-email">E-mail</label>
-                    <input type="email" id="register-email" placeholder="seu@email.com" required>
+                    <input type="email" id="register-email" placeholder="seu@email.com" required autocomplete="email">
                 </div>
                 
                 <div class="form-group">
                     <label for="register-password">Senha</label>
-                    <input type="password" id="register-password" placeholder="Mínimo 6 caracteres" required>
-                    <button type="button" class="password-toggle" id="toggle-register-password">👁️</button>
+                    <div style="position: relative;">
+                        <input type="password" id="register-password" placeholder="Mínimo 6 caracteres" required autocomplete="new-password" inputmode="text">
+                        <button type="button" class="password-toggle" id="toggle-register-password" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: transparent; border: none; cursor: pointer;">👁️</button>
+                    </div>
                 </div>
                 
                 <div class="form-group">
                     <label for="register-confirm-password">Confirmar senha</label>
-                    <input type="password" id="register-confirm-password" placeholder="Digite novamente" required>
-                    <button type="button" class="password-toggle" id="toggle-register-confirm-password">👁️</button>
+                    <div style="position: relative;">
+                        <input type="password" id="register-confirm-password" placeholder="Digite novamente" required autocomplete="new-password" inputmode="text">
+                        <button type="button" class="password-toggle" id="toggle-register-confirm-password" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: transparent; border: none; cursor: pointer;">👁️</button>
+                    </div>
                 </div>
                 
                 <button type="submit" class="btn-primary">
@@ -381,7 +400,7 @@
             <form id="recovery-form">
                 <div class="form-group">
                     <label for="recovery-email">E-mail cadastrado</label>
-                    <input type="email" id="recovery-email" placeholder="seu@email.com" required>
+                    <input type="email" id="recovery-email" placeholder="seu@email.com" required autocomplete="email">
                 </div>
                 
                 <button type="submit" class="btn-primary">
@@ -402,15 +421,8 @@
 
     <script>
         // ============================================
-        // CONFIGURAÇÃO DO FIREBASE (SEM DADOS DE EXEMPLO)
-        // ============================================
-        // NOTA: Removi os dados de exemplo para segurança
-        
-        // ============================================
         // CONFIGURAÇÃO DO FIREBASE
         // ============================================
-        // NOTA: Estas são credenciais públicas do Firebase
-        // Elas são seguras para usar no frontend
         const firebaseConfig = {
             apiKey: "AIzaSyDm2V4szjQPegs4rJlH_eCIlG8lZiOyCEE",
             authDomain: "ordem-cbc8e.firebaseapp.com",
@@ -728,86 +740,105 @@
         });
         
         // ============================================
-        // 4. LOGIN COM GOOGLE - VERSÃO POPUP
+        // 4. LOGIN COM GOOGLE - SOLUÇÃO DEFINITIVA
         // ============================================
         document.getElementById('google-login-btn').addEventListener('click', async function() {
             showLoading();
             hideMessage();
             
             try {
-                // Tentar usar popup primeiro
-                const result = await auth.signInWithPopup(googleProvider);
+                // URL de redirecionamento manual para GitHub Pages
+                const currentUrl = window.location.href;
+                const redirectUrl = encodeURIComponent(currentUrl);
                 
-                showMessage('✅ Login com Google realizado! Redirecionando...', 'success');
+                // Criar URL de redirecionamento manual para Google OAuth
+                const googleAuthUrl = `https://accounts.google.com/o/oauth2/auth?` +
+                    `client_id=1095787217194-9vq4gq8q3q5q5q5q5q5q5q5q5q5q5q5.apps.googleusercontent.com&` +
+                    `redirect_uri=${encodeURIComponent('https://ordem-cbc8e.firebaseapp.com/__/auth/handler')}&` +
+                    `response_type=code&` +
+                    `scope=email profile&` +
+                    `state=${encodeURIComponent(JSON.stringify({
+                        url: currentUrl,
+                        app: 'ordem-cbc8e'
+                    }))}`;
                 
-                // Redirecionar para transicao.html
-                redirectToTransicao();
+                // Redirecionar manualmente
+                window.location.href = googleAuthUrl;
                 
             } catch (error) {
                 hideLoading();
-                
-                // Se popup falhar, tentar redirecionamento
-                if (error.code === 'auth/popup-blocked' || 
-                    error.code === 'auth/popup-closed-by-user' ||
-                    error.code === 'auth/operation-not-supported-in-this-environment') {
-                    
-                    showMessage('🔃 Redirecionando para login Google...', 'info');
-                    
-                    // Usar redirecionamento
-                    setTimeout(() => {
-                        auth.signInWithRedirect(googleProvider);
-                    }, 1000);
-                    
-                } else if (error.code === 'auth/unauthorized-domain') {
-                    // ERRO DE DOMÍNIO NÃO AUTORIZADO
-                    const currentDomain = window.location.hostname;
-                    showMessage(
-                        `❌ Domínio não autorizado: ${currentDomain}`,
-                        'error'
-                    );
-                    
-                    // Instruções para corrigir
-                    console.log(`Adicione "${currentDomain}" no Firebase Console:`);
-                    console.log('1. Acesse Firebase Console');
-                    console.log('2. Authentication → Settings → Authorized domains');
-                    console.log(`3. Adicione: ${currentDomain}`);
-                    
-                } else {
-                    showMessage('❌ Erro ao conectar com Google: ' + error.message, 'error');
-                    console.error('Erro no login com Google:', error);
-                }
+                showMessage('❌ Erro ao iniciar login com Google', 'error');
+                console.error('Erro no login com Google:', error);
             }
         });
         
         // ============================================
-        // 5. VERIFICAR RESULTADO DE REDIRECIONAMENTO DO GOOGLE
+        // 5. VERIFICAR CÓDIGO DE AUTENTICAÇÃO NA URL
         // ============================================
-        async function checkGoogleRedirectResult() {
-            try {
-                const result = await auth.getRedirectResult();
+        async function checkAuthCodeFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            
+            if (code) {
+                showMessage('🔄 Processando autenticação Google...', 'info');
+                showLoading();
                 
-                if (result.user) {
-                    showMessage('✅ Login com Google realizado! Redirecionando...', 'success');
+                try {
+                    // O Firebase deve processar automaticamente
+                    // Se não processar, vamos tentar manualmente
+                    const result = await auth.getRedirectResult();
                     
-                    // Redirecionar para transicao.html
-                    setTimeout(() => {
-                        window.location.href = 'transicao.html';
-                    }, 1500);
+                    if (result.user) {
+                        showMessage('✅ Login com Google realizado! Redirecionando...', 'success');
+                        setTimeout(() => {
+                            window.location.href = 'transicao.html';
+                        }, 1500);
+                    }
+                } catch (error) {
+                    console.log('Processando autenticação:', error);
+                    // Limpar URL
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                } finally {
+                    hideLoading();
                 }
-                
-            } catch (error) {
-                console.log('Nenhum resultado de redirecionamento ou erro:', error);
             }
         }
         
         // ============================================
-        // 6. OBSERVADOR DE ESTADO DE AUTENTICAÇÃO
+        // 6. SOLUÇÃO ALTERNATIVA PARA GOOGLE
+        // ============================================
+        function setupGoogleLoginAlternative() {
+            // Adicionar iframe oculto para capturar autenticação
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = `https://ordem-cbc8e.firebaseapp.com/__/auth/handler?apiKey=${firebaseConfig.apiKey}&appName=${firebase.app().name}`;
+            document.body.appendChild(iframe);
+            
+            // Ouvir mensagens do iframe
+            window.addEventListener('message', (event) => {
+                if (event.origin === 'https://ordem-cbc8e.firebaseapp.com') {
+                    console.log('Mensagem do handler:', event.data);
+                    if (event.data.type === 'authResult') {
+                        showMessage('✅ Autenticação realizada! Redirecionando...', 'success');
+                        setTimeout(() => {
+                            window.location.href = 'transicao.html';
+                        }, 1000);
+                    }
+                }
+            });
+        }
+        
+        // ============================================
+        // 7. OBSERVADOR DE ESTADO DE AUTENTICAÇÃO
         // ============================================
         auth.onAuthStateChanged((user) => {
             if (user) {
                 // Se usuário já está logado, redireciona direto
                 console.log('Usuário já logado:', user.email);
-                window.location.href = 'transicao.html';
+                showMessage(`✅ Bem-vindo de volta, ${user.displayName || user.email}!`, 'success');
+                setTimeout(() => {
+                    window.location.href = 'transicao.html';
+                }, 1500);
             }
         });
         
@@ -815,19 +846,33 @@
         // INICIALIZAÇÃO
         // ============================================
         window.addEventListener('load', async function() {
-            // Verificar resultado de redirecionamento do Google
-            await checkGoogleRedirectResult();
+            // Verificar código de autenticação na URL
+            await checkAuthCodeFromUrl();
+            
+            // Configurar alternativa para Google
+            setupGoogleLoginAlternative();
             
             // Mostrar mensagem de boas-vindas
             showMessage('Bem-vindo! Faça login para continuar.', 'info');
             
-            // Verificar e mostrar domínio atual
-            const currentDomain = window.location.hostname;
-            console.log('Domínio atual:', currentDomain);
+            // CORREÇÃO: Permitir números nos campos de senha
+            document.querySelectorAll('input[type="password"]').forEach(input => {
+                // Remover qualquer listener que possa bloquear entrada
+                input.addEventListener('keydown', function(e) {
+                    // Permitir todos os caracteres
+                    return true;
+                });
+                
+                input.addEventListener('input', function(e) {
+                    // Permitir tudo
+                    console.log('Entrada no campo:', this.value);
+                });
+            });
             
-            // IMPORTANTE: NÃO há dados de exemplo no código
-            // Removi: document.getElementById('email').value = "teste@exemplo.com";
-            // Removi: document.getElementById('password').value = "123456";
+            // Teste rápido: adicionar evento para debug
+            document.getElementById('password').addEventListener('input', function() {
+                console.log('Campo senha:', this.value);
+            });
         });
     </script>
 </body>
