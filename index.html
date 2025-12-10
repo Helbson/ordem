@@ -1,18 +1,27 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" translate="no">
 <head>
+    <!-- BLOQUEIA GOOGLE TRANSLATE -->
+    <meta name="google" content="notranslate">
+    <meta name="googlebot" content="notranslate">
+    <meta http-equiv="Content-Language" content="pt-br">
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Sistema de Gestão</title>
+    
+    <!-- REMOVI TODOS OS LINKS EXTERNOS -->
     <style>
+        /* ESTILOS COMPLETAMENTE EMBUTIDOS */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
         
         body {
+            background: #1a1a2e;
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             min-height: 100vh;
             display: flex;
@@ -21,14 +30,14 @@
             padding: 20px;
         }
         
-        .container {
+        .login-container {
             width: 100%;
             max-width: 400px;
             background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
             border-radius: 20px;
             padding: 40px 30px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
         }
         
@@ -48,13 +57,6 @@
             font-size: 1rem;
         }
         
-        h2 {
-            color: white;
-            text-align: center;
-            margin-bottom: 25px;
-            font-weight: 600;
-        }
-        
         .form-group {
             margin-bottom: 20px;
         }
@@ -66,13 +68,9 @@
             font-weight: 500;
         }
         
-        .input-wrapper {
-            position: relative;
-        }
-        
         input {
             width: 100%;
-            padding: 14px 45px 14px 15px;
+            padding: 14px 15px;
             background: rgba(255, 255, 255, 0.1);
             border: 2px solid rgba(255, 255, 255, 0.2);
             border-radius: 10px;
@@ -87,22 +85,11 @@
             box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.3);
         }
         
-        .toggle-password {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: #aaa;
-            cursor: pointer;
-            font-size: 18px;
-            padding: 5px;
-        }
-        
-        .btn {
+        button {
             width: 100%;
             padding: 15px;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
             border: none;
             border-radius: 10px;
             font-size: 16px;
@@ -110,65 +97,19 @@
             cursor: pointer;
             transition: all 0.3s;
             margin-top: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
         }
         
-        .btn-primary {
-            background: linear-gradient(to right, #6a11cb, #2575fc);
-            color: white;
-        }
-        
-        .btn-primary:hover {
+        button:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(106, 17, 203, 0.4);
         }
         
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-        
-        .links {
-            text-align: center;
-            margin: 20px 0;
-        }
-        
-        .link {
-            color: #6a11cb;
-            text-decoration: none;
-            font-weight: 500;
-            margin: 0 10px;
-            padding: 5px 0;
-            border-bottom: 2px solid transparent;
-            transition: all 0.3s;
-            display: inline-block;
-            cursor: pointer;
-        }
-        
-        .link:hover {
-            border-bottom: 2px solid #6a11cb;
-        }
-        
         .message {
-            padding: 15px;
-            border-radius: 10px;
+            padding: 12px;
+            border-radius: 8px;
             margin-bottom: 20px;
             text-align: center;
             display: none;
-            animation: fadeIn 0.3s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
         }
         
         .success {
@@ -181,12 +122,6 @@
             background: rgba(231, 76, 60, 0.2);
             color: #e74c3c;
             border: 1px solid rgba(231, 76, 60, 0.3);
-        }
-        
-        .info {
-            background: rgba(52, 152, 219, 0.2);
-            color: #3498db;
-            border: 1px solid rgba(52, 152, 219, 0.3);
         }
         
         .loading {
@@ -210,16 +145,8 @@
             100% { transform: rotate(360deg); }
         }
         
-        .section {
-            display: none;
-        }
-        
-        .section.active {
-            display: block;
-        }
-        
         @media (max-width: 480px) {
-            .container {
+            .login-container {
                 padding: 30px 20px;
             }
             
@@ -230,110 +157,36 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="login-container">
         <div class="logo">
             <h1>🔐 Sistema</h1>
-            <p>Autenticação Segura</p>
+            <p>Acesso ao Painel</p>
         </div>
         
-        <!-- MENSAGENS -->
         <div class="message" id="message"></div>
         
-        <!-- SEÇÃO DE LOGIN -->
-        <div class="section active" id="login-section">
-            <h2>Faça seu acesso</h2>
-            
-            <form id="login-form">
-                <div class="form-group">
-                    <label for="email">Nome de Usuário</label>
-                    <div class="input-wrapper">
-                        <input type="text" id="username" placeholder="Seu nome ou e-mail" required>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="password">Senha</label>
-                    <div class="input-wrapper">
-                        <input type="password" id="password" placeholder="Sua senha" required>
-                        <button type="button" class="toggle-password" id="toggle-password">👁️</button>
-                    </div>
-                </div>
-                
-                <button type="submit" class="btn btn-primary">
-                    <span>Acessar Sistema</span>
-                </button>
-            </form>
-            
-            <div class="links">
-                <a class="link" id="show-register">Primeiro acesso</a>
-                <a class="link" id="show-recovery">Esqueci a senha</a>
-            </div>
+        <div class="form-group">
+            <label for="username">Usuário</label>
+            <input type="text" id="username" placeholder="Digite seu usuário" autocomplete="username">
         </div>
         
-        <!-- SEÇÃO DE CADASTRO -->
-        <div class="section" id="register-section">
-            <h2>Criar novo acesso</h2>
-            
-            <form id="register-form">
-                <div class="form-group">
-                    <label for="register-name">Nome completo</label>
-                    <input type="text" id="register-name" placeholder="Seu nome completo" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="register-email">E-mail</label>
-                    <input type="email" id="register-email" placeholder="seu@email.com" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="register-password">Senha</label>
-                    <div class="input-wrapper">
-                        <input type="password" id="register-password" placeholder="Mínimo 6 caracteres" required>
-                        <button type="button" class="toggle-password" id="toggle-register-password">👁️</button>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="register-confirm-password">Confirmar senha</label>
-                    <div class="input-wrapper">
-                        <input type="password" id="register-confirm-password" placeholder="Digite novamente" required>
-                        <button type="button" class="toggle-password" id="toggle-register-confirm-password">👁️</button>
-                    </div>
-                </div>
-                
-                <button type="submit" class="btn btn-primary">
-                    <span>Criar Conta</span>
-                </button>
-            </form>
-            
-            <button class="btn btn-secondary" id="back-to-login">
-                <span>← Voltar para login</span>
-            </button>
+        <div class="form-group">
+            <label for="password">Senha</label>
+            <input type="password" id="password" placeholder="Digite sua senha" autocomplete="current-password">
         </div>
         
-        <!-- SEÇÃO DE RECUPERAÇÃO -->
-        <div class="section" id="recovery-section">
-            <h2>Recuperar acesso</h2>
-            
-            <form id="recovery-form">
-                <div class="form-group">
-                    <label for="recovery-email">E-mail cadastrado</label>
-                    <input type="email" id="recovery-email" placeholder="seu@email.com" required>
-                </div>
-                
-                <button type="submit" class="btn btn-primary">
-                    <span>Redefinir Senha</span>
-                </button>
-            </form>
-            
-            <button class="btn btn-secondary" id="back-to-login-from-recovery">
-                <span>← Voltar para login</span>
-            </button>
-        </div>
+        <button id="loginBtn">Entrar no Sistema</button>
         
         <div class="loading" id="loading">
             <div class="spinner"></div>
-            <span>Processando...</span>
+            <span style="color: white;">Carregando...</span>
+        </div>
+        
+        <div style="margin-top: 25px; text-align: center;">
+            <p style="color: #aaa; font-size: 14px;">
+                Sistema de Gestão Empresarial v1.0<br>
+                <small>Todos os direitos reservados © 2024</small>
+            </p>
         </div>
     </div>
 
@@ -342,83 +195,58 @@
         // SISTEMA DE LOGIN SIMPLES (localStorage)
         // ============================================
         
+        // Elementos da página
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const loginBtn = document.getElementById('loginBtn');
+        const messageEl = document.getElementById('message');
+        const loadingEl = document.getElementById('loading');
+        
         // ============================================
         // FUNÇÕES AUXILIARES
         // ============================================
-        function showMessage(message, type = 'info') {
-            const messageEl = document.getElementById('message');
-            messageEl.textContent = message;
+        function showMessage(text, type = 'info') {
+            messageEl.textContent = text;
             messageEl.className = `message ${type}`;
             messageEl.style.display = 'block';
-            
-            if (type === 'success') {
-                setTimeout(() => {
-                    messageEl.style.display = 'none';
-                }, 3000);
-            }
         }
         
         function hideMessage() {
-            document.getElementById('message').style.display = 'none';
+            messageEl.style.display = 'none';
         }
         
         function showLoading() {
-            document.getElementById('loading').style.display = 'block';
-            document.querySelectorAll('button').forEach(btn => {
-                btn.disabled = true;
-            });
+            loadingEl.style.display = 'block';
+            loginBtn.disabled = true;
         }
         
         function hideLoading() {
-            document.getElementById('loading').style.display = 'none';
-            document.querySelectorAll('button').forEach(btn => {
-                btn.disabled = false;
-            });
+            loadingEl.style.display = 'none';
+            loginBtn.disabled = false;
         }
         
-        function showSection(sectionId) {
-            document.querySelectorAll('.section').forEach(section => {
-                section.classList.remove('active');
-            });
-            document.getElementById(sectionId).classList.add('active');
-            hideMessage();
-        }
-        
-        function togglePasswordVisibility(passwordField, toggleButton) {
-            if (passwordField.type === 'password') {
-                passwordField.type = 'text';
-                toggleButton.textContent = '🙈';
-            } else {
-                passwordField.type = 'password';
-                toggleButton.textContent = '👁️';
-            }
-        }
-        
-        function redirectToTransicao() {
-            showMessage('✅ Acesso realizado! Redirecionando...', 'success');
+        function redirectTo(url) {
             setTimeout(() => {
-                window.location.href = 'transicao.html';
-            }, 1500);
+                window.location.href = url;
+            }, 1000);
         }
         
         // ============================================
-        // SALVAR USUÁRIO NO localStorage
+        // SALVAR DADOS DO USUÁRIO
         // ============================================
-        function saveUser(userData) {
+        function saveUserData(username) {
             try {
-                // Criar um ID único para o usuário
-                const userId = 'user_' + Date.now();
-                userData.id = userId;
-                userData.createdAt = new Date().toISOString();
+                const userData = {
+                    id: 'user_' + Date.now(),
+                    username: username,
+                    loginTime: new Date().toISOString(),
+                    sessionId: Math.random().toString(36).substr(2, 9)
+                };
                 
                 // Salvar no localStorage
                 localStorage.setItem('currentUser', JSON.stringify(userData));
                 localStorage.setItem('isLoggedIn', 'true');
-                
-                // Se quiser salvar histórico de usuários
-                const users = JSON.parse(localStorage.getItem('allUsers') || '[]');
-                users.push(userData);
-                localStorage.setItem('allUsers', JSON.stringify(users));
+                localStorage.setItem('lastLogin', Date.now());
                 
                 return true;
             } catch (error) {
@@ -428,199 +256,109 @@
         }
         
         // ============================================
-        // VERIFICAR LOGIN
+        // VERIFICAR SE JÁ ESTÁ LOGADO
         // ============================================
-        function checkLogin() {
+        function checkIfLoggedIn() {
             const isLoggedIn = localStorage.getItem('isLoggedIn');
-            const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            const lastLogin = localStorage.getItem('lastLogin');
             
-            if (isLoggedIn === 'true' && user) {
-                return user;
+            // Verificar se a sessão tem menos de 24 horas
+            if (isLoggedIn === 'true' && lastLogin) {
+                const hoursSinceLogin = (Date.now() - parseInt(lastLogin)) / (1000 * 60 * 60);
+                if (hoursSinceLogin < 24) {
+                    return true;
+                } else {
+                    // Sessão expirada
+                    localStorage.removeItem('isLoggedIn');
+                }
             }
-            return null;
+            return false;
         }
         
         // ============================================
-        // VERIFICAR SE JÁ ESTÁ LOGADO
+        // PROCESSO DE LOGIN
         // ============================================
-        window.addEventListener('load', function() {
-            const user = checkLogin();
-            if (user) {
-                showMessage(`✅ Bem-vindo de volta, ${user.name}!`, 'success');
-                setTimeout(() => {
-                    window.location.href = 'transicao.html';
-                }, 1000);
-            } else {
-                showMessage('Bem-vindo! Faça login para continuar.', 'info');
-            }
-        });
-        
-        // ============================================
-        // EVENT LISTENERS PARA TOGGLE DE SENHA
-        // ============================================
-        document.getElementById('toggle-password').addEventListener('click', function() {
-            const passwordField = document.getElementById('password');
-            togglePasswordVisibility(passwordField, this);
-        });
-        
-        document.getElementById('toggle-register-password').addEventListener('click', function() {
-            const passwordField = document.getElementById('register-password');
-            togglePasswordVisibility(passwordField, this);
-        });
-        
-        document.getElementById('toggle-register-confirm-password').addEventListener('click', function() {
-            const passwordField = document.getElementById('register-confirm-password');
-            togglePasswordVisibility(passwordField, this);
-        });
-        
-        // ============================================
-        // NAVEGAÇÃO ENTRE SESSÕES
-        // ============================================
-        document.getElementById('show-register').addEventListener('click', function(e) {
-            e.preventDefault();
-            showSection('register-section');
-        });
-        
-        document.getElementById('show-recovery').addEventListener('click', function(e) {
-            e.preventDefault();
-            showSection('recovery-section');
-        });
-        
-        document.getElementById('back-to-login').addEventListener('click', function() {
-            showSection('login-section');
-        });
-        
-        document.getElementById('back-to-login-from-recovery').addEventListener('click', function() {
-            showSection('login-section');
-        });
-        
-        // ============================================
-        // 1. LOGIN SIMPLES
-        // ============================================
-        document.getElementById('login-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
+        function handleLogin() {
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value;
             
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value;
-            
+            // Validação básica
             if (!username || !password) {
                 showMessage('Por favor, preencha todos os campos.', 'error');
                 return;
             }
             
-            showLoading();
-            hideMessage();
-            
-            // Simular verificação (em produção, isso seria no servidor)
-            setTimeout(() => {
-                // Criar objeto do usuário
-                const userData = {
-                    name: username,
-                    email: username.includes('@') ? username : username + '@exemplo.com',
-                    loginTime: new Date().toISOString()
-                };
-                
-                // Salvar usuário
-                if (saveUser(userData)) {
-                    // Login bem sucedido
-                    redirectToTransicao();
-                    
-                    // Limpar formulário
-                    this.reset();
-                } else {
-                    showMessage('❌ Erro ao salvar dados do usuário.', 'error');
-                }
-                
-                hideLoading();
-            }, 1000);
-        });
-        
-        // ============================================
-        // 2. CADASTRO SIMPLES
-        // ============================================
-        document.getElementById('register-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const name = document.getElementById('register-name').value.trim();
-            const email = document.getElementById('register-email').value.trim();
-            const password = document.getElementById('register-password').value;
-            const confirmPassword = document.getElementById('register-confirm-password').value;
-            
-            // Validações
-            if (!name || !email || !password || !confirmPassword) {
-                showMessage('Por favor, preencha todos os campos.', 'error');
-                return;
-            }
-            
-            if (password !== confirmPassword) {
-                showMessage('As senhas não coincidem.', 'error');
-                return;
-            }
-            
-            if (password.length < 6) {
-                showMessage('A senha deve ter pelo menos 6 caracteres.', 'error');
+            if (password.length < 4) {
+                showMessage('A senha deve ter pelo menos 4 caracteres.', 'error');
                 return;
             }
             
             showLoading();
             hideMessage();
             
-            // Simular processamento
+            // Simular verificação (substitua por validação real se necessário)
             setTimeout(() => {
-                // Criar objeto do usuário
-                const userData = {
-                    name: name,
-                    email: email,
-                    createdAt: new Date().toISOString()
-                };
-                
-                // Salvar usuário
-                if (saveUser(userData)) {
-                    showMessage('✅ Conta criada com sucesso! Redirecionando...', 'success');
+                // Salvar dados do usuário
+                if (saveUserData(username)) {
+                    showMessage('✅ Login realizado com sucesso!', 'success');
                     
-                    // Redirecionar
-                    redirectToTransicao();
+                    // Redirecionar para painel
+                    redirectTo('transicao.html');
                     
-                    // Limpar formulário
-                    this.reset();
+                    // Limpar campos
+                    usernameInput.value = '';
+                    passwordInput.value = '';
                 } else {
-                    showMessage('❌ Erro ao criar conta.', 'error');
+                    showMessage('❌ Erro ao processar login.', 'error');
                 }
                 
                 hideLoading();
             }, 1500);
+        }
+        
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('✅ Página de login carregada');
+            
+            // Verificar se já está logado
+            if (checkIfLoggedIn()) {
+                showMessage('✅ Sessão ativa detectada. Redirecionando...', 'success');
+                redirectTo('transicao.html');
+            } else {
+                showMessage('Digite seu usuário e senha para acessar o sistema.', 'info');
+            }
+            
+            // Configurar eventos
+            loginBtn.addEventListener('click', handleLogin);
+            
+            // Permitir Enter para login
+            passwordInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    handleLogin();
+                }
+            });
+            
+            // Preencher com dados de teste (remova em produção)
+            usernameInput.value = 'admin';
+            passwordInput.value = '1234';
         });
         
         // ============================================
-        // 3. RECUPERAÇÃO SIMPLES
+        // BLOQUEAR GOOGLE TRANSLATE VIA JAVASCRIPT
         // ============================================
-        document.getElementById('recovery-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById('recovery-email').value.trim();
-            
-            if (!email) {
-                showMessage('Por favor, informe seu e-mail.', 'error');
-                return;
-            }
-            
-            showLoading();
-            hideMessage();
-            
-            // Simular envio
+        window.addEventListener('load', function() {
+            // Remover qualquer iframe do Google Translate
             setTimeout(() => {
-                showMessage(`✅ Instruções enviadas para ${email}.`, 'success');
+                const translateElements = document.querySelectorAll('[id*="google"], [class*="translate"], iframe[src*="translate"]');
+                translateElements.forEach(el => el.remove());
                 
-                // Limpar formulário
-                this.reset();
-                
-                // Voltar para login após 3 segundos
-                setTimeout(() => {
-                    showSection('login-section');
-                }, 3000);
-                
-                hideLoading();
-            }, 1500);
+                // Bloquear objeto do translate se existir
+                if (window.google && google.translate) {
+                    google.translate.TranslateElement = null;
+                }
+            }, 100);
         });
     </script>
 </body>
