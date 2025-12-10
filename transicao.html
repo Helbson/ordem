@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestão - Transição</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="transicao.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Sistema de Gestão</h1>
+            <p>Selecione uma das opções abaixo para acessar as funcionalidades do sistema. Ambas as opções possuem processos otimizados para melhor experiência.</p>
+        </div>
+        
+        <div class="cards-container">
+            <!-- Card 1: Ordem de Pagamento -->
+            <div class="card" id="paymentCard">
+                <div class="icon-container payment-icon">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                </div>
+                <h2>Ordem de Pagamento</h2>
+                <p>Gerencie e acompanhe todas as transações financeiras, pagamentos a fornecedores, emissão de boletos e relatórios financeiros.</p>
+                <button class="btn payment-btn" id="paymentBtn">Acessar</button>
+            </div>
+            
+            <!-- Card 2: Ordem de Serviço -->
+            <div class="card" id="serviceCard">
+                <div class="icon-container service-icon">
+                    <i class="fas fa-tools"></i>
+                </div>
+                <h2>Ordem de Serviço</h2>
+                <p>Controle de serviços prestados, agendamentos, alocação de técnicos, acompanhamento de execução e histórico de serviços.</p>
+                <button class="btn service-btn" id="serviceBtn">Acessar</button>
+            </div>
+
+            <!-- Card 3: Relatório de Pagamentos -->
+            <div class="card" id="relatorioCard">
+                <div class="icon-container relatorio-icon">
+                    <i class="fas fa-file-lines"></i>
+                </div>
+                <h2>Relatório de Pagamentos</h2>
+                <p>Visualize e exporte relatórios detalhados de todas as transações financeiras do sistema.</p>
+                <button class="btn relatorio-btn" id="relatorioBtn">Acessar</button>
+            </div>
+
+            <!-- Card 4: Divulgador -->
+            <div class="card" id="divulgarCard">
+                <div class="icon-container divulga-icon">
+                    <i class="fas fa-share-alt"></i>
+                </div>
+                <h2>Divulgador</h2>
+                <p>Divulgue arquivos para WhatsApp e outras plataformas de comunicação.</p>
+                <button class="btn divulga-btn" id="divulgaBtn">Acessar</button>
+            </div>
+            
+            <!-- Card 5: Despesas Pessoais -->
+            <div class="card" id="despesaCard">
+                <div class="icon-container despesas-icon">
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <h2>Despesas</h2>
+                <p>Controle todas as suas contas pessoais e despesas do dia a dia.</p>
+                <button class="btn despesas-btn" id="despesasBtn">Acessar</button>
+            </div>
+
+            <!-- Card 6: Inventário -->
+            <div class="card" id="inventarioCard">
+                <div class="icon-container inventario-icon">
+                    <i class="fas fa-boxes"></i>
+                </div>
+                <h2>Inventário</h2>
+                <p>Controle completo de entradas e saídas do estoque com emissão de comprovantes.</p>
+                <button class="btn inventario-btn" id="inventarioBtn">Acessar</button>
+            </div>
+
+            <!-- Card 7: Finanças -->
+            <div class="card" id="financasCard">
+                <div class="icon-container financas-icon">
+                    <i class="fas fa-chart-line"></i> <!-- Ícone apropriado para finanças -->
+                </div>
+                <h2>Finanças</h2>
+                <p>Controle completo de fluxo de caixa, investimentos, análises financeiras e planejamento orçamentário.</p>
+                <button class="btn financas-btn" id="financasBtn">Acessar</button>
+            </div>
+        </div>
+        
+        <!-- Botão para voltar à página inicial -->
+        <div class="back-container">
+            <button class="btn back-btn" id="backBtn">
+                <i class="fas fa-home"></i> Voltar para Página Inicial
+            </button>
+        </div>
+        
+        <div class="footer">
+            <p>Sistema de Gestão Empresarial &copy; 2024 - Todos os direitos reservados</p>
+        </div>
+    </div>
+
+    <script src="transicao.js"></script>
+</body>
+</html> 
