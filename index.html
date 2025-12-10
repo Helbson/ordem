@@ -721,29 +721,50 @@
         });
         
         // ============================================
-        // 4. LOGIN COM GOOGLE
+        // 4. LOGIN COM GOOGLE - VERSÃO POPUP
         // ============================================
         document.getElementById('google-login-btn').addEventListener('click', async function() {
             showLoading();
             hideMessage();
             
             try {
-                // Usar signInWithRedirect (funciona melhor que popup)
-                await auth.signInWithRedirect(googleProvider);
+                // Tentar usar popup primeiro
+                const result = await auth.signInWithPopup(googleProvider);
+                
+                showMessage('✅ Login com Google realizado! Redirecionando...', 'success');
+                
+                // Redirecionar para transicao.html
+                redirectToTransicao();
                 
             } catch (error) {
                 hideLoading();
-                let errorMessage = '❌ Erro ao conectar com Google.';
                 
-                if (error.code === 'auth/operation-not-supported-in-this-environment') {
-                    // Fallback para redirecionamento manual
-                    const redirectUrl = `https://ordem-cbc8e.firebaseapp.com/__/auth/handler?apiKey=${firebaseConfig.apiKey}&authType=signInViaRedirect&provider=google.com&redirectUrl=${encodeURIComponent(window.location.href)}`;
-                    window.location.href = redirectUrl;
-                    return;
+                // Se popup falhar, tentar redirecionamento
+                if (error.code === 'auth/popup-blocked' || 
+                    error.code === 'auth/popup-closed-by-user' ||
+                    error.code === 'auth/operation-not-supported-in-this-environment') {
+                    
+                    showMessage('🔃 Redirecionando para login Google...', 'info');
+                    
+                    // Usar redirecionamento
+                    setTimeout(() => {
+                        auth.signInWithRedirect(googleProvider);
+                    }, 1000);
+                    
+                } else if (error.code === 'auth/unauthorized-domain') {
+                    // ERRO DE DOMÍNIO NÃO AUTORIZADO
+                    const currentDomain = window.location.hostname;
+                    showMessage(
+                        `❌ Domínio não autorizado: ${currentDomain}<br>` +
+                        `Adicione <strong>${currentDomain}</strong> no Firebase Console<br>` +
+                        `Authentication → Settings → Authorized domains`,
+                        'error'
+                    );
+                    
+                } else {
+                    showMessage('❌ Erro ao conectar com Google: ' + error.message, 'error');
+                    console.error('Erro no login com Google:', error);
                 }
-                
-                showMessage(errorMessage, 'error');
-                console.error('Erro no login com Google:', error);
             }
         });
         
@@ -792,6 +813,10 @@
             
             // Mostrar mensagem de boas-vindas
             showMessage('Bem-vindo! Faça login para continuar.', 'info');
+            
+            // Verificar e mostrar domínio atual
+            const currentDomain = window.location.hostname;
+            console.log('Domínio atual:', currentDomain);
         });
     </script>
 </body>
