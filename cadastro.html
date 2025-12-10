@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Sistema de Gestão</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a237e 0%, #283593 50%, #3949ab 100%);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: #1a237e;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            color: #555;
+            font-size: 1.1rem;
+        }
+        
+        .form-container {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .input-container {
+            position: relative;
+        }
+        
+        input {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        input:focus {
+            border-color: #2196F3;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+            outline: none;
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7f8c8d;
+            font-size: 18px;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7f8c8d;
+            cursor: pointer;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+        
+        .password-toggle:hover {
+            color: #2196F3;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 15px;
+        }
+        
+        .requirements {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border-left: 4px solid #2196F3;
+            display: none;
+        }
+        
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #2196F3, #0D47A1);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+        
+        .btn:hover {
+            background: linear-gradient(135deg, #1976D2, #0D3C82);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #757575, #424242);
+        }
+        
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #616161, #303030);
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .alert-success {
+            background-color: #d5edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .redirect-message {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .progress-bar {
+            height: 4px;
+            background: #f0f0f0;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #2196F3, #0D47A1);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .links {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        
+        .links a {
+            color: #2196F3;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .links a:hover {
+            text-decoration: underline;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+        
+        .password-strength {
+            height: 5px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .strength-meter {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s ease;
+            border-radius: 3px;
+        }
+        
+        .strength-weak { background: #f44336; }
+        .strength-medium { background: #ff9800; }
+        .strength-strong { background: #4CAF50; }
+        
+        .form-navigation {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 25px;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .form-navigation {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+            
+            header {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-user-plus"></i> Cadastro de Usuário</h1>
+            <p class="subtitle">Crie sua conta para acessar o Sistema de Gestão Empresarial</p>
+        </header>
+        
+        <main>
+            <div id="alertSuccess" class="alert alert-success">
+                <i class="fas fa-check-circle"></i> <span id="successMessage">Cadastro realizado com sucesso!</span>
+            </div>
+            
+            <div id="alertError" class="alert alert-error">
+                <i class="fas fa-exclamation-circle"></i> <span id="errorMessage"></span>
+            </div>
+            
+            <div id="redirectMessage" class="redirect-message">
+                <i class="fas fa-spinner fa-spin"></i> Redirecionando em <span id="countdown">3</span> segundos...
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+            
+            <form id="registrationForm" class="form-container">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">
+                            <i class="fas fa-user"></i> Nome Completo *
+                        </label>
+                        <div class="input-container">
+                            <i class="fas fa-user input-icon"></i>
+                            <input type="text" id="name" name="name" placeholder="Digite seu nome completo" required>
+                        </div>
+                        <div class="requirements" id="nameRequirements">
+                            Mínimo 3 caracteres, apenas letras e espaços
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">
+                            <i class="fas fa-phone"></i> Telefone *
+                        </label>
+                        <div class="input-container">
+                            <i class="fas fa-phone input-icon"></i>
+                            <input type="tel" id="phone" name="phone" placeholder="(11) 99999-9999" required>
+                        </div>
+                        <div class="requirements" id="phoneRequirements">
+                            Formato: (DD) 99999-9999
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">
+                            <i class="fas fa-envelope"></i> E-mail *
+                        </label>
+                        <div class="input-container">
+                            <i class="fas fa-envelope input-icon"></i>
+                            <input type="email" id="email" name="email" placeholder="seuemail@exemplo.com" required>
+                        </div>
+                        <div class="requirements" id="emailRequirements">
+                            Deve ser um e-mail válido
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="birthdate">
+                            <i class="fas fa-calendar-alt"></i> Data de Nascimento *
+                        </label>
+                        <div class="input-container">
+                            <i class="fas fa-calendar-alt input-icon"></i>
+                            <input type="date" id="birthdate" name="birthdate" required>
+                        </div>
+                        <div class="requirements" id="birthdateRequirements">
+                            Você deve ter pelo menos 13 anos
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="password">
+                            <i class="fas fa-lock"></i> Senha *
+                        </label>
+                        <div class="input-container">
+                            <i class="fas fa-lock input-icon"></i>
+                            <input type="password" id="password" name="password" placeholder="Mínimo 6 caracteres" required>
+                            <i class="fas fa-eye password-toggle" id="togglePassword"></i>
+                        </div>
+                        <div class="password-strength">
+                            <div class="strength-meter" id="passwordStrength"></div>
+                        </div>
+                        <div class="requirements" id="passwordRequirements">
+                            Mínimo 6 caracteres. Recomendado: letras maiúsculas, minúsculas, números e símbolos
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirmPassword">
+                            <i class="fas fa-lock"></i> Confirmar Senha *
+                        </label>
+                        <div class="input-container">
+                            <i class="fas fa-lock input-icon"></i>
+                            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Repita sua senha" required>
+                            <i class="fas fa-eye password-toggle" id="toggleConfirmPassword"></i>
+                        </div>
+                        <div class="requirements" id="confirmPasswordRequirements">
+                            As senhas devem coincidir
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-navigation">
+                    <button type="submit" class="btn" id="submitBtn">
+                        <i class="fas fa-user-plus"></i> Criar Conta
+                    </button>
+                    
+                    <button type="button" class="btn btn-secondary" id="backBtn" onclick="window.location.href='index.html'">
+                        <i class="fas fa-arrow-left"></i> Voltar para Login
+                    </button>
+                </div>
+                
+                <div class="links">
+                    <p>Já tem uma conta? <a href="index.html">Faça login aqui</a></p>
+                    <p>Ao se cadastrar, você concorda com nossos <a href="#">Termos de Serviço</a> e <a href="#">Política de Privacidade</a></p>
+                </div>
+            </form>
+        </main>
+        
+        <footer>
+            <p>&copy; <span id="currentYear"></span> Sistema de Gestão Empresarial - Todos os direitos reservados</p>
+        </footer>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    
+    <script>
+        // =============================================
+        // CONFIGURAÇÃO DO FIREBASE
+        // =============================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyCjEo5Ca0XmsIhZrrqDw8B6Kh_JI6thb_o",
+            authDomain: "alff-f3aa9.firebaseapp.com",
+            projectId: "alff-f3aa9",
+            storageBucket: "alff-f3aa9.firebasestorage.app",
+            messagingSenderId: "1009645743744",
+            appId: "1:1009645743744:web:99360c3f4c8ba346c58065",
+            measurementId: "G-QT4YD6H190"
+        };
+
+        // Inicializar Firebase
+        let app;
+        if (!firebase.apps.length) {
+            app = firebase.initializeApp(firebaseConfig);
+            console.log("✅ Firebase inicializado com sucesso!");
+        } else {
+            app = firebase.app();
+        }
+
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        
+        // =============================================
+        // VARIÁVEIS GLOBAIS
+        // =============================================
+        let isSubmitting = false;
+        let redirectCountdown;
+        
+        // =============================================
+        // INICIALIZAÇÃO
+        // =============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configurar ano atual
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+            
+            // Configurar data de nascimento
+            setupBirthdateField();
+            
+            // Inicializar event listeners
+            initializeEventListeners();
+            
+            // Verificar se usuário já está logado
+            checkCurrentUser();
+            
+            console.log("📋 Sistema de cadastro inicializado");
+        });
+        
+        // =============================================
+        // FUNÇÕES DE CONFIGURAÇÃO
+        // =============================================
+        function setupBirthdateField() {
+            const today = new Date();
+            const minAgeDate = new Date(today.getFullYear() - 13, today.getMonth(), today.getDate());
+            const maxAgeDate = new Date(today.getFullYear() - 120, today.getMonth(), today.getDate());
+            
+            document.getElementById('birthdate').max = minAgeDate.toISOString().split('T')[0];
+            document.getElementById('birthdate').min = maxAgeDate.toISOString().split('T')[0];
+            
+            // Definir data padrão para 18 anos atrás
+            const defaultDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+            document.getElementById('birthdate').value = defaultDate.toISOString().split('T')[0];
+        }
+        
+        function checkCurrentUser() {
+            auth.onAuthStateChanged((user) => {
+                if (user) {
+                    console.log("👤 Usuário já está logado:", user.email);
+                    // Se já estiver logado, sugerir ir para transição
+                    // showAlert('error', 'Você já está logado. <a href="transicao.html">Ir para o sistema</a>');
+                }
+            });
+        }
+        
+        // =============================================
+        // FUNÇÕES DE INTERFACE
+        // =============================================
+        function showAlert(type, message = '', duration = 5000) {
+            const alertSuccess = document.getElementById('alertSuccess');
+            const alertError = document.getElementById('alertError');
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Esconder todos os alertas
+            alertSuccess.style.display = 'none';
+            alertError.style.display = 'none';
+            
+            if (type === 'success') {
+                successMessage.innerHTML = message || 'Cadastro realizado com sucesso!';
+                alertSuccess.style.display = 'block';
+                
+                if (duration > 0) {
+                    setTimeout(() => {
+                        alertSuccess.style.display = 'none';
+                    }, duration);
+                }
+            } else if (type === 'error') {
+                errorMessage.innerHTML = message;
+                alertError.style.display = 'block';
+                
+                if (duration > 0) {
+                    setTimeout(() => {
+                        alertError.style.display = 'none';
+                    }, duration);
+                }
+            }
+        }
+        
+        function showRedirectMessage(seconds = 3) {
+            const redirectMessage = document.getElementById('redirectMessage');
+            const countdownElement = document.getElementById('countdown');
+            const progressFill = document.getElementById('progressFill');
+            
+            redirectMessage.style.display = 'block';
+            let currentSeconds = seconds;
+            
+            // Atualizar contagem regressiva
+            redirectCountdown = setInterval(() => {
+                countdownElement.textContent = currentSeconds;
+                progressFill.style.width = `${((seconds - currentSeconds) / seconds) * 100}%`;
+                currentSeconds--;
+                
+                if (currentSeconds < 0) {
+                    clearInterval(redirectCountdown);
+                    redirectMessage.style.display = 'none';
+                }
+            }, 1000);
+        }
+        
+        function setLoading(isLoading) {
+            isSubmitting = isLoading;
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = isLoading;
+            
+            if (isLoading) {
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Criando conta...';
+            } else {
+                btn.innerHTML = '<i class="fas fa-user-plus"></i> Criar Conta';
+            }
+        }
+        
+        // =============================================
+        // FUNÇÕES DE VALIDAÇÃO
+        // =============================================
+        function validateName(name) {
+            if (name.trim().length < 3) {
+                return { valid: false, message: 'Nome deve ter pelo menos 3 caracteres' };
+            }
+            
+            if (!/^[A-Za-zÀ-ÿ\s]+$/.test(name)) {
+                return { valid: false, message: 'Nome deve conter apenas letras' };
+            }
+            
+            return { valid: true };
+        }
+        
+        function validatePhone(phone) {
+            const phoneRegex = /^\(\d{2}\) \d{4,5}-\d{4}$/;
+            if (!phoneRegex.test(phone)) {
+                return { valid: false, message: 'Telefone inválido. Use o formato (11) 99999-9999' };
+            }
+            
+            return { valid: true };
+        }
+        
+        function validateEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                return { valid: false, message: 'E-mail inválido' };
+            }
+            
+            return { valid: true };
+        }
+        
+        function validateBirthdate(birthdate) {
+            if (!birthdate) {
+                return { valid: false, message: 'Data de nascimento é obrigatória' };
+            }
+            
+            const birthDate = new Date(birthdate);
+            const today = new Date();
+            const minAgeDate = new Date(today.getFullYear() - 13, today.getMonth(), today.getDate());
+            
+            if (birthDate > minAgeDate) {
+                return { valid: false, message: 'Você deve ter pelo menos 13 anos' };
+            }
+            
+            return { valid: true };
+        }
+        
+        function validatePassword(password) {
+            if (password.length < 6) {
+                return { 
+                    valid: false, 
+                    message: 'Senha deve ter pelo menos 6 caracteres',
+                    strength: 'weak'
+                };
+            }
+            
+            let strength = 'weak';
+            if (password.length >= 8) strength = 'medium';
+            if (password.length >= 10 && /[A-Z]/.test(password) && /[0-9]/.test(password)) {
+                strength = 'strong';
+            }
+            
+            return { valid: true, strength };
+        }
+        
+        function validateConfirmPassword(password, confirmPassword) {
+            if (password !== confirmPassword) {
+                return { valid: false, message: 'As senhas não coincidem' };
+            }
+            
+            return { valid: true };
+        }
+        
+        function validateForm() {
+            const name = document.getElementById('name').value.trim();
+            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value.trim();
+            const birthdate = document.getElementById('birthdate').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Validar cada campo
+            const nameValidation = validateName(name);
+            if (!nameValidation.valid) {
+                showAlert('error', nameValidation.message);
+                document.getElementById('name').focus();
+                return false;
+            }
+            
+            const phoneValidation = validatePhone(phone);
+            if (!phoneValidation.valid) {
+                showAlert('error', phoneValidation.message);
+                document.getElementById('phone').focus();
+                return false;
+            }
+            
+            const emailValidation = validateEmail(email);
+            if (!emailValidation.valid) {
+                showAlert('error', emailValidation.message);
+                document.getElementById('email').focus();
+                return false;
+            }
+            
+            const birthdateValidation = validateBirthdate(birthdate);
+            if (!birthdateValidation.valid) {
+                showAlert('error', birthdateValidation.message);
+                document.getElementById('birthdate').focus();
+                return false;
+            }
+            
+            const passwordValidation = validatePassword(password);
+            if (!passwordValidation.valid) {
+                showAlert('error', passwordValidation.message);
+                document.getElementById('password').focus();
+                return false;
+            }
+            
+            const confirmValidation = validateConfirmPassword(password, confirmPassword);
+            if (!confirmValidation.valid) {
+                showAlert('error', confirmValidation.message);
+                document.getElementById('confirmPassword').focus();
+                return false;
+            }
+            
+            return true;
+        }
+        
+        // =============================================
+        // FUNÇÕES DO FIREBASE
+        // =============================================
+        async function registerUser(userData) {
+            try {
+                console.log("🚀 Iniciando cadastro...");
+                
+                // 1. Criar usuário no Authentication
+                const userCredential = await auth.createUserWithEmailAndPassword(
+                    userData.email, 
+                    userData.password
+                );
+                
+                const user = userCredential.user;
+                console.log("✅ Usuário criado! UID:", user.uid);
+                
+                // 2. Enviar verificação de e-mail (opcional)
+                // await user.sendEmailVerification();
+                // console.log("📧 E-mail de verificação enviado");
+                
+                // 3. Salvar dados no Firestore
+                await db.collection("users").doc(user.uid).set({
+                    nome: userData.name,
+                    telefone: userData.phone,
+                    email: userData.email,
+                    dataNascimento: userData.birthdate,
+                    dataCriacao: firebase.firestore.FieldValue.serverTimestamp(),
+                    uid: user.uid,
+                    criadoEm: new Date().toISOString(),
+                    emailVerificado: false
+                });
+                
+                console.log("💾 Dados salvos no Firestore!");
+                
+                // 4. Salvar no localStorage
+                localStorage.setItem('user', JSON.stringify({
+                    uid: user.uid,
+                    email: user.email,
+                    nome: userData.name,
+                    telefone: userData.phone,
+                    dataNascimento: userData.birthdate
+                }));
+                
+                // 5. Sucesso
+                showAlert('success', 'Conta criada com sucesso! Redirecionando...');
+                setLoading(false);
+                
+                // 6. Mostrar mensagem de redirecionamento
+                showRedirectMessage(3);
+                
+                // 7. Redirecionar após 3 segundos
+                setTimeout(() => {
+                    window.location.href = 'transicao.html';
+                }, 3000);
+                
+                return { success: true, user: user };
+                
+            } catch (error) {
+                console.error("❌ Erro no cadastro:", error.code, error.message);
+                setLoading(false);
+                
+                let errorMsg = "Erro ao cadastrar: ";
+                switch(error.code) {
+                    case 'auth/email-already-in-use':
+                        errorMsg = "Este e-mail já está cadastrado. <a href='index.html'>Faça login aqui</a>";
+                        break;
+                    case 'auth/invalid-email':
+                        errorMsg = "E-mail inválido.";
+                        break;
+                    case 'auth/weak-password':
+                        errorMsg = "Senha muito fraca. Use pelo menos 6 caracteres.";
+                        break;
+                    case 'auth/operation-not-allowed':
+                        errorMsg = "Cadastro por e-mail/senha não está habilitado.";
+                        break;
+                    case 'auth/network-request-failed':
+                        errorMsg = "Erro de conexão. Verifique sua internet.";
+                        break;
+                    case 'permission-denied':
+                        errorMsg = "Erro de permissão. Contate o administrador.";
+                        break;
+                    default:
+                        errorMsg = "Erro: " + error.message;
+                }
+                
+                showAlert('error', errorMsg);
+                return { success: false, error: error };
+            }
+        }
+        
+        // =============================================
+        // EVENT LISTENERS
+        // =============================================
+        function initializeEventListeners() {
+            // Mostrar/ocultar senha
+            document.getElementById('togglePassword').addEventListener('click', togglePasswordVisibility);
+            document.getElementById('toggleConfirmPassword').addEventListener('click', toggleConfirmPasswordVisibility);
+            
+            // Máscara para telefone
+            document.getElementById('phone').addEventListener('input', formatPhoneNumber);
+            
+            // Validação em tempo real
+            document.getElementById('name').addEventListener('blur', validateNameField);
+            document.getElementById('email').addEventListener('blur', validateEmailField);
+            document.getElementById('password').addEventListener('input', updatePasswordStrength);
+            document.getElementById('confirmPassword').addEventListener('blur', validateConfirmPasswordField);
+            
+            // Foco nos campos
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.addEventListener('focus', showFieldRequirements);
+                input.addEventListener('blur', hideFieldRequirements);
+            });
+            
+            // Envio do formulário
+            document.getElementById('registrationForm').addEventListener('submit', handleFormSubmit);
+        }
+        
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            const type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type;
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        }
+        
+        function toggleConfirmPasswordVisibility() {
+            const confirmInput = document.getElementById('confirmPassword');
+            const type = confirmInput.type === 'password' ? 'text' : 'password';
+            confirmInput.type = type;
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        }
+        
+        function formatPhoneNumber(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            
+            if (value.length > 11) {
+                value = value.substring(0, 11);
+            }
+            
+            if (value.length > 10) {
+                value = value.replace(/^(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+            } else if (value.length > 6) {
+                value = value.replace(/^(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+            } else if (value.length > 2) {
+                value = value.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
+            } else if (value.length > 0) {
+                value = value.replace(/^(\d{0,2})/, '($1');
+            }
+            
+            e.target.value = value;
+        }
+        
+        function validateNameField() {
+            const name = document.getElementById('name').value.trim();
+            const validation = validateName(name);
+            const requirements = document.getElementById('nameRequirements');
+            
+            if (name && !validation.valid) {
+                showAlert('error', validation.message, 3000);
+                requirements.style.display = 'block';
+            } else {
+                requirements.style.display = 'none';
+            }
+        }
+        
+        function validateEmailField() {
+            const email = document.getElementById('email').value.trim();
+            const validation = validateEmail(email);
+            const requirements = document.getElementById('emailRequirements');
+            
+            if (email && !validation.valid) {
+                showAlert('error', validation.message, 3000);
+                requirements.style.display = 'block';
+            } else {
+                requirements.style.display = 'none';
+            }
+        }
+        
+        function updatePasswordStrength() {
+            const password = document.getElementById('password').value;
+            const strengthMeter = document.getElementById('passwordStrength');
+            const requirements = document.getElementById('passwordRequirements');
+            
+            if (password) {
+                const validation = validatePassword(password);
+                
+                // Atualizar medidor de força
+                strengthMeter.className = 'strength-meter';
+                if (validation.strength === 'weak') {
+                    strengthMeter.classList.add('strength-weak');
+                    strengthMeter.style.width = '30%';
+                } else if (validation.strength === 'medium') {
+                    strengthMeter.classList.add('strength-medium');
+                    strengthMeter.style.width = '60%';
+                } else if (validation.strength === 'strong') {
+                    strengthMeter.classList.add('strength-strong');
+                    strengthMeter.style.width = '100%';
+                }
+                
+                requirements.style.display = 'block';
+            } else {
+                strengthMeter.style.width = '0%';
+                strengthMeter.className = 'strength-meter';
+                requirements.style.display = 'none';
+            }
+        }
+        
+        function validateConfirmPasswordField() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const validation = validateConfirmPassword(password, confirmPassword);
+            const requirements = document.getElementById('confirmPasswordRequirements');
+            
+            if (confirmPassword && !validation.valid) {
+                showAlert('error', validation.message, 3000);
+                requirements.style.display = 'block';
+            } else {
+                requirements.style.display = 'none';
+            }
+        }
+        
+        function showFieldRequirements(e) {
+            const fieldId = e.target.id;
+            const requirements = document.getElementById(fieldId + 'Requirements');
+            if (requirements) {
+                requirements.style.display = 'block';
+            }
+        }
+        
+        function hideFieldRequirements(e) {
+            const fieldId = e.target.id;
+            const requirements = document.getElementById(fieldId + 'Requirements');
+            if (requirements && !e.target.value) {
+                requirements.style.display = 'none';
+            }
+        }
+        
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            if (isSubmitting) return;
+            
+            if (!validateForm()) return;
+            
+            // Coletar dados do formulário
+            const userData = {
+                name: document.getElementById('name').value.trim(),
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value.trim(),
+                birthdate: document.getElementById('birthdate').value,
+                password: document.getElementById('password').value
+            };
+            
+            setLoading(true);
+            showAlert('error', '');
+            
+            await registerUser(userData);
+        }
+        
+        // =============================================
+        // INICIALIZAÇÃO FINAL
+        // =============================================
+        console.log("🚀 Sistema de cadastro pronto!");
+        console.log("Firebase Auth disponível:", !!auth);
+        console.log("Firestore disponível:", !!db);
+    </script>
+</body>
+</html>
