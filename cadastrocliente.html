@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Clientes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        input, button {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+        }
+
+        .row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .row .form-group {
+            flex: 1;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .client-list {
+            margin-top: 40px;
+        }
+
+        .client-list h2 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        tr:hover {
+            background-color: #f5f7fa;
+        }
+
+        .code-input {
+            background-color: #f8f9fa;
+            color: #7f8c8d;
+            cursor: not-allowed;
+        }
+
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cadastro de Clientes</h1>
+        
+        <div class="success-message" id="successMessage">
+            Cliente cadastrado com sucesso!
+        </div>
+        
+        <form id="clientForm">
+            <div class="form-group">
+                <label for="code">Código do Cliente</label>
+                <input type="text" id="code" class="code-input" readonly>
+            </div>
+            
+            <div class="form-group">
+                <label for="name">Nome Completo</label>
+                <input type="text" id="name" required>
+            </div>
+            
+            <div class="row">
+                <div class="form-group">
+                    <label for="phone">Telefone</label>
+                    <input type="tel" id="phone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" required>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="form-group">
+                    <label for="cep">CEP</label>
+                    <input type="text" id="cep" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="address">Endereço</label>
+                    <input type="text" id="address" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="complement">Complemento</label>
+                <input type="text" id="complement">
+            </div>
+            
+            <button type="submit">Cadastrar Cliente</button>
+        </form>
+        
+        <div class="client-list">
+            <h2>Clientes Cadastrados</h2>
+            <table id="clientTable">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Nome</th>
+                        <th>Telefone</th>
+                        <th>E-mail</th>
+                    </tr>
+                </thead>
+                <tbody id="clientTableBody">
+                    <!-- Os clientes cadastrados aparecerão aqui -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Inicializa o código do cliente
+        let clientCode = 1;
+        
+        // Função para formatar o código com zeros à esquerda
+        function formatClientCode(code) {
+            return code.toString().padStart(4, '0');
+        }
+        
+        // Atualiza o campo de código quando a página carrega
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('code').value = formatClientCode(clientCode);
+            
+            // Carrega clientes salvos no localStorage
+            loadClientsFromStorage();
+        });
+        
+        // Função para buscar endereço pelo CEP
+        document.getElementById('cep').addEventListener('blur', function() {
+            const cep = this.value.replace(/\D/g, '');
+            
+            if (cep.length === 8) {
+                fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.erro) {
+                            document.getElementById('address').value = `${data.logradouro}, ${data.bairro}, ${data.localidade} - ${data.uf}`;
+                        } else {
+                            alert('CEP não encontrado');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro ao buscar CEP:', error);
+                    });
+            }
+        });
+        
+        // Função para adicionar cliente
+        document.getElementById('clientForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Coleta os dados do formulário
+            const code = document.getElementById('code').value;
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value;
+            const cep = document.getElementById('cep').value;
+            const address = document.getElementById('address').value;
+            const complement = document.getElementById('complement').value;
+            
+            // Cria o objeto cliente
+            const client = {
+                code,
+                name,
+                phone,
+                email,
+                cep,
+                address,
+                complement
+            };
+            
+            // Adiciona à tabela
+            addClientToTable(client);
+            
+            // Salva no localStorage
+            saveClientToStorage(client);
+            
+            // Incrementa o código para o próximo cliente
+            clientCode++;
+            if (clientCode > 10000) {
+                clientCode = 1; // Reinicia se atingir o limite
+            }
+            document.getElementById('code').value = formatClientCode(clientCode);
+            
+            // Mostra mensagem de sucesso
+            const successMessage = document.getElementById('successMessage');
+            successMessage.style.display = 'block';
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 3000);
+            
+            // Limpa o formulário
+            this.reset();
+            document.getElementById('code').value = formatClientCode(clientCode);
+        });
+        
+        // Função para adicionar cliente à tabela
+        function addClientToTable(client) {
+            const tableBody = document.getElementById('clientTableBody');
+            const row = document.createElement('tr');
+            
+            row.innerHTML = `
+                <td>${client.code}</td>
+                <td>${client.name}</td>
+                <td>${client.phone}</td>
+                <td>${client.email}</td>
+            `;
+            
+            tableBody.appendChild(row);
+        }
+        
+        // Função para salvar cliente no localStorage
+        function saveClientToStorage(client) {
+            let clients = JSON.parse(localStorage.getItem('clients')) || [];
+            clients.push(client);
+            localStorage.setItem('clients', JSON.stringify(clients));
+        }
+        
+        // Função para carregar clientes do localStorage
+        function loadClientsFromStorage() {
+            const clients = JSON.parse(localStorage.getItem('clients')) || [];
+            
+            // Encontra o maior código para continuar a contagem
+            if (clients.length > 0) {
+                const maxCode = Math.max(...clients.map(client => parseInt(client.code)));
+                clientCode = maxCode + 1;
+                document.getElementById('code').value = formatClientCode(clientCode);
+            }
+            
+            // Adiciona os clientes à tabela
+            clients.forEach(client => {
+                addClientToTable(client);
+            });
+        }
+    </script>
+</body>
+</html>

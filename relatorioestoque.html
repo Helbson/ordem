@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Relatório de Estoque - Novembro 2025</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+
+    header {
+      background: #4facfe, #00f2fe);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2.2rem;
+    }
+
+    .data-atual {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead {
+      background: #2c3e50;
+      color: white;
+    }
+
+    th, td {
+      padding: 14px 10px;
+      text-align: center;
+    }
+
+    th {
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    tbody tr:nth-child(even) {
+      background: #f9f9;
+    }
+
+    tbody tr:hover {
+      background: #d5f5e3;
+      transition: 0.3s;
+    }
+
+    .validade-proxima {
+      background: #fff3cd !important;
+      color: #856404;
+      font-weight: bold;
+    }
+
+    .validade-vencida {
+      background: #f8d7da !important;
+      color: #721c24;
+      font-weight: bold;
+      animation: pisca 2s infinite;
+    }
+
+    @keyframes pisca {
+      50% { opacity: 0.7; }
+    }
+
+    .totais {
+      background: #2c3e50;
+      color: white;
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+
+    .totais td {
+      padding: 20px !important;
+    }
+
+    /* Responsivo perfeito no celular */
+    @media (max-width: 768px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+        width: 100%;
+      }
+
+      thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+      }
+
+      tr {
+        border: 1px solid #ccc;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        padding: 15px;
+        background: white !important;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      }
+
+      td {
+        border: none;
+        position: relative;
+        padding-left: 50% !important;
+        text-align: right !important;
+        font-size: 1.1rem;
+      }
+
+      td:before {
+        content: attr(data-label);
+        position: absolute;
+        left: 15px;
+        width: 45%;
+        font-weight: bold;
+        text-align: left;
+        color: #4facfe;
+      }
+
+      .totais td {
+        padding-left: 15px !important;
+        text-align: left !important;
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>RELATÓRIO COMPLETO DE ESTOQUE</h1>
+    <p class="data-atual">Gerado em 20 de Novembro de 2025</p>
+  </header>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Código</th>
+        <th>Nome do Produto</th>
+        <th>Estoque Atual</th>
+        <th>Validade</th>
+        <th>Custo Unit.</th>
+        <th>Venda Unit.</th>
+        <th>Saldo Custo</th>
+        <th>Saldo Venda</th>
+        <th>Lucro Potencial</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td data-label="#">1</td>
+        <td data-label="Código">001</td>
+        <td data-label="Produto">Creme Hidratante Facial 50g</td>
+        <td data-label="Estoque">48</td>
+        <td data-label="Validade">28/11/2025</td>
+        <td data-label="Custo">R$ 32,90</td>
+        <td data-label="Venda">R$ 69,90</td>
+        <td data-label="Saldo Custo">R$ 1.579,20</td>
+        <td data-label="Saldo Venda">R$ 3.355,20</td>
+        <td data-label="Lucro" style="color:#27ae60; font-weight:bold;">R$ 1.776,00</td>
+      </tr>
+      <tr>
+        <td data-label="#">2</td>
+        <td data-label="Código">002</td>
+        <td data-label="Produto">Protetor Solar FPS 50 200ml</td>
+        <td data-label="Estoque">23</td>
+        <td data-label="Validade">15/03/2026</td>
+        <td data-label="Custo">R$ 42,00</td>
+        <td data-label="Venda">R$ 89,00</td>
+        <td data-label="Saldo Custo">R$ 966,00</td>
+        <td data-label="Saldo Venda">R$ 2.047,00</td>
+        <td data-label="Lucro" style="color:#27ae60; font-weight:bold;">R$ 1.081,00</td>
+      </tr>
+      <tr>
+        <td data-label="#">3</td>
+        <td data-label="Código">003</td>
+        <td data-label="Produto">Creme Anti-Idade Noturno</td>
+        <td data-label="Estoque">12</td>
+        <td data-label="Validade" class="validade-vencida">18/11/2025</td> <!-- já venceu -->
+        <td data-label="Custo">R$ 68,50</td>
+        <td data-label="Venda">R$ 129,90</td>
+        <td data-label="Saldo Custo">R$822,00</td>
+        <td data-label="Saldo Venda">R$ 1.558,80</td>
+        <td data-label="Lucro" style="color:#27ae60; font-weight:bold;">R$ 736,80</td>
+      </tr>
+      <tr>
+        <td data-label="#">4</td>
+        <td data-label="Código">005</td>
+        <td data-label="Produto">Óleo Corporal 100ml</td>
+        <td data-label="Estoque">35</td>
+        <td data-label="Validade" class="validade-proxima">05/12/2025</td> <!-- perto -->
+        <td data-label="Custo">R$ 29,90</td>
+        <td data-label="Venda">R$ 64,90</td>
+        <td data-label="Saldo Custo">R$ 1.046,50</td>
+        <td data-label="Saldo Venda">R$ 2.271,50</td>
+        <td data-label="Lucro" style="color:#27ae60; font-weight:bold;">R$ 1.225,00</td>
+      </tr>
+      <!-- Adicione quantas linhas quiser -->
+    </tbody>
+    <tfoot>
+      <tr class="totais">
+        <td colspan="3">TOTAIS GERAIS</td>
+        <td style="font-size:1.5rem;">118 unid.</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>R$ 4.413,70</td>
+        <td>R$ 9.232,50</td>
+        <td style="color:#00ff88; font-size:1.6rem;">R$ 4.818,80</td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+
+<script>
+  // Colore automaticamente as validades (funciona mesmo se você adicionar mais linhas depois)
+  document.querySelectorAll('td[data-label="Validade"]').forEach(cell => {
+    const texto = cell.textContent.trim();
+    if (!texto) return;
+    
+    const [dia, mes, ano] = texto.split('/');
+    const validade = new Date(`${ano}-${mes}-${dia}`);
+    const hoje = new Date();
+    const diffDias = Math.floor((validade - hoje) / (1000 * 60 * 60 * 24));
+
+    if (diffDias < 0) {
+      cell.classList.add('validade-vencida');
+    } else if (diffDias <= 15) {
+      cell.classList.add('validade-proxima');
+    }
+  });
+</script>
+
+</body>
+</html>

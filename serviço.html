@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro de Serviços</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap');
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
+    body { background:#f0f2f5; padding:20px; }
+    
+    .container { max-width:800px; margin:0 auto; background:white; border-radius:10px; padding:20px; box-shadow:0 5px 15px rgba(0,0,0,0.1); }
+    
+    .tabela-servicos { width:100%; border-collapse: collapse; margin:20px 0; background:white; border-radius:8px; overflow:hidden; }
+    .tabela-servicos th { background:#2c3e50; color:white; padding:15px; text-align:left; }
+    .tabela-servicos td { padding:12px 15px; border-bottom:1px solid #eee; }
+    .tabela-servicos tr:hover { background:#f8f9fa; }
+    
+    .btn-cadastrar { background:#27ae60; color:white; border:none; padding:12px 25px; border-radius:8px; cursor:pointer; font-size:1.1rem; margin:10px 0; }
+    .btn-cadastrar:hover { background:#219a52; }
+    
+    .form-cadastro { background:#f8f9fa; padding:25px; border-radius:15px; margin:20px 0; display:none; }
+    .form-cadastro.ativo { display:block; }
+    .campo-form { margin-bottom:20px; }
+    .campo-form label { display:block; margin-bottom:8px; font-weight:bold; color:#2c3e50; }
+    .campo-form input { width:100%; padding:12px; border:2px solid #ddd; border-radius:8px; font-size:1rem; }
+    .campo-form input:focus { border-color:#3498db; outline:none; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Serviços Cadastrados</h2>
+  
+  <table class="tabela-servicos">
+    <thead>
+      <tr>
+        <th>Código</th>
+        <th>Descrição do Serviço</th>
+        <th>Valor (R$)</th>
+      </tr>
+    </thead>
+    <tbody id="tabela-servicos-body">
+      <tr>
+        <td>SER001</td>
+        <td>Corte de Cabelo Feminino</td>
+        <td>R$ 80,00</td>
+      </tr>
+      <tr>
+        <td>SER002</td>
+        <td>Coloração Completa</td>
+        <td>R$ 150,00</td>
+      </tr>
+      <tr>
+        <td>SER003</td>
+        <td>Manicure e Pedicure</td>
+        <td>R$ 60,00</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <button class="btn-cadastrar" onclick="mostrarFormulario()">Cadastrar</button>
+  
+  <div id="form-cadastro" class="form-cadastro">
+    <h3>Cadastrar Novo Serviço</h3>
+    <div class="campo-form">
+      <label for="codigo-servico">Código do Serviço:</label>
+      <input type="text" id="codigo-servico" placeholder="Ex: SER001">
+    </div>
+    <div class="campo-form">
+      <label for="nome-servico">Nome do Serviço:</label>
+      <input type="text" id="nome-servico" placeholder="Ex: Corte de Cabelo">
+    </div>
+    <div class="campo-form">
+      <label for="valor-servico">Valor (R$):</label>
+      <input type="number" id="valor-servico" placeholder="0,00" step="0.01" min="0">
+    </div>
+    <button class="btn-cadastrar" onclick="cadastrarServico()">Salvar Serviço</button>
+  </div>
+</div>
+
+<script>
+  function mostrarFormulario() {
+    document.getElementById('form-cadastro').classList.add('ativo');
+  }
+
+  function cadastrarServico() {
+    const codigo = document.getElementById('codigo-servico').value.trim();
+    const nome = document.getElementById('nome-servico').value.trim();
+    const valor = parseFloat(document.getElementById('valor-servico').value);
+
+    if (!codigo || !nome || isNaN(valor) || valor <= 0) {
+      alert('Por favor, preencha todos os campos corretamente!');
+      return;
+    }
+
+    // Adicionar à tabela
+    const tbody = document.getElementById('tabela-servicos-body');
+    const novaLinha = document.createElement('tr');
+    novaLinha.innerHTML = `
+      <td>${codigo}</td>
+      <td>${nome}</td>
+      <td>R$ ${valor.toFixed(2)}</td>
+    `;
+    tbody.appendChild(novaLinha);
+
+    // Limpar formulário e esconder
+    document.getElementById('codigo-servico').value = '';
+    document.getElementById('nome-servico').value = '';
+    document.getElementById('valor-servico').value = '';
+    document.getElementById('form-cadastro').classList.remove('ativo');
+    
+    alert('Serviço cadastrado com sucesso!');
+  }
+</script>
+
+</body>
+</html>

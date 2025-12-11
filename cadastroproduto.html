@@ -3,36 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Produtos</title>
+    <title>Cadastro de Produtos • MeuApp</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* === CONFIGURAÇÕES GERAIS === */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-
-        :root {
-            --ocre-principal: #D4A76A;
-            --ocre-claro: #E8C9A0;
-            --ocre-escuro: #B88C51;
-            --rosa-suave: #F5D6C6;
-            --rosa-escuro: #E8B4A9;
-            --branco: #FFFFFF;
-            --cinza-claro: #F8F9FA;
-            --cinza-escuro: #6C757D;
-            --preto: #2C2C2C;
-            --verde: #4CAF50;
-            --vermelho: #E74C3C;
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background: linear-gradient(135deg, var(--rosa-suave) 0%, var(--ocre-claro) 100%);
-            color: var(--preto);
-            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            color: #333;
             padding: 20px;
         }
 
@@ -41,244 +25,302 @@
             margin: 0 auto;
         }
 
-        /* === HEADER === */
+        /* Header */
         .header {
-            text-align: center;
-            margin-bottom: 2rem;
-            padding: 2rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
         }
 
         .logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .logo i {
-            font-size: 2.5rem;
-            color: var(--ocre-escuro);
-        }
-
-        .logo h1 {
-            font-size: 2.2rem;
-            color: var(--preto);
-        }
-
-        .subtitle {
-            color: var(--cinza-escuro);
-            font-size: 1.1rem;
-        }
-
-        /* === FORMULÁRIO === */
-        .form-container {
-            background: var(--branco);
-            border-radius: 16px;
-            padding: 2.5rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            border: 1px solid var(--rosa-suave);
-        }
-
-        .form-section {
-            margin-bottom: 2rem;
-        }
-
-        .section-title {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-size: 1.3rem;
-            color: var(--ocre-escuro);
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid var(--rosa-suave);
-        }
-
-        .section-title i {
-            font-size: 1.2rem;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .form-group.full-width {
-            grid-column: 1 / -1;
-        }
-
-        .form-label {
-            font-weight: 600;
-            color: var(--preto);
-            font-size: 0.95rem;
-        }
-
-        .required::after {
-            content: " *";
-            color: var(--vermelho);
-        }
-
-        .form-input, .form-select, .form-textarea {
-            padding: 1rem;
-            border: 2px solid var(--rosa-suave);
-            border-radius: 10px;
-            font-size: 1rem;
-            background: var(--branco);
-            transition: all 0.3s ease;
-            font-family: inherit;
-        }
-
-        .form-input:focus, .form-select:focus, .form-textarea:focus {
-            outline: none;
-            border-color: var(--ocre-principal);
-            box-shadow: 0 0 0 3px rgba(212, 167, 106, 0.2);
-        }
-
-        .form-textarea {
-            resize: vertical;
-            min-height: 120px;
-        }
-
-        /* === CÓDIGO DO PRODUTO === */
-        .product-code {
-            background: linear-gradient(135deg, var(--ocre-principal) 0%, var(--rosa-escuro) 100%);
-            color: var(--branco);
-            padding: 1.5rem;
-            border-radius: 12px;
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .code-label {
-            font-size: 0.9rem;
-            opacity: 0.9;
-            margin-bottom: 0.5rem;
-        }
-
-        .code-value {
             font-size: 2rem;
-            font-weight: bold;
-            font-family: 'Courier New', monospace;
-            letter-spacing: 2px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        /* === VALORES E CÁLCULOS === */
-        .values-section {
-            background: var(--cinza-claro);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
-            border: 1px solid var(--rosa-suave);
-        }
-
-        .calculations-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .calculation-item {
-            text-align: center;
-            padding: 1rem;
-            background: var(--branco);
-            border-radius: 8px;
-            border: 1px solid var(--rosa-suave);
-        }
-
-        .calculation-label {
-            font-size: 0.85rem;
-            color: var(--cinza-escuro);
-            margin-bottom: 0.5rem;
-        }
-
-        .calculation-value {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: var(--verde);
-        }
-
-        .calculation-value.negative {
-            color: var(--vermelho);
-        }
-
-        /* === BOTÕES === */
-        .form-actions {
-            display: flex;
-            gap: 1rem;
-            justify-content: flex-end;
-            margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 2px solid var(--rosa-suave);
-        }
-
-        .btn {
-            padding: 1rem 2rem;
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
             border: none;
-            border-radius: 10px;
-            font-size: 1rem;
+            padding: 12px 20px;
+            border-radius: 12px;
+            color: white;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 8px;
+            text-decoration: none;
         }
 
-        .btn-primary {
-            background: var(--ocre-principal);
-            color: var(--branco);
-        }
-
-        .btn-primary:hover {
-            background: var(--ocre-escuro);
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
             transform: translateY(-2px);
         }
 
-        .btn-secondary {
-            background: var(--cinza-claro);
-            color: var(--preto);
+        /* Título da Página */
+        .page-title {
+            text-align: center;
+            margin-bottom: 40px;
         }
 
-        .btn-secondary:hover {
-            background: var(--rosa-suave);
+        .page-title h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
         }
 
-        /* === MENSAGENS === */
-        .message {
-            padding: 1rem;
+        .page-title p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+
+        /* Card do Formulário */
+        .form-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Código Automático */
+        .code-section {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .code-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .code-value {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Formulário */
+        .product-form {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #667eea;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input {
+            padding: 15px 20px;
+            border: 2px solid rgba(102, 126, 234, 0.1);
+            border-radius: 12px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+            color: #333;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: #aaa;
+        }
+
+        .form-input:read-only {
+            background: rgba(102, 126, 234, 0.05);
+            color: #666;
+            cursor: not-allowed;
+        }
+
+        /* Grid para campos lado a lado */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* Campo de Descrição */
+        .description-group {
+            grid-column: 1 / -1;
+        }
+
+        .form-textarea {
+            padding: 15px 20px;
+            border: 2px solid rgba(102, 126, 234, 0.1);
+            border-radius: 12px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+            color: #333;
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        /* Cálculo Automático */
+        .calculation-section {
+            background: rgba(102, 126, 234, 0.05);
+            border: 2px solid rgba(102, 126, 234, 0.1);
+            border-radius: 16px;
+            padding: 25px;
+            margin: 10px 0;
+        }
+
+        .calculation-title {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .calculation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .calculation-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .calculation-label {
+            font-size: 0.85rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .calculation-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #27ae60;
+            padding: 10px;
+            background: white;
             border-radius: 8px;
-            margin-bottom: 1rem;
+            text-align: center;
+            border: 1px solid rgba(39, 174, 96, 0.2);
+        }
+
+        .calculation-value.negative {
+            color: #e74c3c;
+            border-color: rgba(231, 76, 60, 0.2);
+        }
+
+        /* Botão Salvar */
+        .save-section {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .save-btn {
+            background: linear-gradient(135deg, #27ae60, #219653);
+            color: white;
+            border: none;
+            padding: 18px 50px;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 8px 25px rgba(39, 174, 96, 0.3);
+        }
+
+        .save-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(39, 174, 96, 0.4);
+        }
+
+        .save-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .save-btn i {
+            font-size: 1.3rem;
+        }
+
+        /* Mensagem de Sucesso */
+        .success-message {
+            background: rgba(39, 174, 96, 0.1);
+            border: 2px solid rgba(39, 174, 96, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 20px;
             display: none;
         }
 
-        .message.success {
-            background: rgba(76, 175, 80, 0.1);
-            border: 1px solid var(--verde);
-            color: var(--verde);
+        .success-message.show {
             display: block;
+            animation: fadeIn 0.5s ease;
         }
 
-        .message.error {
-            background: rgba(231, 76, 60, 0.1);
-            border: 1px solid var(--vermelho);
-            color: var(--vermelho);
-            display: block;
+        .success-icon {
+            font-size: 2rem;
+            color: #27ae60;
+            margin-bottom: 10px;
         }
 
-        /* === ANIMAÇÕES === */
+        .success-text {
+            color: #27ae60;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
         @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Animações */
+        @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(30px);
             }
             to {
                 opacity: 1;
@@ -286,231 +328,210 @@
             }
         }
 
-        .fade-in {
-            animation: fadeIn 0.6s ease-out;
+        .animated {
+            animation: fadeInUp 0.8s ease-out;
         }
 
-        /* === RESPONSIVIDADE === */
+        /* Responsividade */
         @media (max-width: 768px) {
-            .form-grid {
+            .form-card {
+                padding: 30px 25px;
+            }
+
+            .page-title h1 {
+                font-size: 2rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .calculation-grid {
                 grid-template-columns: 1fr;
             }
-            
-            .form-actions {
-                flex-direction: column;
-            }
-            
-            .btn {
+
+            .save-btn {
                 width: 100%;
-                justify-content: center;
+                padding: 16px 30px;
+                font-size: 1rem;
             }
-            
-            .calculations-grid {
-                grid-template-columns: 1fr;
+
+            .code-value {
+                font-size: 1.6rem;
             }
         }
 
         @media (max-width: 480px) {
-            .form-container {
-                padding: 1.5rem;
+            .form-card {
+                padding: 25px 20px;
             }
-            
-            .header {
-                padding: 1rem 0;
-            }
-            
-            .logo h1 {
+
+            .page-title h1 {
                 font-size: 1.8rem;
             }
-            
+
+            .page-title p {
+                font-size: 1rem;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .calculation-section {
+                padding: 20px 15px;
+            }
+
+            .form-input, .form-textarea {
+                padding: 12px 15px;
+            }
+
+            .code-section {
+                padding: 15px;
+            }
+
             .code-value {
-                font-size: 1.5rem;
+                font-size: 1.4rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .page-title h1 {
+                font-size: 1.6rem;
+            }
+
+            .form-card {
+                padding: 20px 15px;
+            }
+
+            .calculation-value {
+                font-size: 1rem;
+                padding: 8px;
+            }
+
+            .code-value {
+                font-size: 1.2rem;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- HEADER -->
-        <header class="header fade-in">
-            <div class="logo">
-                <i class="fas fa-box-open"></i>
-                <h1>Cadastro de Produtos</h1>
-            </div>
-            <p class="subtitle">Adicione novos produtos ao seu catálogo</p>
-        </header>
+        <!-- Header -->
+        <div class="header animated">
+            <div class="logo">MeuApp</div>
+            <a href="produtos.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                Voltar para Produtos
+            </a>
+        </div>
 
-        <!-- FORMULÁRIO -->
-        <div class="form-container fade-in">
-            <!-- CÓDIGO DO PRODUTO -->
-            <div class="product-code">
+        <!-- Título da Página -->
+        <div class="page-title animated">
+            <h1>Cadastro de Produtos</h1>
+            <p>Adicione novos produtos ao seu inventário</p>
+        </div>
+
+        <!-- Card do Formulário -->
+        <div class="form-card animated">
+            <!-- Código Automático -->
+            <div class="code-section">
                 <div class="code-label">Código do Produto</div>
-                <div class="code-value" id="productCode">PROD-0001</div>
+                <div class="code-value" id="productCodeDisplay">000001</div>
+                <input type="hidden" id="productCode" value="000001">
             </div>
 
-            <form id="productForm">
-                <!-- INFORMAÇÕES BÁSICAS -->
-                <div class="form-section">
-                    <h2 class="section-title">
-                        <i class="fas fa-info-circle"></i>
-                        Informações Básicas
-                    </h2>
-                    
-                    <div class="form-grid">
-                        <div class="form-group full-width">
-                            <label class="form-label required" for="productName">Nome do Produto</label>
-                            <input type="text" id="productName" class="form-input" placeholder="Ex: Notebook Dell Inspiron 15" required>
-                        </div>
+            <form class="product-form" id="productForm">
+                <!-- Informações Básicas -->
+                <div class="form-group">
+                    <label class="form-label" for="productName">Nome do Produto *</label>
+                    <input type="text" id="productName" class="form-input" placeholder="Ex: Notebook Dell Inspiron 15" required>
+                </div>
 
-                        <div class="form-group full-width">
-                            <label class="form-label" for="productDescription">Descrição</label>
-                            <textarea id="productDescription" class="form-textarea" placeholder="Descreva as características do produto..."></textarea>
-                        </div>
+                <div class="form-group description-group">
+                    <label class="form-label" for="productDescription">Descrição</label>
+                    <textarea id="productDescription" class="form-textarea" placeholder="Descreva as características do produto..."></textarea>
+                </div>
 
-                        <div class="form-group">
-                            <label class="form-label required" for="productCategory">Categoria</label>
-                            <select id="productCategory" class="form-select" required>
-                                <option value="">Selecione uma categoria</option>
-                                <option value="eletronicos">Eletrônicos</option>
-                                <option value="informatica">Informática</option>
-                                <option value="moveis">Móveis</option>
-                                <option value="vestuario">Vestuário</option>
-                                <option value="livros">Livros</option>
-                                <option value="outros">Outros</option>
-                            </select>
-                        </div>
+                <!-- Quantidade -->
+                <div class="form-group">
+                    <label class="form-label" for="productQuantity">Quantidade *</label>
+                    <input type="number" id="productQuantity" class="form-input" placeholder="0" min="0" required>
+                </div>
 
-                        <div class="form-group">
-                            <label class="form-label" for="productBrand">Marca</label>
-                            <input type="text" id="productBrand" class="form-input" placeholder="Ex: Dell, Samsung, etc.">
+                <!-- Valores -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="costPrice">Valor de Custo (R$) *</label>
+                        <input type="number" id="costPrice" class="form-input" placeholder="0.00" step="0.01" min="0" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="salePrice">Valor de Venda (R$) *</label>
+                        <input type="number" id="salePrice" class="form-input" placeholder="0.00" step="0.01" min="0" required>
+                    </div>
+                </div>
+
+                <!-- Cálculos Automáticos -->
+                <div class="calculation-section">
+                    <h3 class="calculation-title">Cálculos Automáticos</h3>
+                    <div class="calculation-grid">
+                        <div class="calculation-item">
+                            <span class="calculation-label">Lucro por Unidade</span>
+                            <div class="calculation-value" id="profitPerUnit">R$ 0.00</div>
+                        </div>
+                        <div class="calculation-item">
+                            <span class="calculation-label">Margem de Lucro</span>
+                            <div class="calculation-value" id="profitMargin">0%</div>
+                        </div>
+                        <div class="calculation-item">
+                            <span class="calculation-label">Valor Total em Estoque</span>
+                            <div class="calculation-value" id="totalStockValue">R$ 0.00</div>
+                        </div>
+                        <div class="calculation-item">
+                            <span class="calculation-label">Lucro Total Potencial</span>
+                            <div class="calculation-value" id="totalPotentialProfit">R$ 0.00</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- ESTOQUE E FORNECEDOR -->
-                <div class="form-section">
-                    <h2 class="section-title">
-                        <i class="fas fa-warehouse"></i>
-                        Estoque e Fornecedor
-                    </h2>
-                    
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label class="form-label required" for="productQuantity">Quantidade em Estoque</label>
-                            <input type="number" id="productQuantity" class="form-input" placeholder="0" min="0" required>
-                        </div>
+                <!-- Categoria e Fornecedor -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="productCategory">Categoria</label>
+                        <select id="productCategory" class="form-input">
+                            <option value="">Selecione uma categoria</option>
+                            <option value="eletronicos">Eletrônicos</option>
+                            <option value="informatica">Informática</option>
+                            <option value="moveis">Móveis</option>
+                            <option value="vestuario">Vestuário</option>
+                            <option value="outros">Outros</option>
+                        </select>
+                    </div>
 
-                        <div class="form-group">
-                            <label class="form-label required" for="minStock">Estoque Mínimo</label>
-                            <input type="number" id="minStock" class="form-input" placeholder="0" min="0" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label" for="supplier">Fornecedor</label>
-                            <input type="text" id="supplier" class="form-input" placeholder="Nome do fornecedor">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label" for="supplierCode">Código do Fornecedor</label>
-                            <input type="text" id="supplierCode" class="form-input" placeholder="Código interno do fornecedor">
-                        </div>
+                    <div class="form-group">
+                        <label class="form-label" for="productSupplier">Fornecedor</label>
+                        <input type="text" id="productSupplier" class="form-input" placeholder="Nome do fornecedor">
                     </div>
                 </div>
 
-                <!-- VALORES -->
-                <div class="form-section">
-                    <h2 class="section-title">
-                        <i class="fas fa-dollar-sign"></i>
-                        Valores
-                    </h2>
-                    
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label class="form-label required" for="costPrice">Preço de Custo (R$)</label>
-                            <input type="number" id="costPrice" class="form-input" placeholder="0.00" step="0.01" min="0" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label required" for="salePrice">Preço de Venda (R$)</label>
-                            <input type="number" id="salePrice" class="form-input" placeholder="0.00" step="0.01" min="0" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label" for="profitMargin">Margem de Lucro (%)</label>
-                            <input type="number" id="profitMargin" class="form-input" placeholder="0" step="0.1" min="0" readonly>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label" for="profitValue">Lucro por Unidade (R$)</label>
-                            <input type="number" id="profitValue" class="form-input" placeholder="0.00" step="0.01" readonly>
-                        </div>
-                    </div>
-
-                    <!-- CÁLCULOS AUTOMÁTICOS -->
-                    <div class="values-section">
-                        <h3 style="color: var(--ocre-escuro); margin-bottom: 1rem;">Cálculos Automáticos</h3>
-                        <div class="calculations-grid">
-                            <div class="calculation-item">
-                                <div class="calculation-label">Valor Total em Estoque</div>
-                                <div class="calculation-value" id="totalStockValue">R$ 0,00</div>
-                            </div>
-                            <div class="calculation-item">
-                                <div class="calculation-label">Lucro Total Potencial</div>
-                                <div class="calculation-value" id="totalPotentialProfit">R$ 0,00</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- INFORMAÇÕES ADICIONAIS -->
-                <div class="form-section">
-                    <h2 class="section-title">
-                        <i class="fas fa-ellipsis-h"></i>
-                        Informações Adicionais
-                    </h2>
-                    
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label class="form-label" for="weight">Peso (kg)</label>
-                            <input type="number" id="weight" class="form-input" placeholder="0.00" step="0.01" min="0">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label" for="dimensions">Dimensões (cm)</label>
-                            <input type="text" id="dimensions" class="form-input" placeholder="L x A x C">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label" for="warranty">Garantia (meses)</label>
-                            <input type="number" id="warranty" class="form-input" placeholder="0" min="0">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label" for="barcode">Código de Barras</label>
-                            <input type="text" id="barcode" class="form-input" placeholder="Código EAN/UPC">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- MENSAGENS -->
-                <div class="message success" id="successMessage">
-                    <i class="fas fa-check-circle"></i> Produto cadastrado com sucesso!
-                </div>
-
-                <div class="message error" id="errorMessage">
-                    <i class="fas fa-exclamation-circle"></i> Preencha todos os campos obrigatórios.
-                </div>
-
-                <!-- BOTÕES -->
-                <div class="form-actions">
-                    <button type="button" class="btn btn-secondary">
-                        <i class="fas fa-times"></i>
-                        Cancelar
-                    </button>
-                    <button type="submit" class="btn btn-primary">
+                <!-- Botão Salvar -->
+                <div class="save-section">
+                    <button type="submit" class="save-btn">
                         <i class="fas fa-save"></i>
                         Salvar Produto
                     </button>
+                </div>
+
+                <!-- Mensagem de Sucesso -->
+                <div class="success-message" id="successMessage">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="success-text">Produto cadastrado com sucesso!</div>
                 </div>
             </form>
         </div>
@@ -522,44 +543,81 @@
         const costPriceInput = document.getElementById('costPrice');
         const salePriceInput = document.getElementById('salePrice');
         const quantityInput = document.getElementById('productQuantity');
-        const profitMarginInput = document.getElementById('profitMargin');
-        const profitValueInput = document.getElementById('profitValue');
+        const successMessage = document.getElementById('successMessage');
+        const productCodeDisplay = document.getElementById('productCodeDisplay');
+        const productCodeInput = document.getElementById('productCode');
+
+        // Elementos de cálculo
+        const profitPerUnit = document.getElementById('profitPerUnit');
+        const profitMargin = document.getElementById('profitMargin');
         const totalStockValue = document.getElementById('totalStockValue');
         const totalPotentialProfit = document.getElementById('totalPotentialProfit');
-        const productCode = document.getElementById('productCode');
-        const successMessage = document.getElementById('successMessage');
-        const errorMessage = document.getElementById('errorMessage');
 
-        // Gerar código do produto
+        // Função para gerar código automático
         function generateProductCode() {
-            const timestamp = new Date().getTime();
-            const random = Math.floor(Math.random() * 1000);
-            return `PROD-${timestamp.toString().slice(-4)}${random.toString().padStart(3, '0')}`;
+            // Buscar último código do localStorage
+            let products = JSON.parse(localStorage.getItem('products')) || [];
+            let lastCode = 0;
+            
+            if (products.length > 0) {
+                // Encontrar o maior código existente
+                products.forEach(product => {
+                    if (product.code) {
+                        const codeNumber = parseInt(product.code);
+                        if (codeNumber > lastCode) {
+                            lastCode = codeNumber;
+                        }
+                    }
+                });
+            }
+            
+            // Gerar próximo código
+            const nextCode = lastCode + 1;
+            return nextCode.toString().padStart(6, '0');
         }
 
-        // Calcular valores automáticos
+        // Função para atualizar código na tela
+        function updateProductCode() {
+            const newCode = generateProductCode();
+            productCodeDisplay.textContent = newCode;
+            productCodeInput.value = newCode;
+        }
+
+        // Função para calcular valores
         function calculateValues() {
             const costPrice = parseFloat(costPriceInput.value) || 0;
             const salePrice = parseFloat(salePriceInput.value) || 0;
             const quantity = parseInt(quantityInput.value) || 0;
 
-            // Calcular margem de lucro
+            // Cálculo do lucro por unidade
             const profit = salePrice - costPrice;
-            const margin = costPrice > 0 ? (profit / costPrice) * 100 : 0;
-
-            // Atualizar campos
-            profitMarginInput.value = margin.toFixed(2);
-            profitValueInput.value = profit.toFixed(2);
-
-            // Atualizar cálculos totais
-            const totalStock = costPrice * quantity;
-            const totalProfit = profit * quantity;
-
-            totalStockValue.textContent = `R$ ${totalStock.toFixed(2)}`;
-            totalPotentialProfit.textContent = `R$ ${totalProfit.toFixed(2)}`;
-
-            // Cor do lucro
+            profitPerUnit.textContent = `R$ ${profit.toFixed(2)}`;
+            
             if (profit < 0) {
+                profitPerUnit.classList.add('negative');
+            } else {
+                profitPerUnit.classList.remove('negative');
+            }
+
+            // Cálculo da margem de lucro
+            const margin = costPrice > 0 ? ((profit / costPrice) * 100) : 0;
+            profitMargin.textContent = `${margin.toFixed(1)}%`;
+            
+            if (margin < 0) {
+                profitMargin.classList.add('negative');
+            } else {
+                profitMargin.classList.remove('negative');
+            }
+
+            // Valor total em estoque
+            const totalValue = costPrice * quantity;
+            totalStockValue.textContent = `R$ ${totalValue.toFixed(2)}`;
+
+            // Lucro total potencial
+            const totalProfit = profit * quantity;
+            totalPotentialProfit.textContent = `R$ ${totalProfit.toFixed(2)}`;
+            
+            if (totalProfit < 0) {
                 totalPotentialProfit.classList.add('negative');
             } else {
                 totalPotentialProfit.classList.remove('negative');
@@ -571,48 +629,70 @@
         salePriceInput.addEventListener('input', calculateValues);
         quantityInput.addEventListener('input', calculateValues);
 
-        // Submissão do formulário
-        productForm.addEventListener('submit', function(e) {
-            e.preventDefault();
+        // Função para salvar produto
+        function saveProduct(event) {
+            event.preventDefault();
             
-            // Validar campos obrigatórios
-            const requiredFields = productForm.querySelectorAll('[required]');
-            let isValid = true;
-            
-            requiredFields.forEach(field => {
-                if (!field.value.trim()) {
-                    isValid = false;
-                    field.style.borderColor = 'var(--vermelho)';
-                } else {
-                    field.style.borderColor = 'var(--rosa-suave)';
-                }
-            });
+            // Coletar dados do formulário
+            const productData = {
+                code: productCodeInput.value,
+                name: document.getElementById('productName').value,
+                description: document.getElementById('productDescription').value,
+                quantity: parseInt(document.getElementById('productQuantity').value),
+                costPrice: parseFloat(document.getElementById('costPrice').value),
+                salePrice: parseFloat(document.getElementById('salePrice').value),
+                category: document.getElementById('productCategory').value,
+                supplier: document.getElementById('productSupplier').value,
+                timestamp: new Date().toISOString()
+            };
 
-            if (!isValid) {
-                errorMessage.style.display = 'block';
-                successMessage.style.display = 'none';
+            // Validar dados
+            if (!productData.name || !productData.quantity || !productData.costPrice || !productData.salePrice) {
+                alert('Por favor, preencha todos os campos obrigatórios (*)');
                 return;
             }
 
-            // Simular salvamento
-            errorMessage.style.display = 'none';
-            successMessage.style.display = 'block';
+            if (productData.costPrice > productData.salePrice) {
+                const confirmSave = confirm('O valor de custo é maior que o valor de venda. Isso indica prejuízo. Deseja continuar?');
+                if (!confirmSave) return;
+            }
 
-            // Gerar novo código
-            productCode.textContent = generateProductCode();
+            // Salvar no localStorage
+            let products = JSON.parse(localStorage.getItem('products')) || [];
+            products.push(productData);
+            localStorage.setItem('products', JSON.stringify(products));
 
-            // Limpar formulário após 2 segundos
+            // Mostrar mensagem de sucesso
+            successMessage.classList.add('show');
+
+            // Gerar novo código para o próximo produto
             setTimeout(() => {
+                updateProductCode();
                 productForm.reset();
-                calculateValues();
-                successMessage.style.display = 'none';
-            }, 2000);
-        });
+                calculateValues(); // Recalcular valores
+                successMessage.classList.remove('show');
+            }, 3000);
 
-        // Inicializar
+            // Log para demonstração
+            console.log('Produto salvo:', productData);
+        }
+
+        // Event listener para o formulário
+        productForm.addEventListener('submit', saveProduct);
+
+        // Inicializar página
         document.addEventListener('DOMContentLoaded', function() {
-            productCode.textContent = generateProductCode();
+            // Gerar código inicial
+            updateProductCode();
+            
+            // Inicializar cálculos
             calculateValues();
+            
+            // Adicionar animação aos elementos
+            const elements = document.querySelectorAll('.animated');
+            elements.forEach((element, index) => {
+                element.style.animationDelay = `${index * 0.1}s`;
+            });
         });
     </script>
 </body>
